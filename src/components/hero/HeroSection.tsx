@@ -95,10 +95,10 @@ export default function HeroSection() {
 
             {/* Left Column - Logo, tagline, CTA (flex column with space-between for top/bottom alignment) */}
             <div className="text-center lg:text-left lg:flex-1 mb-10 lg:mb-0 lg:flex lg:flex-col lg:justify-between">
-              {/* Top content - Logo and tagline */}
+              {/* Top content - Logo only */}
               <div>
                 {/* Logo */}
-                <div className="mb-6">
+                <div className="mb-6 lg:mb-0">
                   <Image
                     src="/images/logo-hero.png"
                     alt="Browning's Welding & Fabrication"
@@ -108,7 +108,10 @@ export default function HeroSection() {
                     priority
                   />
                 </div>
+              </div>
 
+              {/* Bottom content - Tagline and CTA Button (aligned with bottom of entry cards) */}
+              <div className="lg:mt-auto">
                 {/* Since 1972 Badge */}
                 <p className="text-gray-300 text-sm mb-4">Since 1972</p>
 
@@ -116,13 +119,10 @@ export default function HeroSection() {
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4">
                   Faith, Family, & Fabrication
                 </h1>
-                <p className="text-base md:text-lg text-gray-300 mb-6 lg:max-w-md lg:mb-0">
+                <p className="text-base md:text-lg text-gray-300 mb-6 lg:max-w-md">
                   Commercial fabrication solutions for your business
                 </p>
-              </div>
 
-              {/* Bottom content - CTA Button (aligned with bottom of entry cards) */}
-              <div className="lg:mt-auto">
                 <button
                   onClick={() => setIsQuoteModalOpen(true)}
                   className="inline-flex items-center gap-2 bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-full font-semibold transition-colors text-lg"
