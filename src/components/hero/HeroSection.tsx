@@ -136,10 +136,10 @@ export default function HeroSection() {
             {/* Right Column - Configurator */}
             <div className="lg:flex-1 lg:max-w-xl">
               {/* Divider - only on mobile */}
-              <div className="flex items-center justify-center gap-4 mb-8 lg:hidden">
-                <div className="h-px bg-white/30 w-24"></div>
-                <span className="text-white/60 text-sm">or choose how to start</span>
-                <div className="h-px bg-white/30 w-24"></div>
+              <div className="flex items-center justify-center gap-2 mb-8 lg:hidden">
+                <div className="h-px bg-white/30 flex-1 max-w-12"></div>
+                <span className="text-white/60 text-sm whitespace-nowrap">or choose how to start</span>
+                <div className="h-px bg-white/30 flex-1 max-w-12"></div>
               </div>
 
               {/* Upload Zone */}
