@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Hedvig_Letters_Serif } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Providers from "@/components/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
+const hedvigLettersSerif = Hedvig_Letters_Serif({
+  subsets: ["latin"],
+  variable: "--font-hedvig-serif",
+});
 
 export const metadata: Metadata = {
   title: "Browning's Welding & Fabrication | Custom Metal Fabrication",
@@ -20,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white text-browning-charcoal`}>
+      <body className={`${inter.className} ${hedvigLettersSerif.variable} bg-white text-browning-charcoal`}>
         <Providers>
           <Navbar />
           <main>{children}</main>

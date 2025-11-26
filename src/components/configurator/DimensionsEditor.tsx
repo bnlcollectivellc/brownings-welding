@@ -9,8 +9,6 @@ export default function DimensionsEditor() {
     selectedTemplate,
     updateTemplateParameter,
     setPartDimensions,
-    nextStep,
-    prevStep,
   } = useConfigurator();
 
   const svgContainerRef = useRef<HTMLDivElement>(null);
@@ -47,7 +45,12 @@ export default function DimensionsEditor() {
         if (innerDiameter > 0) {
           model = new makerjs.models.Ring(diameter / 2, innerDiameter / 2);
         } else {
-          model = new makerjs.models.Ellipse(diameter / 2, diameter / 2);
+          // Use Ring with a very small inner radius to create a proper circle path
+          model = {
+            paths: {
+              circle: new makerjs.paths.Circle([0, 0], diameter / 2)
+            }
+          };
         }
         break;
       }
@@ -140,14 +143,15 @@ export default function DimensionsEditor() {
     const dimensions = calculateDimensions(model);
     setPartDimensions(dimensions);
 
-    // Generate SVG
+    // Generate SVG with proper scaling
     const svg = makerjs.exporter.toSVG(model, {
       stroke: '#E63329',
-      strokeWidth: '2',
+      strokeWidth: '0.5',
       fill: 'none',
       viewBox: true,
       svgAttrs: {
-        style: 'max-width: 100%; height: auto;'
+        preserveAspectRatio: 'xMidYMid meet',
+        style: 'width: 100%; height: 100%;'
       }
     });
 
@@ -155,28 +159,30 @@ export default function DimensionsEditor() {
   }, [selectedTemplate, generateShape, calculateDimensions, setPartDimensions]);
 
   if (!selectedTemplate) {
-    return <div>Please select a template first</div>;
+    return (
+      <div className="h-full flex items-center justify-center text-gray-500">
+        Please select a template first
+      </div>
+    );
   }
 
   // Get template definition for parameter metadata
   const templateDef = useConfigurator.getState().templates.find(t => t.id === selectedTemplate.id);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h2 className="text-xl font-bold text-browning-charcoal">Customize Dimensions</h2>
-        <p className="text-gray-500 text-sm">Adjust the parameters for your {selectedTemplate.name}</p>
+    <div className="h-full flex flex-col md:flex-row">
+      {/* Main Preview Area - account for bottom panel on mobile */}
+      <div className="flex-1 p-4 md:p-6 flex items-center justify-center bg-gray-50 pb-[25vh] md:pb-0">
+        <div ref={svgContainerRef} className="w-full max-w-[200px] h-[200px] md:max-w-md md:h-96 flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-w-full [&>svg]:max-h-full" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Preview */}
-        <div className="bg-gray-50 rounded-xl p-6 flex items-center justify-center min-h-[300px]">
-          <div ref={svgContainerRef} className="w-full max-w-md" />
-        </div>
+      {/* Parameters Panel - Bottom on mobile, right sidebar on desktop */}
+      <div className="fixed bottom-16 left-0 right-0 md:static md:bottom-auto md:w-72 lg:w-80 flex-shrink-0 border-t md:border-t-0 md:border-l border-gray-200 bg-white p-4 md:p-6 overflow-y-auto h-[25vh] md:h-auto md:max-h-none z-10">
+        <h3 className="text-sm font-semibold text-gray-900 mb-3 md:mb-4">
+          Customize {selectedTemplate.name}
+        </h3>
 
-        {/* Parameters */}
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4 md:gap-5">
           {selectedTemplate.parameters.map((param) => {
             const paramDef = templateDef?.parameters.find(p => p.id === param.id);
 
@@ -189,7 +195,7 @@ export default function DimensionsEditor() {
                   <select
                     value={param.value as string}
                     onChange={(e) => updateTemplateParameter(param.id, e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
                   >
                     {(paramDef.options as string[]).map((opt: string) => (
                       <option key={opt} value={opt}>{opt}</option>
@@ -207,7 +213,7 @@ export default function DimensionsEditor() {
                     id={param.id}
                     checked={param.value as boolean}
                     onChange={(e) => updateTemplateParameter(param.id, e.target.checked)}
-                    className="w-5 h-5 rounded border-gray-300 text-browning-red focus:ring-browning-red"
+                    className="w-4 h-4 rounded border-gray-300 text-browning-red focus:ring-browning-red"
                   />
                   <label htmlFor={param.id} className="text-sm font-medium text-gray-700">
                     {paramDef.name}
@@ -216,14 +222,14 @@ export default function DimensionsEditor() {
               );
             }
 
-            // Default: dimension/number input
+            // Default: dimension/number input with slider
             return (
               <div key={param.id}>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {paramDef?.name || param.id}
                   {paramDef?.unit && <span className="text-gray-400 ml-1">({paramDef.unit})</span>}
                 </label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <input
                     type="range"
                     value={param.value as number}
@@ -240,29 +246,13 @@ export default function DimensionsEditor() {
                     min={paramDef?.min || 0}
                     max={paramDef?.max || 48}
                     step={paramDef?.step || 0.125}
-                    className="w-24 border border-gray-300 rounded-lg px-3 py-2 text-right"
+                    className="w-20 border border-gray-300 rounded-lg px-2 py-1.5 text-sm text-right"
                   />
                 </div>
               </div>
             );
           })}
         </div>
-      </div>
-
-      {/* Navigation */}
-      <div className="flex justify-between pt-4">
-        <button
-          onClick={prevStep}
-          className="px-6 py-3 rounded-lg border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
-        >
-          Back
-        </button>
-        <button
-          onClick={nextStep}
-          className="bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-        >
-          Continue to Material
-        </button>
       </div>
     </div>
   );

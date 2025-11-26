@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { FileText, Wrench, PenTool, MessageSquare, ArrowRight } from 'lucide-react';
 import CustomQuoteModal from '@/components/modals/CustomQuoteModal';
+import CADUploadModal from '@/components/modals/CADUploadModal';
+import DesignServicesModal from '@/components/modals/DesignServicesModal';
+import { useConfigurator } from '@/store/useConfigurator';
 
 const entryCards = [
   {
@@ -33,12 +36,20 @@ const entryCards = [
 
 export default function ContactSection() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
+  const { openConfigurator } = useConfigurator();
 
   const handleCardClick = (action: string) => {
     if (action === 'quote') {
       setIsQuoteModalOpen(true);
+    } else if (action === 'upload') {
+      setIsUploadModalOpen(true);
+    } else if (action === 'design') {
+      setIsDesignModalOpen(true);
+    } else if (action === 'builder') {
+      openConfigurator('builder');
     }
-    // TODO: Handle other actions in Phase 2
   };
 
   return (
@@ -47,7 +58,7 @@ export default function ContactSection() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4 font-serif">
               Ready to start your project?
             </h2>
             <p className="text-white/90 text-sm md:text-lg max-w-2xl mx-auto">
@@ -102,6 +113,18 @@ export default function ContactSection() {
       <CustomQuoteModal
         isOpen={isQuoteModalOpen}
         onClose={() => setIsQuoteModalOpen(false)}
+      />
+
+      {/* CAD Upload Modal */}
+      <CADUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+      />
+
+      {/* Design Services Modal */}
+      <DesignServicesModal
+        isOpen={isDesignModalOpen}
+        onClose={() => setIsDesignModalOpen(false)}
       />
     </>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, User } from 'lucide-react';
 
 const team = [
@@ -36,30 +36,50 @@ const team = [
   },
 ];
 
+// Triple the items for seamless infinite scroll
+const infiniteTeam = [...team, ...team, ...team];
+
 export default function TeamSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const isScrollingRef = useRef(false);
+
+  // Initialize scroll position to middle set
+  useEffect(() => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const singleSetWidth = container.scrollWidth / 3;
+      container.scrollLeft = singleSetWidth;
+    }
+  }, []);
+
+  // Handle seamless looping
+  const handleScroll = useCallback(() => {
+    if (isScrollingRef.current || !scrollRef.current) return;
+
+    const container = scrollRef.current;
+    const singleSetWidth = container.scrollWidth / 3;
+
+    // If scrolled to the end (third set), jump to middle set
+    if (container.scrollLeft >= singleSetWidth * 2) {
+      isScrollingRef.current = true;
+      container.scrollLeft = container.scrollLeft - singleSetWidth;
+      setTimeout(() => { isScrollingRef.current = false; }, 50);
+    }
+    // If scrolled to the beginning (first set), jump to middle set
+    else if (container.scrollLeft <= 0) {
+      isScrollingRef.current = true;
+      container.scrollLeft = container.scrollLeft + singleSetWidth;
+      setTimeout(() => { isScrollingRef.current = false; }, 50);
+    }
+  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const container = scrollRef.current;
       const scrollAmount = 280;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-
-      if (direction === 'right') {
-        // If at or near the end, loop back to start
-        if (container.scrollLeft >= maxScroll - 10) {
-          container.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        }
-      } else {
-        // If at or near the start, loop to end
-        if (container.scrollLeft <= 10) {
-          container.scrollTo({ left: maxScroll, behavior: 'smooth' });
-        } else {
-          container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-        }
-      }
+      scrollRef.current.scrollBy({
+        left: direction === 'right' ? scrollAmount : -scrollAmount,
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -68,7 +88,7 @@ export default function TeamSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-8 md:mb-12">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-browning-charcoal">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-browning-charcoal font-serif">
             Meet the Family
           </h2>
         </div>
@@ -84,10 +104,11 @@ export default function TeamSection() {
           {/* Scrollable Container */}
           <div
             ref={scrollRef}
+            onScroll={handleScroll}
             className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide px-8 md:px-12 pb-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {team.map((member, index) => (
+            {infiniteTeam.map((member, index) => (
               <div
                 key={index}
                 className="flex-shrink-0 w-48 md:w-64"

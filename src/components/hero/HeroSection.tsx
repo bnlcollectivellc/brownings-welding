@@ -2,8 +2,9 @@
 
 import { useState, useCallback } from 'react';
 import Image from 'next/image';
-import { Upload, FileText, Wrench, PenTool, MessageSquare, ArrowRight } from 'lucide-react';
+import { Upload, Wrench, PenTool, MessageSquare, ArrowRight } from 'lucide-react';
 import CustomQuoteModal from '@/components/modals/CustomQuoteModal';
+import DesignServicesModal from '@/components/modals/DesignServicesModal';
 import { useConfigurator, EntryPath } from '@/store/useConfigurator';
 
 const ACCEPTED_FILES = ['.ai', '.dxf', '.dwg', '.eps', '.stp', '.step'];
@@ -11,7 +12,8 @@ const ACCEPTED_FILES = ['.ai', '.dxf', '.dwg', '.eps', '.stp', '.step'];
 export default function HeroSection() {
   const [isDragging, setIsDragging] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  const { openConfigurator, setUploadedFile } = useConfigurator();
+  const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
+  const { openConfigurator } = useConfigurator();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -27,35 +29,27 @@ export default function HeroSection() {
     e.preventDefault();
     setIsDragging(false);
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      setUploadedFile(files[0], null);
-      openConfigurator('upload');
-    }
-  }, [openConfigurator, setUploadedFile]);
+    console.log('Files dropped:', files);
+    // TODO: Handle file upload - Phase 2
+  }, []);
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
-    if (files.length > 0) {
-      setUploadedFile(files[0], null);
-      openConfigurator('upload');
-    }
-  }, [openConfigurator, setUploadedFile]);
+    console.log('Files selected:', files);
+    // TODO: Handle file upload - Phase 2
+  }, []);
 
   const handleCardClick = (action: string) => {
     if (action === 'quote') {
       setIsQuoteModalOpen(true);
-    } else if (action === 'upload' || action === 'builder' || action === 'design') {
+    } else if (action === 'design') {
+      setIsDesignModalOpen(true);
+    } else if (action === 'builder') {
       openConfigurator(action as EntryPath);
     }
   };
 
   const entryCards = [
-    {
-      icon: FileText,
-      title: 'Upload a CAD file',
-      description: 'We accept .ai, .dxf, .dwg, .eps, .stp, and .step',
-      action: 'upload',
-    },
     {
       icon: Wrench,
       title: 'Use our Parts Builder',
@@ -123,7 +117,7 @@ export default function HeroSection() {
                 <p className="text-gray-300 text-sm mb-4">Since 1972</p>
 
                 {/* Header Text */}
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 font-serif">
                   Faith, Family, & Fabrication
                 </h1>
                 <p className="text-base md:text-lg text-gray-300 mb-6 lg:max-w-md">
@@ -161,11 +155,11 @@ export default function HeroSection() {
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                 >
-                  <Upload className="mx-auto mb-2 text-gray-300" size={36} />
+                  <Upload className="mx-auto mb-3 text-gray-300" size={36} />
                   <p className="text-base md:text-lg font-medium text-white mb-2">
                     Drop up to 10 files here to get started
                   </p>
-                  <p className="text-gray-400 mb-2 text-sm">or</p>
+                  <p className="text-gray-400 mb-3">or</p>
                   <label className="inline-block">
                     <input
                       type="file"
@@ -174,11 +168,11 @@ export default function HeroSection() {
                       accept={ACCEPTED_FILES.join(',')}
                       onChange={handleFileSelect}
                     />
-                    <span className="bg-browning-red hover:bg-red-700 text-white px-5 py-2 rounded-lg font-semibold cursor-pointer transition-colors inline-block text-sm">
+                    <span className="bg-browning-red hover:bg-red-700 text-white px-6 py-2.5 rounded-lg font-semibold cursor-pointer transition-colors inline-block">
                       BROWSE FILES
                     </span>
                   </label>
-                  <p className="text-gray-400 mt-2 text-xs">
+                  <p className="text-gray-400 mt-3 text-xs md:text-sm">
                     {ACCEPTED_FILES.join('  ')}
                   </p>
                 </div>
@@ -188,8 +182,8 @@ export default function HeroSection() {
                 </p>
               </div>
 
-              {/* Entry Cards - 2 cols on mobile, 4 cols on desktop */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
+              {/* Entry Cards - 3 cols */}
+              <div className="grid grid-cols-3 gap-2 md:gap-3">
                 {entryCards.map((card) => (
                   <button
                     key={card.action}
@@ -219,6 +213,12 @@ export default function HeroSection() {
       <CustomQuoteModal
         isOpen={isQuoteModalOpen}
         onClose={() => setIsQuoteModalOpen(false)}
+      />
+
+      {/* Design Services Modal */}
+      <DesignServicesModal
+        isOpen={isDesignModalOpen}
+        onClose={() => setIsDesignModalOpen(false)}
       />
     </>
   );

@@ -1,7 +1,10 @@
 'use client';
 
-import { Edit2, Check, ShoppingCart } from 'lucide-react';
+import { useState } from 'react';
+import { Edit2, Check, ShoppingCart, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useConfigurator } from '@/store/useConfigurator';
+
+type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 export default function ReviewStep() {
   const {
@@ -17,7 +20,48 @@ export default function ReviewStep() {
     finishes,
     setStep,
     prevStep,
+    closeConfigurator,
+    reset,
   } = useConfigurator();
+
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
+
+  const handleSubmit = async () => {
+    setSubmitStatus('submitting');
+
+    try {
+      // Simulate API call - replace with actual quote submission
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate 90% success rate for demo
+          if (Math.random() > 0.1) {
+            resolve(true);
+          } else {
+            reject(new Error('Submission failed'));
+          }
+        }, 1500);
+      });
+
+      console.log('Quote submitted:', {
+        selectedTemplate,
+        selectedMaterial,
+        selectedServices,
+        selectedFinish,
+        partDimensions,
+        priceBreakdown,
+        quantity,
+      });
+      setSubmitStatus('success');
+    } catch (error) {
+      console.error('Submit error:', error);
+      setSubmitStatus('error');
+    }
+  };
+
+  const handleReturnToSite = () => {
+    reset();
+    closeConfigurator();
+  };
 
   // Get full data objects
   const materialCategory = materials.find(m => m.id === selectedMaterial?.categoryId);
@@ -68,8 +112,59 @@ export default function ReviewStep() {
     },
   ];
 
+  // Success State
+  if (submitStatus === 'success') {
+    return (
+      <div className="max-w-2xl mx-auto p-4 md:p-6 flex flex-col items-center justify-center min-h-[400px]">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <CheckCircle size={32} className="text-green-600" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h2>
+        <p className="text-gray-600 mb-6 text-center max-w-md">
+          Your quote request has been submitted successfully. We&apos;ll review it and get back to you within 1-2 business days.
+        </p>
+        <button
+          onClick={handleReturnToSite}
+          className="px-6 py-3 bg-browning-red hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
+        >
+          Return to Site
+        </button>
+      </div>
+    );
+  }
+
+  // Error State
+  if (submitStatus === 'error') {
+    return (
+      <div className="max-w-2xl mx-auto p-4 md:p-6 flex flex-col items-center justify-center min-h-[400px]">
+        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <AlertCircle size={32} className="text-red-600" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Something Went Wrong</h2>
+        <p className="text-gray-600 mb-6 text-center max-w-md">
+          Sorry, we couldn&apos;t submit your quote. Please try again later or contact us directly.
+        </p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setSubmitStatus('idle')}
+            className="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+          >
+            <ArrowLeft size={18} />
+            Try Again
+          </button>
+          <button
+            onClick={handleReturnToSite}
+            className="px-6 py-3 bg-browning-red hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
+          >
+            Return to Site
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-6">
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-browning-charcoal">Review Your Order</h2>
@@ -181,15 +276,27 @@ export default function ReviewStep() {
       <div className="flex justify-between pt-4">
         <button
           onClick={prevStep}
-          className="px-6 py-3 rounded-lg border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
+          disabled={submitStatus === 'submitting'}
+          className="px-6 py-3 rounded-lg border border-gray-300 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
         >
           Back
         </button>
         <button
-          className="bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+          onClick={handleSubmit}
+          disabled={submitStatus === 'submitting'}
+          className="bg-browning-red hover:bg-red-700 disabled:bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 transition-colors"
         >
-          <ShoppingCart size={20} />
-          Add to Quote
+          {submitStatus === 'submitting' ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={20} />
+              Add to Quote
+            </>
+          )}
         </button>
       </div>
     </div>

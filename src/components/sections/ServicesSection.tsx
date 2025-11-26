@@ -42,7 +42,7 @@ export default function ServicesSection() {
           <span className="text-browning-red font-semibold text-sm uppercase tracking-wider">
             What We Do
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4 mb-4 font-serif">
             Our Fabrication Services
           </h2>
           <p className="text-browning-gray text-lg max-w-2xl mx-auto">

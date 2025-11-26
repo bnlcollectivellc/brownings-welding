@@ -160,7 +160,7 @@ export const useConfigurator = create<ConfiguratorState>((set, get) => ({
   currentStep: 'entry',
   entryPath: null,
 
-  materialViewMode: 'list',
+  materialViewMode: 'tile',
 
   selectedMaterial: null,
   selectedTemplate: null,

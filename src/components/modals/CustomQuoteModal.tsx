@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { X, Upload } from 'lucide-react';
+import { X, Upload, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 
 interface CustomQuoteModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 const ACCEPTED_FILES = '.ai, .dxf, .dwg, .eps, .stp, .step';
 
@@ -27,6 +29,7 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
   });
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -55,10 +58,49 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
     setFiles(prev => [...prev, ...selectedFiles]);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData, files);
-    // TODO: Send to Resend API
+    setSubmitStatus('submitting');
+
+    try {
+      // Simulate API call - replace with actual Resend API
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate 90% success rate for demo
+          if (Math.random() > 0.1) {
+            resolve(true);
+          } else {
+            reject(new Error('Network error'));
+          }
+        }, 1500);
+      });
+
+      console.log('Form submitted:', formData, files);
+      setSubmitStatus('success');
+    } catch (error) {
+      console.error('Submission error:', error);
+      setSubmitStatus('error');
+    }
+  };
+
+  const handleClose = () => {
+    // Reset form state on close
+    setSubmitStatus('idle');
+    setFormData({
+      material: '',
+      thickness: '',
+      quantity: '',
+      length: '1',
+      width: '1',
+      unit: 'inches',
+      software: '',
+      name: '',
+      email: '',
+      zipCode: '',
+      purpose: '',
+      comments: '',
+    });
+    setFiles([]);
     onClose();
   };
 
@@ -69,24 +111,75 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={submitStatus === 'idle' ? handleClose : undefined}
       />
 
       {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-          <h2 className="text-xl font-bold text-gray-900">Request Custom Quote</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X size={24} />
-          </button>
-        </div>
+        {/* Success State */}
+        {submitStatus === 'success' && (
+          <div className="p-8 text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle size={32} className="text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h2>
+            <p className="text-gray-600 mb-6">
+              Your quote request has been submitted successfully. We&apos;ll get back to you within 1-2 business days.
+            </p>
+            <button
+              onClick={handleClose}
+              className="px-6 py-3 bg-browning-red hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
+            >
+              Return to Site
+            </button>
+          </div>
+        )}
 
-        {/* Content */}
-        <form onSubmit={handleSubmit} className="p-6">
+        {/* Error State */}
+        {submitStatus === 'error' && (
+          <div className="p-8 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle size={32} className="text-red-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Something Went Wrong</h2>
+            <p className="text-gray-600 mb-6">
+              Sorry, we couldn&apos;t submit your request. Please try again later or contact us directly.
+            </p>
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={() => setSubmitStatus('idle')}
+                className="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+              >
+                <ArrowLeft size={18} />
+                Try Again
+              </button>
+              <button
+                onClick={handleClose}
+                className="px-6 py-3 bg-browning-red hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
+              >
+                Return to Site
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Form State (idle or submitting) */}
+        {(submitStatus === 'idle' || submitStatus === 'submitting') && (
+          <>
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-xl font-bold text-gray-900">Request Custom Quote</h2>
+              <button
+                onClick={handleClose}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+                disabled={submitStatus === 'submitting'}
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Content */}
+            <form onSubmit={handleSubmit} className="p-6">
           <p className="text-gray-600 mb-6">
             Need help with a custom project? No problem! Fill out the form below and we&apos;ll get right back to you.
           </p>
@@ -140,7 +233,7 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
               name="material"
               value={formData.material}
               onChange={handleInputChange}
-              className="border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red"
+              className="border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red h-12"
             >
               <option value="">Material</option>
               <option value="aluminum">Aluminum</option>
@@ -151,22 +244,20 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
               <option value="other">Other</option>
             </select>
 
-            <div>
-              <label className="text-xs text-gray-500 mb-1 block">Length</label>
-              <input
-                type="number"
-                name="length"
-                value={formData.length}
-                onChange={handleInputChange}
-                className="border border-gray-300 rounded-lg px-4 py-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red"
-              />
-            </div>
+            <input
+              type="number"
+              name="length"
+              placeholder="Length"
+              value={formData.length}
+              onChange={handleInputChange}
+              className="border border-gray-300 rounded-lg px-4 py-3 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red h-12"
+            />
 
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, unit: 'inches' }))}
-                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+                className={`flex-1 py-3 rounded-lg font-medium transition-colors h-12 ${
                   formData.unit === 'inches'
                     ? 'bg-blue-500 text-white'
                     : 'bg-gray-100 text-gray-700 border border-gray-300'
@@ -177,7 +268,7 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, unit: 'millimeters' }))}
-                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+                className={`flex-1 py-3 rounded-lg font-medium transition-colors h-12 ${
                   formData.unit === 'millimeters'
                     ? 'bg-blue-500 text-white'
                     : 'bg-gray-100 text-gray-700 border border-gray-300'
@@ -193,7 +284,7 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
               name="thickness"
               value={formData.thickness}
               onChange={handleInputChange}
-              className="border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red"
+              className="border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red h-12"
             >
               <option value="">Thickness</option>
               <option value="0.030">0.030&quot;</option>
@@ -210,19 +301,17 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
               placeholder="Quantity"
               value={formData.quantity}
               onChange={handleInputChange}
-              className="border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red"
+              className="border border-gray-300 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red h-12"
             />
 
-            <div>
-              <label className="text-xs text-gray-500 mb-1 block">Width</label>
-              <input
-                type="number"
-                name="width"
-                value={formData.width}
-                onChange={handleInputChange}
-                className="border border-gray-300 rounded-lg px-4 py-2 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red"
-              />
-            </div>
+            <input
+              type="number"
+              name="width"
+              placeholder="Width"
+              value={formData.width}
+              onChange={handleInputChange}
+              className="border border-gray-300 rounded-lg px-4 py-3 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-browning-red/20 focus:border-browning-red h-12"
+            />
           </div>
 
           <select
@@ -289,19 +378,30 @@ export default function CustomQuoteModal({ isOpen, onClose }: CustomQuoteModalPr
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
             <button
               type="button"
-              onClick={onClose}
-              className="px-6 py-2.5 text-gray-600 font-medium hover:text-gray-800 transition-colors"
+              onClick={handleClose}
+              disabled={submitStatus === 'submitting'}
+              className="px-6 py-2.5 text-gray-600 font-medium hover:text-gray-800 transition-colors disabled:opacity-50"
             >
               CLOSE
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 bg-gray-400 hover:bg-browning-red text-white font-medium rounded-lg transition-colors"
+              disabled={submitStatus === 'submitting'}
+              className="px-6 py-2.5 bg-browning-red hover:bg-red-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
             >
-              REQUEST QUOTE
+              {submitStatus === 'submitting' ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  SUBMITTING...
+                </>
+              ) : (
+                'REQUEST QUOTE'
+              )}
             </button>
           </div>
         </form>
+          </>
+        )}
       </div>
     </div>
   );

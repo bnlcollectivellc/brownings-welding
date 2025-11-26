@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const clients = [
@@ -14,27 +14,50 @@ const clients = [
   { name: 'Client Eight', logo: null },
 ];
 
+// Triple the items for seamless infinite scroll
+const infiniteClients = [...clients, ...clients, ...clients];
+
 export default function ClientsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const isScrollingRef = useRef(false);
 
-  const checkScroll = () => {
+  // Initialize scroll position to middle set
+  useEffect(() => {
     if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+      const container = scrollRef.current;
+      const singleSetWidth = container.scrollWidth / 3;
+      container.scrollLeft = singleSetWidth;
     }
-  };
+  }, []);
+
+  // Handle seamless looping
+  const handleScroll = useCallback(() => {
+    if (isScrollingRef.current || !scrollRef.current) return;
+
+    const container = scrollRef.current;
+    const singleSetWidth = container.scrollWidth / 3;
+
+    // If scrolled to the end (third set), jump to middle set
+    if (container.scrollLeft >= singleSetWidth * 2) {
+      isScrollingRef.current = true;
+      container.scrollLeft = container.scrollLeft - singleSetWidth;
+      setTimeout(() => { isScrollingRef.current = false; }, 50);
+    }
+    // If scrolled to the beginning (first set), jump to middle set
+    else if (container.scrollLeft <= 0) {
+      isScrollingRef.current = true;
+      container.scrollLeft = container.scrollLeft + singleSetWidth;
+      setTimeout(() => { isScrollingRef.current = false; }, 50);
+    }
+  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       const scrollAmount = 200;
       scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        left: direction === 'right' ? scrollAmount : -scrollAmount,
         behavior: 'smooth',
       });
-      setTimeout(checkScroll, 300);
     }
   };
 
@@ -43,7 +66,7 @@ export default function ClientsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal">
+          <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal font-serif">
             Who We&apos;ve Created For
           </h2>
         </div>
@@ -59,11 +82,11 @@ export default function ClientsSection() {
           {/* Scrollable Container */}
           <div
             ref={scrollRef}
-            onScroll={checkScroll}
+            onScroll={handleScroll}
             className="flex gap-6 overflow-x-auto scrollbar-hide px-10"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {clients.map((client, index) => (
+            {infiniteClients.map((client, index) => (
               <div
                 key={index}
                 className="flex-shrink-0 w-40 h-20 bg-browning-light rounded-xl border border-gray-200 flex items-center justify-center hover:border-browning-red/30 transition-colors"
@@ -89,24 +112,14 @@ export default function ClientsSection() {
         <div className="flex justify-center gap-3 mt-8">
           <button
             onClick={() => scroll('left')}
-            disabled={!canScrollLeft}
-            className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all ${
-              canScrollLeft
-                ? 'border-browning-red text-browning-red hover:bg-browning-red hover:text-white'
-                : 'border-gray-300 text-gray-300 cursor-not-allowed'
-            }`}
+            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
             aria-label="Previous"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={() => scroll('right')}
-            disabled={!canScrollRight}
-            className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all ${
-              canScrollRight
-                ? 'border-browning-red text-browning-red hover:bg-browning-red hover:text-white'
-                : 'border-gray-300 text-gray-300 cursor-not-allowed'
-            }`}
+            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
             aria-label="Next"
           >
             <ChevronRight size={20} />

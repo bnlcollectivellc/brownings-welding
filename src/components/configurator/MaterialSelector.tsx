@@ -11,7 +11,6 @@ export default function MaterialSelector() {
     setSelectedMaterial,
     materialViewMode,
     setMaterialViewMode,
-    nextStep,
   } = useConfigurator();
 
   const [expandedCategory, setExpandedCategory] = useState<string | null>(
@@ -47,7 +46,7 @@ export default function MaterialSelector() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-4">
       {/* Header with View Toggle */}
       <div className="flex items-center justify-between">
         <div>
@@ -158,20 +157,17 @@ export default function MaterialSelector() {
       )}
 
       {/* Tile View */}
-      {materialViewMode === 'tile' && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {materialViewMode === 'tile' && !expandedCategory && (
+        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
           {materials.map((category) => (
             <button
               key={category.id}
               onClick={() => handleCategoryClick(category.id)}
-              className={`p-6 rounded-xl border-2 text-left transition-all ${
-                expandedCategory === category.id
-                  ? 'border-browning-red bg-browning-red/5'
-                  : 'border-gray-200 hover:border-browning-red/50'
-              }`}
+              className="relative rounded-xl border-2 p-3 transition-all hover:shadow-md flex flex-col border-gray-200 bg-white hover:border-gray-300"
             >
-              <div className="w-12 h-12 bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
-                <span className="text-2xl">
+              {/* Icon Area */}
+              <div className="w-full aspect-square flex items-center justify-center p-2">
+                <span className="text-3xl">
                   {category.id === 'steel' && '🔩'}
                   {category.id === 'stainless' && '✨'}
                   {category.id === 'aluminum' && '🪶'}
@@ -179,8 +175,9 @@ export default function MaterialSelector() {
                   {category.id === 'galvanized' && '🛡️'}
                 </span>
               </div>
-              <h3 className="font-semibold text-browning-charcoal">{category.name}</h3>
-              <p className="text-xs text-gray-500 mt-1">{category.subcategories.length} types</p>
+              <p className="text-xs text-center text-gray-600 mt-1 truncate w-full">
+                {category.name}
+              </p>
             </button>
           ))}
         </div>
@@ -188,10 +185,22 @@ export default function MaterialSelector() {
 
       {/* Tile View - Expanded Category */}
       {materialViewMode === 'tile' && expandedCategory && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-xl">
-          <h3 className="font-semibold text-browning-charcoal mb-3">
-            {materials.find(m => m.id === expandedCategory)?.name} Types
-          </h3>
+        <div className="p-4 bg-gray-50 rounded-xl">
+          <div className="flex items-center gap-3 mb-4">
+            <button
+              onClick={() => {
+                setExpandedCategory(null);
+                setExpandedSubcategory(null);
+              }}
+              className="text-gray-600 hover:text-gray-900 font-medium transition-colors flex items-center gap-1"
+            >
+              <ChevronRight size={16} className="rotate-180" />
+              Back
+            </button>
+            <h3 className="font-semibold text-browning-charcoal">
+              {materials.find(m => m.id === expandedCategory)?.name} Types
+            </h3>
+          </div>
           <div className="space-y-3">
             {materials
               .find(m => m.id === expandedCategory)
@@ -242,16 +251,6 @@ export default function MaterialSelector() {
         </div>
       )}
 
-      {/* Continue Button */}
-      <div className="flex justify-end pt-4">
-        <button
-          onClick={nextStep}
-          disabled={!selectedMaterial}
-          className="bg-browning-red hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-        >
-          Continue
-        </button>
-      </div>
     </div>
   );
 }

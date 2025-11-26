@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
+import Image from 'next/image';
 import { useConfigurator } from '@/store/useConfigurator';
 import ProgressStepper from './ProgressStepper';
 import TemplateSelector from './TemplateSelector';
@@ -10,7 +11,6 @@ import MaterialSelector from './MaterialSelector';
 import ServicesSelector from './ServicesSelector';
 import FinishSelector from './FinishSelector';
 import ReviewStep from './ReviewStep';
-import PricingSidebar from './PricingSidebar';
 
 export default function ConfiguratorModal() {
   const {
@@ -20,6 +20,10 @@ export default function ConfiguratorModal() {
     entryPath,
     setStep,
     reset,
+    nextStep,
+    prevStep,
+    selectedTemplate,
+    selectedMaterial,
   } = useConfigurator();
 
   // Prevent body scroll when modal is open
@@ -72,50 +76,71 @@ export default function ConfiguratorModal() {
     }
   };
 
-  const getStepTitle = () => {
+  // Determine if Next button should be enabled
+  const canProceed = () => {
     switch (currentStep) {
-      case 'template': return 'Choose Template';
-      case 'dimensions': return 'Set Dimensions';
-      case 'material': return 'Select Material';
-      case 'services': return 'Add Services';
-      case 'finish': return 'Choose Finish';
-      case 'review': return 'Review Order';
-      default: return 'Configure Part';
+      case 'template':
+        return !!selectedTemplate;
+      case 'dimensions':
+        return !!selectedTemplate;
+      case 'material':
+        return !!selectedMaterial;
+      case 'services':
+        return true; // Services are optional
+      case 'finish':
+        return true; // Finish is optional (none is valid)
+      case 'review':
+        return false; // No next on review
+      default:
+        return false;
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={handleClose}
-      />
+  // Get next button text
+  const getNextButtonText = () => {
+    switch (currentStep) {
+      case 'template':
+        return 'Customize';
+      case 'dimensions':
+        return 'Material';
+      case 'material':
+        return 'Services';
+      case 'services':
+        return 'Finishing';
+      case 'finish':
+        return 'Review';
+      default:
+        return 'Next';
+    }
+  };
 
-      {/* Modal */}
-      <div className="relative bg-white w-full h-full md:h-auto md:max-h-[90vh] md:max-w-6xl md:rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="flex-shrink-0 border-b border-gray-200">
-          <div className="flex items-center justify-between px-4 md:px-6 py-4">
-            <div>
-              <h2 className="text-lg md:text-xl font-bold text-browning-charcoal">
-                {getStepTitle()}
-              </h2>
-              <p className="text-sm text-gray-500 hidden md:block">
-                {entryPath === 'builder' && 'Build your custom part step by step'}
-                {entryPath === 'upload' && 'Configure your uploaded design'}
-              </p>
-            </div>
+  const isFirstStep = currentStep === 'template';
+  const isLastStep = currentStep === 'review';
+
+  return (
+    <div className="fixed inset-0 z-50 bg-gray-50">
+      {/* Full-page layout */}
+      <div className="h-full flex flex-col">
+        {/* Header with logo and close */}
+        <div className="flex-shrink-0 bg-white border-b border-gray-200">
+          <div className="flex items-center justify-between px-4 md:px-6 py-3">
+            <Image
+              src="/images/logo-icon.png"
+              alt="Browning's"
+              width={40}
+              height={40}
+              className="w-10 h-10"
+            />
             <button
               onClick={handleClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
             >
-              <X size={24} className="text-gray-500" />
+              CANCEL
             </button>
           </div>
 
-          {/* Progress Stepper */}
-          <div className="px-4 md:px-6 pb-4">
+          {/* Progress Stepper - Centered */}
+          <div className="px-4 md:px-6 pb-4 flex justify-center">
             <ProgressStepper
               currentStep={currentStep}
               entryPath={entryPath}
@@ -124,25 +149,46 @@ export default function ConfiguratorModal() {
           </div>
         </div>
 
-        {/* Content */}
+        {/* Main Content Area */}
         <div className="flex-1 overflow-auto">
-          <div className="flex flex-col lg:flex-row h-full">
-            {/* Main Content */}
-            <div className="flex-1 p-4 md:p-6 overflow-auto">
-              {renderStepContent()}
-            </div>
+          {renderStepContent()}
+        </div>
 
-            {/* Pricing Sidebar - Desktop */}
-            <div className="hidden lg:block w-80 border-l border-gray-200 p-6 bg-gray-50 overflow-auto">
-              <PricingSidebar />
+        {/* Bottom Navigation Bar */}
+        {!isLastStep && (
+          <div className="flex-shrink-0 bg-white border-t border-gray-200 px-4 md:px-6 py-3">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              {/* Left side - Back button or info link */}
+              <div>
+                {!isFirstStep ? (
+                  <button
+                    onClick={prevStep}
+                    className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+                  >
+                    &larr; Back
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleClose}
+                    className="text-browning-red hover:text-red-700 font-medium text-sm transition-colors flex items-center gap-1"
+                  >
+                    <X size={16} />
+                    Cancel
+                  </button>
+                )}
+              </div>
+
+              {/* Right side - Next button */}
+              <button
+                onClick={nextStep}
+                disabled={!canProceed()}
+                className="bg-browning-red hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg font-semibold transition-colors"
+              >
+                {getNextButtonText()}
+              </button>
             </div>
           </div>
-        </div>
-
-        {/* Mobile Pricing Summary */}
-        <div className="lg:hidden flex-shrink-0 border-t border-gray-200 bg-white p-4">
-          <PricingSidebar />
-        </div>
+        )}
       </div>
     </div>
   );

@@ -33,7 +33,7 @@ export default function AboutSection() {
             <span className="text-browning-red font-semibold text-sm uppercase tracking-wider">
               About Browning&apos;s
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4 mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4 mb-6 font-serif">
               Manufacturing Excellence,<br />Home Grown Values
             </h2>
             <p className="text-browning-gray text-lg mb-6">

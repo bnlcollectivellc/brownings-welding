@@ -9,8 +9,6 @@ export default function ServicesSelector() {
     selectedServices,
     addService,
     removeService,
-    nextStep,
-    prevStep,
   } = useConfigurator();
 
   const isServiceSelected = (serviceId: string) => {
@@ -35,7 +33,7 @@ export default function ServicesSelector() {
   }, {} as Record<string, typeof services>);
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-browning-charcoal">Add Services</h2>
@@ -145,21 +143,6 @@ export default function ServicesSelector() {
         </div>
       )}
 
-      {/* Navigation */}
-      <div className="flex justify-between pt-4">
-        <button
-          onClick={prevStep}
-          className="px-6 py-3 rounded-lg border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
-        >
-          Back
-        </button>
-        <button
-          onClick={nextStep}
-          className="bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-        >
-          Continue to Finish
-        </button>
-      </div>
     </div>
   );
 }

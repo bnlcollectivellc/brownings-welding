@@ -18,6 +18,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-hedvig-serif)', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
       },
     },
   },
