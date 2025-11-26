@@ -98,7 +98,7 @@ export default function Navbar() {
               </button>
               <button
                 onClick={() => scrollToSection('hero')}
-                className="block w-full bg-browning-red hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-semibold transition-colors text-center"
+                className="block w-full text-left text-browning-charcoal hover:text-browning-red transition-colors font-medium py-2"
               >
                 Get Your Quote!
               </button>
