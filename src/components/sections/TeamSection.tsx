@@ -31,9 +31,19 @@ const team = [
     image: '/images/team/team-5.jpg',
   },
   {
+    name: 'Team Member 7',
+    role: 'Welder',
+    image: '/images/team/team-7.jpg',
+  },
+  {
     name: 'Team Member 6',
     role: 'Production Manager',
     image: '/images/team/team-6.jpg',
+  },
+  {
+    name: 'Team Member 8',
+    role: 'Fabricator',
+    image: '/images/team/team-8.jpg',
   },
 ];
 
