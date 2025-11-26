@@ -1,0 +1,126 @@
+{
+  "finishes": [
+    {
+      "id": "none",
+      "name": "No Finish",
+      "description": "Raw material, as-cut",
+      "priceMultiplier": 1.0,
+      "leadTimeDays": 0,
+      "compatibleMaterials": ["all"]
+    },
+    {
+      "id": "powder-coat",
+      "name": "Powder Coating",
+      "description": "Durable, even finish in various colors",
+      "priceMultiplier": 1.35,
+      "leadTimeDays": 3,
+      "compatibleMaterials": ["steel", "aluminum", "galvanized"],
+      "colors": [
+        { "id": "black-matte", "name": "Black Matte", "hex": "#1a1a1a", "upcharge": 0 },
+        { "id": "black-gloss", "name": "Black Gloss", "hex": "#0a0a0a", "upcharge": 0 },
+        { "id": "white-matte", "name": "White Matte", "hex": "#f5f5f5", "upcharge": 0 },
+        { "id": "white-gloss", "name": "White Gloss", "hex": "#ffffff", "upcharge": 0 },
+        { "id": "red", "name": "Safety Red", "hex": "#cc0000", "upcharge": 5.00 },
+        { "id": "blue", "name": "Safety Blue", "hex": "#0066cc", "upcharge": 5.00 },
+        { "id": "yellow", "name": "Safety Yellow", "hex": "#ffcc00", "upcharge": 5.00 },
+        { "id": "orange", "name": "Safety Orange", "hex": "#ff6600", "upcharge": 5.00 },
+        { "id": "green", "name": "Safety Green", "hex": "#009933", "upcharge": 5.00 },
+        { "id": "gray", "name": "Gray", "hex": "#808080", "upcharge": 0 },
+        { "id": "custom", "name": "Custom RAL Color", "hex": null, "upcharge": 25.00 }
+      ],
+      "minOrderQty": 1
+    },
+    {
+      "id": "anodizing",
+      "name": "Anodizing",
+      "description": "Electrochemical finish for aluminum",
+      "priceMultiplier": 1.45,
+      "leadTimeDays": 5,
+      "compatibleMaterials": ["aluminum"],
+      "colors": [
+        { "id": "clear", "name": "Clear", "hex": "#e8e8e8", "upcharge": 0 },
+        { "id": "black-anodize", "name": "Black", "hex": "#1a1a1a", "upcharge": 5.00 },
+        { "id": "red-anodize", "name": "Red", "hex": "#cc0000", "upcharge": 8.00 },
+        { "id": "blue-anodize", "name": "Blue", "hex": "#0066cc", "upcharge": 8.00 },
+        { "id": "gold-anodize", "name": "Gold", "hex": "#d4af37", "upcharge": 8.00 }
+      ],
+      "types": [
+        { "id": "type-ii", "name": "Type II (Decorative)", "priceMultiplier": 1.0 },
+        { "id": "type-iii", "name": "Type III (Hardcoat)", "priceMultiplier": 1.5 }
+      ],
+      "minOrderQty": 5
+    },
+    {
+      "id": "zinc-plating",
+      "name": "Zinc Plating",
+      "description": "Corrosion-resistant zinc coating",
+      "priceMultiplier": 1.25,
+      "leadTimeDays": 4,
+      "compatibleMaterials": ["steel"],
+      "options": [
+        { "id": "clear-zinc", "name": "Clear Zinc", "upcharge": 0 },
+        { "id": "yellow-zinc", "name": "Yellow Zinc", "upcharge": 3.00 },
+        { "id": "black-zinc", "name": "Black Zinc", "upcharge": 5.00 }
+      ],
+      "minOrderQty": 10
+    },
+    {
+      "id": "nickel-plating",
+      "name": "Nickel Plating",
+      "description": "Decorative and corrosion-resistant",
+      "priceMultiplier": 1.55,
+      "leadTimeDays": 5,
+      "compatibleMaterials": ["steel", "copper"],
+      "options": [
+        { "id": "bright-nickel", "name": "Bright Nickel", "upcharge": 0 },
+        { "id": "electroless-nickel", "name": "Electroless Nickel", "upcharge": 15.00 }
+      ],
+      "minOrderQty": 10
+    },
+    {
+      "id": "brushed",
+      "name": "Brushed Finish",
+      "description": "Linear grain pattern",
+      "priceMultiplier": 1.15,
+      "leadTimeDays": 2,
+      "compatibleMaterials": ["stainless", "aluminum"],
+      "options": [
+        { "id": "grain-120", "name": "#4 (120 Grit)", "upcharge": 0 },
+        { "id": "grain-180", "name": "#6 (180 Grit)", "upcharge": 3.00 },
+        { "id": "grain-320", "name": "#7 (320 Grit)", "upcharge": 5.00 }
+      ],
+      "minOrderQty": 1
+    },
+    {
+      "id": "mirror-polish",
+      "name": "Mirror Polish",
+      "description": "Highly reflective surface",
+      "priceMultiplier": 1.75,
+      "leadTimeDays": 5,
+      "compatibleMaterials": ["stainless", "aluminum"],
+      "minOrderQty": 1
+    },
+    {
+      "id": "passivation",
+      "name": "Passivation",
+      "description": "Chemical treatment for stainless steel",
+      "priceMultiplier": 1.20,
+      "leadTimeDays": 3,
+      "compatibleMaterials": ["stainless"],
+      "minOrderQty": 1
+    },
+    {
+      "id": "chem-film",
+      "name": "Chem Film (Chromate)",
+      "description": "Corrosion protection for aluminum",
+      "priceMultiplier": 1.18,
+      "leadTimeDays": 3,
+      "compatibleMaterials": ["aluminum"],
+      "options": [
+        { "id": "clear-chem", "name": "Clear", "upcharge": 0 },
+        { "id": "gold-chem", "name": "Gold (MIL-DTL-5541)", "upcharge": 5.00 }
+      ],
+      "minOrderQty": 5
+    }
+  ]
+}

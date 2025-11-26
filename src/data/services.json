@@ -1,0 +1,105 @@
+{
+  "services": [
+    {
+      "id": "laser-cutting",
+      "name": "Laser Cutting",
+      "description": "Precision cutting with tight tolerances",
+      "icon": "laser",
+      "basePrice": 0,
+      "included": true,
+      "category": "cutting"
+    },
+    {
+      "id": "bending",
+      "name": "Bending / Forming",
+      "description": "CNC press brake bending for precise angles",
+      "icon": "bend",
+      "basePrice": 5.00,
+      "pricePerBend": 1.50,
+      "included": false,
+      "category": "forming",
+      "options": [
+        { "id": "simple-bend", "name": "Simple Bend (90°)", "price": 1.50 },
+        { "id": "complex-bend", "name": "Complex Bend", "price": 3.00 },
+        { "id": "hem", "name": "Hem", "price": 2.50 },
+        { "id": "channel", "name": "Channel / U-Bend", "price": 4.00 }
+      ]
+    },
+    {
+      "id": "welding",
+      "name": "Welding",
+      "description": "MIG, TIG, and spot welding services",
+      "icon": "weld",
+      "basePrice": 10.00,
+      "pricePerInch": 0.50,
+      "included": false,
+      "category": "assembly",
+      "options": [
+        { "id": "mig-weld", "name": "MIG Welding", "pricePerInch": 0.50 },
+        { "id": "tig-weld", "name": "TIG Welding", "pricePerInch": 0.85 },
+        { "id": "spot-weld", "name": "Spot Welding", "pricePerSpot": 0.25 }
+      ]
+    },
+    {
+      "id": "hardware",
+      "name": "Hardware Insertion",
+      "description": "PEM nuts, studs, and standoffs",
+      "icon": "hardware",
+      "basePrice": 0,
+      "included": false,
+      "category": "assembly",
+      "options": [
+        { "id": "pem-nut", "name": "PEM Nut", "priceEach": 0.35 },
+        { "id": "pem-stud", "name": "PEM Stud", "priceEach": 0.45 },
+        { "id": "standoff", "name": "Standoff", "priceEach": 0.55 },
+        { "id": "rivet-nut", "name": "Rivet Nut", "priceEach": 0.40 }
+      ]
+    },
+    {
+      "id": "tapping",
+      "name": "Tapping",
+      "description": "Threaded holes for fasteners",
+      "icon": "tap",
+      "basePrice": 0,
+      "pricePerHole": 0.75,
+      "included": false,
+      "category": "machining"
+    },
+    {
+      "id": "countersinking",
+      "name": "Countersinking",
+      "description": "Recessed holes for flush fasteners",
+      "icon": "countersink",
+      "basePrice": 0,
+      "pricePerHole": 0.50,
+      "included": false,
+      "category": "machining"
+    },
+    {
+      "id": "deburring",
+      "name": "Deburring",
+      "description": "Smooth edges and remove sharp burrs",
+      "icon": "deburr",
+      "basePrice": 2.00,
+      "pricePerSqIn": 0.002,
+      "included": false,
+      "category": "finishing"
+    },
+    {
+      "id": "tumbling",
+      "name": "Tumbling",
+      "description": "Mass finishing for smooth edges",
+      "icon": "tumble",
+      "basePrice": 3.00,
+      "included": false,
+      "category": "finishing"
+    }
+  ],
+  "categories": [
+    { "id": "cutting", "name": "Cutting", "order": 1 },
+    { "id": "forming", "name": "Forming", "order": 2 },
+    { "id": "machining", "name": "Machining", "order": 3 },
+    { "id": "assembly", "name": "Assembly", "order": 4 },
+    { "id": "finishing", "name": "Finishing", "order": 5 }
+  ]
+}

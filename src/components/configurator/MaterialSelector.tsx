@@ -1,0 +1,257 @@
+'use client';
+
+import { useState } from 'react';
+import { ChevronRight, List, Grid, Check } from 'lucide-react';
+import { useConfigurator, MaterialCategory, Subcategory, Thickness } from '@/store/useConfigurator';
+
+export default function MaterialSelector() {
+  const {
+    materials,
+    selectedMaterial,
+    setSelectedMaterial,
+    materialViewMode,
+    setMaterialViewMode,
+    nextStep,
+  } = useConfigurator();
+
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(
+    selectedMaterial?.categoryId || null
+  );
+  const [expandedSubcategory, setExpandedSubcategory] = useState<string | null>(
+    selectedMaterial?.subcategoryId || null
+  );
+
+  const handleCategoryClick = (categoryId: string) => {
+    setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
+    setExpandedSubcategory(null);
+  };
+
+  const handleSubcategoryClick = (subcategoryId: string) => {
+    setExpandedSubcategory(expandedSubcategory === subcategoryId ? null : subcategoryId);
+  };
+
+  const handleThicknessSelect = (category: MaterialCategory, subcategory: Subcategory, thickness: Thickness) => {
+    setSelectedMaterial({
+      categoryId: category.id,
+      subcategoryId: subcategory.id,
+      thickness,
+    });
+  };
+
+  const isThicknessSelected = (categoryId: string, subcategoryId: string, gauge: string) => {
+    return (
+      selectedMaterial?.categoryId === categoryId &&
+      selectedMaterial?.subcategoryId === subcategoryId &&
+      selectedMaterial?.thickness.gauge === gauge
+    );
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Header with View Toggle */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-browning-charcoal">Select Material</h2>
+          <p className="text-gray-500 text-sm">Choose your material type and thickness</p>
+        </div>
+        <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+          <button
+            onClick={() => setMaterialViewMode('list')}
+            className={`p-2 rounded ${materialViewMode === 'list' ? 'bg-white shadow' : ''}`}
+          >
+            <List size={18} />
+          </button>
+          <button
+            onClick={() => setMaterialViewMode('tile')}
+            className={`p-2 rounded ${materialViewMode === 'tile' ? 'bg-white shadow' : ''}`}
+          >
+            <Grid size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* List View */}
+      {materialViewMode === 'list' && (
+        <div className="space-y-2">
+          {materials.map((category) => (
+            <div key={category.id} className="border border-gray-200 rounded-xl overflow-hidden">
+              {/* Category Header */}
+              <button
+                onClick={() => handleCategoryClick(category.id)}
+                className={`w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors ${
+                  expandedCategory === category.id ? 'bg-gray-50' : ''
+                }`}
+              >
+                <div>
+                  <h3 className="font-semibold text-browning-charcoal">{category.name}</h3>
+                  <p className="text-sm text-gray-500">{category.description}</p>
+                </div>
+                <ChevronRight
+                  size={20}
+                  className={`text-gray-400 transition-transform ${
+                    expandedCategory === category.id ? 'rotate-90' : ''
+                  }`}
+                />
+              </button>
+
+              {/* Subcategories */}
+              {expandedCategory === category.id && (
+                <div className="border-t border-gray-200">
+                  {category.subcategories.map((subcategory) => (
+                    <div key={subcategory.id}>
+                      {/* Subcategory Header */}
+                      <button
+                        onClick={() => handleSubcategoryClick(subcategory.id)}
+                        className={`w-full flex items-center justify-between p-3 pl-8 text-left hover:bg-gray-50 border-b border-gray-100 ${
+                          expandedSubcategory === subcategory.id ? 'bg-gray-50' : ''
+                        }`}
+                      >
+                        <div>
+                          <h4 className="font-medium text-browning-charcoal">{subcategory.name}</h4>
+                          <p className="text-xs text-gray-500">{subcategory.description}</p>
+                        </div>
+                        <ChevronRight
+                          size={16}
+                          className={`text-gray-400 transition-transform ${
+                            expandedSubcategory === subcategory.id ? 'rotate-90' : ''
+                          }`}
+                        />
+                      </button>
+
+                      {/* Thicknesses */}
+                      {expandedSubcategory === subcategory.id && (
+                        <div className="bg-gray-50 p-3 pl-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                          {subcategory.thicknesses.map((thickness) => {
+                            const selected = isThicknessSelected(category.id, subcategory.id, thickness.gauge);
+                            return (
+                              <button
+                                key={thickness.gauge}
+                                onClick={() => handleThicknessSelect(category, subcategory, thickness)}
+                                className={`relative p-3 rounded-lg border text-left transition-all ${
+                                  selected
+                                    ? 'border-browning-red bg-browning-red/5'
+                                    : 'border-gray-200 bg-white hover:border-browning-red/50'
+                                }`}
+                              >
+                                {selected && (
+                                  <div className="absolute top-2 right-2 w-5 h-5 bg-browning-red rounded-full flex items-center justify-center">
+                                    <Check size={12} className="text-white" />
+                                  </div>
+                                )}
+                                <p className="font-semibold text-browning-charcoal">{thickness.gauge}</p>
+                                <p className="text-xs text-gray-500">{thickness.inches}&quot; / {thickness.mm}mm</p>
+                                <p className="text-xs text-browning-red mt-1">
+                                  ${thickness.pricePerSqIn.toFixed(3)}/in²
+                                </p>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Tile View */}
+      {materialViewMode === 'tile' && (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {materials.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleCategoryClick(category.id)}
+              className={`p-6 rounded-xl border-2 text-left transition-all ${
+                expandedCategory === category.id
+                  ? 'border-browning-red bg-browning-red/5'
+                  : 'border-gray-200 hover:border-browning-red/50'
+              }`}
+            >
+              <div className="w-12 h-12 bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
+                <span className="text-2xl">
+                  {category.id === 'steel' && '🔩'}
+                  {category.id === 'stainless' && '✨'}
+                  {category.id === 'aluminum' && '🪶'}
+                  {category.id === 'copper' && '🥉'}
+                  {category.id === 'galvanized' && '🛡️'}
+                </span>
+              </div>
+              <h3 className="font-semibold text-browning-charcoal">{category.name}</h3>
+              <p className="text-xs text-gray-500 mt-1">{category.subcategories.length} types</p>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Tile View - Expanded Category */}
+      {materialViewMode === 'tile' && expandedCategory && (
+        <div className="mt-4 p-4 bg-gray-50 rounded-xl">
+          <h3 className="font-semibold text-browning-charcoal mb-3">
+            {materials.find(m => m.id === expandedCategory)?.name} Types
+          </h3>
+          <div className="space-y-3">
+            {materials
+              .find(m => m.id === expandedCategory)
+              ?.subcategories.map((subcategory) => (
+                <div key={subcategory.id}>
+                  <button
+                    onClick={() => handleSubcategoryClick(subcategory.id)}
+                    className={`w-full p-3 rounded-lg border text-left transition-all ${
+                      expandedSubcategory === subcategory.id
+                        ? 'border-browning-red bg-white'
+                        : 'border-gray-200 bg-white hover:border-browning-red/50'
+                    }`}
+                  >
+                    <h4 className="font-medium">{subcategory.name}</h4>
+                    <p className="text-xs text-gray-500">{subcategory.description}</p>
+                  </button>
+
+                  {expandedSubcategory === subcategory.id && (
+                    <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {subcategory.thicknesses.map((thickness) => {
+                        const category = materials.find(m => m.id === expandedCategory)!;
+                        const selected = isThicknessSelected(category.id, subcategory.id, thickness.gauge);
+                        return (
+                          <button
+                            key={thickness.gauge}
+                            onClick={() => handleThicknessSelect(category, subcategory, thickness)}
+                            className={`relative p-3 rounded-lg border text-left transition-all ${
+                              selected
+                                ? 'border-browning-red bg-browning-red/5'
+                                : 'border-gray-200 bg-white hover:border-browning-red/50'
+                            }`}
+                          >
+                            {selected && (
+                              <div className="absolute top-2 right-2 w-5 h-5 bg-browning-red rounded-full flex items-center justify-center">
+                                <Check size={12} className="text-white" />
+                              </div>
+                            )}
+                            <p className="font-semibold">{thickness.gauge}</p>
+                            <p className="text-xs text-gray-500">{thickness.inches}&quot;</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* Continue Button */}
+      <div className="flex justify-end pt-4">
+        <button
+          onClick={nextStep}
+          disabled={!selectedMaterial}
+          className="bg-browning-red hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+  );
+}

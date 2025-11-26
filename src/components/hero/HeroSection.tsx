@@ -4,12 +4,14 @@ import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { Upload, FileText, Wrench, PenTool, MessageSquare, ArrowRight } from 'lucide-react';
 import CustomQuoteModal from '@/components/modals/CustomQuoteModal';
+import { useConfigurator, EntryPath } from '@/store/useConfigurator';
 
 const ACCEPTED_FILES = ['.ai', '.dxf', '.dwg', '.eps', '.stp', '.step'];
 
 export default function HeroSection() {
   const [isDragging, setIsDragging] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const { openConfigurator, setUploadedFile } = useConfigurator();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -25,21 +27,26 @@ export default function HeroSection() {
     e.preventDefault();
     setIsDragging(false);
     const files = Array.from(e.dataTransfer.files);
-    console.log('Files dropped:', files);
-    // TODO: Handle file upload - Phase 2
-  }, []);
+    if (files.length > 0) {
+      setUploadedFile(files[0], null);
+      openConfigurator('upload');
+    }
+  }, [openConfigurator, setUploadedFile]);
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
-    console.log('Files selected:', files);
-    // TODO: Handle file upload - Phase 2
-  }, []);
+    if (files.length > 0) {
+      setUploadedFile(files[0], null);
+      openConfigurator('upload');
+    }
+  }, [openConfigurator, setUploadedFile]);
 
   const handleCardClick = (action: string) => {
     if (action === 'quote') {
       setIsQuoteModalOpen(true);
+    } else if (action === 'upload' || action === 'builder' || action === 'design') {
+      openConfigurator(action as EntryPath);
     }
-    // TODO: Handle other actions in Phase 2
   };
 
   const entryCards = [
