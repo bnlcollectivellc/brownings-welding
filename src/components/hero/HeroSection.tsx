@@ -90,42 +90,47 @@ export default function HeroSection() {
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 w-full">
 
-          {/* Desktop: Side by side layout */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12">
+          {/* Desktop: Side by side layout - stretch to align tops and bottoms */}
+          <div className="flex flex-col lg:flex-row lg:items-stretch lg:gap-12">
 
-            {/* Left Column - Logo, tagline, CTA */}
-            <div className="text-center lg:text-left lg:flex-1 mb-10 lg:mb-0">
-              {/* Logo */}
-              <div className="mb-6">
-                <Image
-                  src="/images/logo-hero.png"
-                  alt="Browning's Welding & Fabrication"
-                  width={500}
-                  height={167}
-                  className="mx-auto lg:mx-0 h-auto w-[260px] md:w-[380px] lg:w-[420px]"
-                  priority
-                />
+            {/* Left Column - Logo, tagline, CTA (flex column with space-between for top/bottom alignment) */}
+            <div className="text-center lg:text-left lg:flex-1 mb-10 lg:mb-0 lg:flex lg:flex-col lg:justify-between">
+              {/* Top content - Logo and tagline */}
+              <div>
+                {/* Logo */}
+                <div className="mb-6">
+                  <Image
+                    src="/images/logo-hero.png"
+                    alt="Browning's Welding & Fabrication"
+                    width={500}
+                    height={167}
+                    className="mx-auto lg:mx-0 h-auto w-[260px] md:w-[380px] lg:w-[420px]"
+                    priority
+                  />
+                </div>
+
+                {/* Since 1972 Badge */}
+                <p className="text-gray-300 text-sm mb-4">Since 1972</p>
+
+                {/* Header Text */}
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4">
+                  Faith, Family, & Fabrication
+                </h1>
+                <p className="text-base md:text-lg text-gray-300 mb-6 lg:max-w-md lg:mb-0">
+                  Commercial fabrication solutions for your business
+                </p>
               </div>
 
-              {/* Since 1972 Badge */}
-              <p className="text-gray-300 text-sm mb-4">Since 1972</p>
-
-              {/* Header Text */}
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4">
-                Faith, Family, & Fabrication
-              </h1>
-              <p className="text-base md:text-lg text-gray-300 mb-6 lg:max-w-md">
-                Commercial fabrication solutions for your business
-              </p>
-
-              {/* CTA Button */}
-              <button
-                onClick={() => setIsQuoteModalOpen(true)}
-                className="inline-flex items-center gap-2 bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-full font-semibold transition-colors text-lg"
-              >
-                Get Your Quote!
-                <ArrowRight size={20} />
-              </button>
+              {/* Bottom content - CTA Button (aligned with bottom of entry cards) */}
+              <div className="lg:mt-auto">
+                <button
+                  onClick={() => setIsQuoteModalOpen(true)}
+                  className="inline-flex items-center gap-2 bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-full font-semibold transition-colors text-lg"
+                >
+                  Get Your Quote!
+                  <ArrowRight size={20} />
+                </button>
+              </div>
             </div>
 
             {/* Right Column - Configurator */}
