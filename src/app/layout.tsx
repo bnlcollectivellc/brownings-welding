@@ -24,6 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" href="/videos/hero.mp4" as="video" type="video/mp4" />
+      </head>
       <body className={`${inter.className} ${hedvigLettersSerif.variable} bg-white text-browning-charcoal`}>
         <Providers>
           <Navbar />

@@ -114,8 +114,8 @@ export default function HeroSection() {
           muted
           loop
           playsInline
+          preload="auto"
           className="video-background"
-          poster="/images/hero-poster.jpg"
         >
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
