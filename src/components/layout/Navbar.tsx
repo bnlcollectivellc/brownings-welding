@@ -34,7 +34,7 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-14 md:h-20">
           {/* Logo - Icon Only */}
           <Link href="/" className="flex-shrink-0">
             <Image
@@ -42,7 +42,7 @@ export default function Navbar() {
               alt="Browning's Welding"
               width={50}
               height={50}
-              className="h-12 w-auto"
+              className="h-9 md:h-12 w-auto"
               priority
             />
           </Link>
