@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
 const clients = [
   { name: 'Client One', logo: null },
@@ -20,6 +21,8 @@ const infiniteClients = [...clients, ...clients, ...clients];
 export default function ClientsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
+  const [sectionRef, sectionVisible] = useInView(0.2);
+  const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
   // Initialize scroll position to middle set
   useEffect(() => {
@@ -62,11 +65,20 @@ export default function ClientsSection() {
   };
 
   return (
-    <section className="bg-white py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className="bg-white py-16"
+      ref={parallaxRef}
+      style={{ transform: `translateY(${parallaxOffset}px)` }}
+    >
+      <div
+        ref={sectionRef}
+        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
+          sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
         {/* Section Header */}
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal font-serif">
+          <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal">
             Who We&apos;ve Created For
           </h2>
         </div>

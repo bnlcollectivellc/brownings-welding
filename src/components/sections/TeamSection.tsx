@@ -2,37 +2,38 @@
 
 import { useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, User } from 'lucide-react';
+import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
 const team = [
   {
     name: 'Team Member 1',
     role: 'Founder / CEO',
-    image: null,
+    image: '/images/team/team-1.jpg',
   },
   {
     name: 'Team Member 2',
     role: 'Operations Manager',
-    image: null,
+    image: '/images/team/team-2.jpg',
   },
   {
     name: 'Team Member 3',
     role: 'Lead Fabricator',
-    image: null,
+    image: '/images/team/team-3.jpg',
   },
   {
     name: 'Team Member 4',
     role: 'Quality Control',
-    image: null,
+    image: '/images/team/team-4.jpg',
   },
   {
     name: 'Team Member 5',
     role: 'Sales Director',
-    image: null,
+    image: '/images/team/team-5.jpg',
   },
   {
     name: 'Team Member 6',
     role: 'Production Manager',
-    image: null,
+    image: '/images/team/team-6.jpg',
   },
 ];
 
@@ -42,6 +43,9 @@ const infiniteTeam = [...team, ...team, ...team];
 export default function TeamSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
+  const [headerRef, headerVisible] = useInView(0.2);
+  const [carouselRef, carouselVisible] = useInView(0.1);
+  const [parallaxRef, parallaxOffset] = useParallax(0.2);
 
   // Initialize scroll position to middle set
   useEffect(() => {
@@ -84,17 +88,32 @@ export default function TeamSection() {
   };
 
   return (
-    <section id="team" className="bg-browning-light py-16 md:py-24">
+    <section
+      id="team"
+      className="bg-browning-light py-16 md:py-24"
+      ref={parallaxRef}
+      style={{ transform: `translateY(${parallaxOffset}px)` }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-browning-charcoal font-serif">
+        <div
+          ref={headerRef}
+          className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-browning-charcoal">
             Meet the Family
           </h2>
         </div>
 
         {/* Carousel Container */}
-        <div className="relative">
+        <div
+          ref={carouselRef}
+          className={`relative transition-all duration-700 delay-200 ${
+            carouselVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           {/* Fade Left */}
           <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-browning-light to-transparent z-10 pointer-events-none" />
 

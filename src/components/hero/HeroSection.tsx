@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { Upload, Wrench, PenTool, MessageSquare, ArrowRight } from 'lucide-react';
 import CustomQuoteModal from '@/components/modals/CustomQuoteModal';
@@ -14,6 +14,41 @@ export default function HeroSection() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
   const { openConfigurator } = useConfigurator();
+
+  // Staggered fade-in states
+  const [showLogo, setShowLogo] = useState(false);
+  const [showFaith, setShowFaith] = useState(false);
+  const [showConfigurator, setShowConfigurator] = useState(false);
+  const [heroDarkness, setHeroDarkness] = useState(0.2); // Extra 20% darkness
+
+  useEffect(() => {
+    // Logo fades in after 0.15s
+    const logoTimer = setTimeout(() => setShowLogo(true), 150);
+    // Faith section fades in 1s after logo (1.5s total)
+    const faithTimer = setTimeout(() => setShowFaith(true), 1500);
+    // Configurator fades in 1s after faith (2.5s total)
+    const configTimer = setTimeout(() => setShowConfigurator(true), 2500);
+
+    return () => {
+      clearTimeout(logoTimer);
+      clearTimeout(faithTimer);
+      clearTimeout(configTimer);
+    };
+  }, []);
+
+  // Adjust darkness based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const threshold = 300; // When configurator becomes visible
+      // Fade from 0.2 (dark) to 0 (normal) as we scroll
+      const darkness = Math.max(0, 0.2 - (scrollY / threshold) * 0.2);
+      setHeroDarkness(darkness);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -88,62 +123,62 @@ export default function HeroSection() {
         {/* Gradient Overlay */}
         <div className="absolute inset-0 hero-gradient" />
 
+        {/* Dynamic Darkness Overlay */}
+        <div
+          className="absolute inset-0 bg-black transition-opacity duration-300"
+          style={{ opacity: heroDarkness }}
+        />
+
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 w-full mt-[5px]">
 
-          {/* Desktop: Side by side layout - stretch to align tops and bottoms */}
-          <div className="flex flex-col lg:flex-row lg:items-stretch lg:gap-12">
-
-            {/* Left Column - Logo, tagline, CTA (flex column with space-between for top/bottom alignment) */}
-            <div className="text-center lg:text-left lg:flex-1 mb-10 lg:mb-0 lg:flex lg:flex-col lg:justify-between">
-              {/* Top content - Logo only */}
-              <div>
-                {/* Logo */}
-                <div className="mb-6 lg:mb-0">
-                  <Image
-                    src="/images/logo-hero.png"
-                    alt="Browning's Welding & Fabrication"
-                    width={500}
-                    height={167}
-                    className="mx-auto lg:mx-0 h-auto w-[260px] md:w-[380px] lg:w-[420px]"
-                    priority
-                  />
-                </div>
-              </div>
-
-              {/* Bottom content - Tagline and CTA Button (aligned with bottom of entry cards) */}
-              <div className="lg:mt-auto">
-                {/* Since 1972 Badge */}
-                <p className="text-gray-300 text-sm mb-4">Since 1972</p>
-
-                {/* Header Text */}
-                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 font-serif">
-                  Faith, Family, & Fabrication
-                </h1>
-                <p className="text-base md:text-lg text-gray-300 mb-6 lg:max-w-md">
-                  Commercial fabrication solutions for your business
-                </p>
-
-                <button
-                  onClick={() => setIsQuoteModalOpen(true)}
-                  className="inline-flex items-center gap-2 bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-full font-semibold transition-colors text-lg"
-                >
-                  Get Your Quote!
-                  <ArrowRight size={20} />
-                </button>
-              </div>
+          {/* Centered Hero Content */}
+          <div className="text-center mb-12 md:mb-16 pt-12 md:pt-16">
+            {/* Logo */}
+            <div className={`mb-20 md:mb-24 transition-opacity duration-1000 ${showLogo ? 'opacity-100' : 'opacity-0'}`}>
+              <Image
+                src="/images/logo-hero.png"
+                alt="Browning's Welding & Fabrication"
+                width={720}
+                height={240}
+                className="mx-auto h-auto w-[403px] md:w-[576px] lg:w-[720px]"
+                priority
+              />
             </div>
 
-            {/* Right Column - Configurator */}
-            <div className="lg:flex-1 lg:max-w-xl">
-              {/* Divider - only on mobile */}
-              <div className="flex items-center justify-center gap-2 mb-8 lg:hidden">
-                <div className="h-px bg-white/30 flex-1 max-w-12"></div>
-                <span className="text-white/60 text-sm whitespace-nowrap">or choose how to start</span>
-                <div className="h-px bg-white/30 flex-1 max-w-12"></div>
-              </div>
+            {/* Faith Section */}
+            <div className={`transition-opacity duration-1000 ${showFaith ? 'opacity-100' : 'opacity-0'}`}>
+              {/* Since 1972 Badge */}
+              <p className="text-gray-400 text-xs mb-2">Since 1972</p>
 
-              {/* Upload Zone */}
+              {/* Header Text */}
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2">
+                Faith, Family, & Fabrication
+              </h1>
+              <p className="text-sm md:text-base text-gray-300 mb-4 max-w-md mx-auto">
+                Commercial fabrication solutions for your business
+              </p>
+
+              <button
+                onClick={() => setIsQuoteModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-browning-red hover:bg-red-700 text-white px-7 py-3 rounded-full font-semibold transition-colors text-lg"
+              >
+                Get Your Quote!
+                <ArrowRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* Configurator Section */}
+          <div className={`max-w-2xl mx-auto transition-opacity duration-1000 ${showConfigurator ? 'opacity-100' : 'opacity-0'}`}>
+            {/* Divider */}
+            <div className="flex items-center justify-center gap-2 mb-8">
+              <div className="h-px bg-white/30 flex-1 max-w-16"></div>
+              <span className="text-white/60 text-sm whitespace-nowrap">or choose how to start</span>
+              <div className="h-px bg-white/30 flex-1 max-w-16"></div>
+            </div>
+
+            {/* Upload Zone */}
               <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 mb-6 border border-white/20">
                 <div
                   className={`upload-zone border-2 border-dashed rounded-xl p-4 md:p-6 text-center cursor-pointer ${
@@ -200,11 +235,10 @@ export default function HeroSection() {
                 ))}
               </div>
 
-              {/* Disclaimer */}
-              <p className="text-center text-gray-500 text-xs mt-4">
-                Note: Pricing examples are general estimates. Upload your file for instant current pricing.
-              </p>
-            </div>
+            {/* Disclaimer */}
+            <p className="text-center text-gray-500 text-xs mt-4">
+              Note: Pricing examples are general estimates. Upload your file for instant current pricing.
+            </p>
           </div>
         </div>
       </section>

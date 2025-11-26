@@ -1,4 +1,7 @@
+'use client';
+
 import { Award, Users, Factory, Heart } from 'lucide-react';
+import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
 const highlights = [
   {
@@ -24,16 +27,30 @@ const highlights = [
 ];
 
 export default function AboutSection() {
+  const [leftRef, leftVisible] = useInView(0.2);
+  const [rightRef, rightVisible] = useInView(0.2);
+  const [parallaxRef, parallaxOffset] = useParallax(0.2);
+
   return (
-    <section id="about" className="bg-browning-light py-24">
+    <section
+      id="about"
+      className="bg-browning-light py-24"
+      ref={parallaxRef}
+      style={{ transform: `translateY(${parallaxOffset}px)` }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left - Content */}
-          <div>
+          <div
+            ref={leftRef}
+            className={`transition-all duration-700 ${
+              leftVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}
+          >
             <span className="text-browning-red font-semibold text-sm uppercase tracking-wider">
               About Browning&apos;s
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4 mb-6 font-serif">
+            <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4 mb-6">
               Manufacturing Excellence,<br />Home Grown Values
             </h2>
             <p className="text-browning-gray text-lg mb-6">
@@ -57,7 +74,12 @@ export default function AboutSection() {
           </div>
 
           {/* Right - Stats/Highlights */}
-          <div className="grid grid-cols-2 gap-6">
+          <div
+            ref={rightRef}
+            className={`grid grid-cols-2 gap-6 transition-all duration-700 delay-200 ${
+              rightVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}
+          >
             {highlights.map((item) => (
               <div
                 key={item.label}

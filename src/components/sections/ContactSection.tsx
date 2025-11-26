@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FileText, Wrench, PenTool, MessageSquare, ArrowRight } from 'lucide-react';
+import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import CustomQuoteModal from '@/components/modals/CustomQuoteModal';
 import CADUploadModal from '@/components/modals/CADUploadModal';
 import DesignServicesModal from '@/components/modals/DesignServicesModal';
@@ -39,6 +40,9 @@ export default function ContactSection() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
   const { openConfigurator } = useConfigurator();
+  const [headerRef, headerVisible] = useInView(0.2);
+  const [cardsRef, cardsVisible] = useInView(0.1);
+  const [parallaxRef, parallaxOffset] = useParallax(0.2);
 
   const handleCardClick = (action: string) => {
     if (action === 'quote') {
@@ -54,11 +58,21 @@ export default function ContactSection() {
 
   return (
     <>
-      <section id="contact" className="bg-browning-red py-16 md:py-24">
+      <section
+        id="contact"
+        className="bg-browning-red py-16 md:py-24"
+        ref={parallaxRef}
+        style={{ transform: `translateY(${parallaxOffset}px)` }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4 font-serif">
+          <div
+            ref={headerRef}
+            className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
+              headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
               Ready to start your project?
             </h2>
             <p className="text-white/90 text-sm md:text-lg max-w-2xl mx-auto">
@@ -68,7 +82,12 @@ export default function ContactSection() {
           </div>
 
           {/* Entry Cards - 2 cols on mobile */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+          <div
+            ref={cardsRef}
+            className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 transition-all duration-700 delay-200 ${
+              cardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
             {entryCards.map((card) => (
               <button
                 key={card.action}
