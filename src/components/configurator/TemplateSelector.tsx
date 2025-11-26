@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Square, Circle, Triangle, Grid, Box, Settings, Check, Star } from 'lucide-react';
+import { Square, Circle, Triangle, Grid, Box, Settings, Check, Star, LucideIcon } from 'lucide-react';
 import { useConfigurator } from '@/store/useConfigurator';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
   square: Square,
   circle: Circle,
   triangle: Triangle,
