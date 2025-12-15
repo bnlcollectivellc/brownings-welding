@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
-import { useInView } from '@/hooks/useScrollAnimations';
+import { useRef, useCallback, useEffect } from 'react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
 const testimonials = [
   {
@@ -49,120 +49,130 @@ const testimonials = [
   },
 ];
 
-export default function TestimonialsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [sectionRef, sectionVisible] = useInView(0.2);
+// Triple for infinite scroll
+const infiniteTestimonials = [...testimonials, ...testimonials, ...testimonials];
 
-  // Auto-rotate testimonials
+export default function TestimonialsSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isScrollingRef = useRef(false);
+  const [sectionRef, sectionVisible] = useInView(0.2);
+  const [parallaxRef, parallaxOffset] = useParallax(0.15);
+
+  // Initialize scroll position to middle set
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(interval);
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const singleSetWidth = container.scrollWidth / 3;
+      container.scrollLeft = singleSetWidth;
+    }
   }, []);
 
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  // Handle seamless looping
+  const handleScroll = useCallback(() => {
+    if (isScrollingRef.current || !scrollRef.current) return;
 
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
+    const container = scrollRef.current;
+    const singleSetWidth = container.scrollWidth / 3;
 
-  const currentTestimonial = testimonials[currentIndex];
+    if (container.scrollLeft >= singleSetWidth * 2) {
+      isScrollingRef.current = true;
+      container.scrollLeft = container.scrollLeft - singleSetWidth;
+      setTimeout(() => { isScrollingRef.current = false; }, 50);
+    } else if (container.scrollLeft <= 0) {
+      isScrollingRef.current = true;
+      container.scrollLeft = container.scrollLeft + singleSetWidth;
+      setTimeout(() => { isScrollingRef.current = false; }, 50);
+    }
+  }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = 320;
+      scrollRef.current.scrollBy({
+        left: direction === 'right' ? scrollAmount : -scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   return (
     <section
       id="testimonials"
-      className="bg-gray-50 py-16 md:py-24"
-      ref={sectionRef}
+      className="bg-gray-50 py-16"
+      ref={parallaxRef}
+      style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div
+        ref={sectionRef}
+        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
+          sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
         {/* Section Header */}
-        <div
-          className={`text-center mb-12 transition-all duration-700 ${
-            sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mb-4">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal">
             What Our Customers Say
           </h2>
-          <div className="flex items-center justify-center gap-1 mb-2">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} size={24} className="text-yellow-400 fill-yellow-400" />
+        </div>
+
+        {/* Carousel Container */}
+        <div className="relative">
+          {/* Fade Left */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
+
+          {/* Fade Right */}
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
+
+          {/* Scrollable Container */}
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex gap-6 overflow-x-auto scrollbar-hide px-10"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {infiniteTestimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-80 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
+              >
+                {/* Review Text */}
+                <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
+                  &ldquo;{testimonial.text}&rdquo;
+                </p>
+
+                {/* Stars */}
+                <div className="flex items-center gap-0.5 mb-2">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
+                  ))}
+                </div>
+
+                {/* Author */}
+                <p className="font-bold text-browning-charcoal">
+                  {testimonial.name}
+                </p>
+              </div>
             ))}
           </div>
-          <p className="text-gray-600">5.0 rating from {testimonials.length} Google reviews</p>
         </div>
 
-        {/* Testimonial Card */}
-        <div
-          className={`relative bg-white rounded-2xl shadow-lg p-8 md:p-12 transition-all duration-700 delay-200 ${
-            sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
-          {/* Quote Icon */}
-          <Quote
-            size={48}
-            className="absolute top-6 left-6 text-browning-red/10"
-          />
-
-          {/* Testimonial Content */}
-          <div className="relative z-10 text-center">
-            <p className="text-lg md:text-xl text-gray-700 mb-6 italic leading-relaxed">
-              &ldquo;{currentTestimonial.text}&rdquo;
-            </p>
-
-            {/* Stars */}
-            <div className="flex items-center justify-center gap-1 mb-3">
-              {[...Array(currentTestimonial.rating)].map((_, i) => (
-                <Star key={i} size={18} className="text-yellow-400 fill-yellow-400" />
-              ))}
-            </div>
-
-            {/* Author */}
-            <p className="font-semibold text-browning-charcoal text-lg">
-              {currentTestimonial.name}
-            </p>
-          </div>
-
-          {/* Navigation Arrows */}
+        {/* Navigation Buttons */}
+        <div className="flex justify-center gap-3 mt-8">
           <button
-            onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-            aria-label="Previous testimonial"
+            onClick={() => scroll('left')}
+            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
+            aria-label="Previous"
           >
-            <ChevronLeft size={24} className="text-gray-600" />
+            <ChevronLeft size={20} />
           </button>
           <button
-            onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-            aria-label="Next testimonial"
+            onClick={() => scroll('right')}
+            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
+            aria-label="Next"
           >
-            <ChevronRight size={24} className="text-gray-600" />
+            <ChevronRight size={20} />
           </button>
         </div>
-
-        {/* Dots Indicator */}
-        <div className="flex items-center justify-center gap-2 mt-6">
-          {testimonials.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentIndex
-                  ? 'bg-browning-red w-6'
-                  : 'bg-gray-300 hover:bg-gray-400'
-              }`}
-              aria-label={`Go to testimonial ${index + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Google Attribution */}
-        <p className="text-center text-sm text-gray-500 mt-6">
-          Reviews from Google
-        </p>
       </div>
     </section>
   );

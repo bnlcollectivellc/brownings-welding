@@ -24,6 +24,8 @@ export default function ConfiguratorModal() {
     prevStep,
     selectedTemplate,
     selectedMaterial,
+    priceBreakdown,
+    quantity,
   } = useConfigurator();
 
   // Prevent body scroll when modal is open
@@ -124,13 +126,19 @@ export default function ConfiguratorModal() {
         {/* Header with logo and close */}
         <div className="flex-shrink-0 bg-white border-b border-gray-200">
           <div className="flex items-center justify-between px-4 md:px-6 py-3">
-            <Image
-              src="/images/logo-icon.png"
-              alt="Browning's"
-              width={40}
-              height={40}
-              className="w-10 h-10"
-            />
+            <button
+              onClick={handleClose}
+              className="hover:opacity-80 transition-opacity"
+              title="Return to home"
+            >
+              <Image
+                src="/images/logo-icon.png"
+                alt="Browning's - Click to return home"
+                width={40}
+                height={40}
+                className="w-10 h-10"
+              />
+            </button>
             <button
               onClick={handleClose}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
@@ -178,14 +186,32 @@ export default function ConfiguratorModal() {
                 )}
               </div>
 
-              {/* Right side - Next button */}
-              <button
-                onClick={nextStep}
-                disabled={!canProceed()}
-                className="bg-browning-red hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg font-semibold transition-colors"
-              >
-                {getNextButtonText()}
-              </button>
+              {/* Right side - Subtotal and Next button */}
+              <div className="flex items-center gap-4">
+                {/* Running Subtotal */}
+                {priceBreakdown && (
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">Cost so far</p>
+                    <p className="text-lg font-bold text-browning-charcoal">
+                      ${priceBreakdown.total.toFixed(2)}
+                      {quantity > 1 && (
+                        <span className="text-xs font-normal text-gray-500 ml-1">
+                          ({quantity} pcs)
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                )}
+
+                {/* Next button */}
+                <button
+                  onClick={nextStep}
+                  disabled={!canProceed()}
+                  className="bg-browning-red hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg font-semibold transition-colors"
+                >
+                  {getNextButtonText()}
+                </button>
+              </div>
             </div>
           </div>
         )}

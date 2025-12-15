@@ -91,23 +91,23 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 rounded-b-2xl shadow-lg">
-            <div className="px-4 py-4 space-y-4">
+          <div className="md:hidden py-4">
+            <div className="space-y-2">
               <button
                 onClick={() => scrollToSection('services')}
-                className="block w-full text-left text-browning-charcoal hover:text-browning-red transition-colors font-medium py-2"
+                className="block w-full text-left text-white hover:text-browning-red transition-colors font-medium py-2"
               >
                 Services
               </button>
               <button
                 onClick={() => scrollToSection('hero')}
-                className="block w-full text-left text-browning-charcoal hover:text-browning-red transition-colors font-medium py-2"
+                className="block w-full text-left text-white hover:text-browning-red transition-colors font-medium py-2"
               >
                 Get Your Quote!
               </button>
               <button
                 onClick={() => scrollToSection('team')}
-                className="block w-full text-left text-browning-charcoal hover:text-browning-red transition-colors font-medium py-2"
+                className="block w-full text-left text-white hover:text-browning-red transition-colors font-medium py-2"
               >
                 Team
               </button>

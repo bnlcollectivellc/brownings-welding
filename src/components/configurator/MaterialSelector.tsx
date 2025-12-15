@@ -167,11 +167,13 @@ export default function MaterialSelector() {
               className="group relative rounded-xl border-2 overflow-hidden transition-all hover:shadow-lg flex flex-col border-gray-200 bg-white hover:border-browning-red/50"
             >
               {/* Image Area */}
-              <div className="w-full aspect-[4/3] relative overflow-hidden">
+              <div className="w-full aspect-[4/3] relative overflow-hidden bg-gray-200">
                 <Image
                   src={category.image}
                   alt={category.name}
                   fill
+                  sizes="(max-width: 768px) 33vw, 200px"
+                  priority
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
