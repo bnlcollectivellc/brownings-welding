@@ -7,6 +7,17 @@
       "icon": "laser",
       "basePrice": 0,
       "included": true,
+      "category": "cutting",
+      "note": "Best for thinner materials - thick metal may burn"
+    },
+    {
+      "id": "shearing",
+      "name": "Shearing",
+      "description": "Straight cuts on sheet metal",
+      "icon": "shear",
+      "basePrice": 3.00,
+      "pricePerCut": 0.50,
+      "included": false,
       "category": "cutting"
     },
     {
@@ -18,6 +29,7 @@
       "pricePerBend": 1.50,
       "included": false,
       "category": "forming",
+      "pricingNote": "$5.00 setup + $1.50 per bend",
       "options": [
         { "id": "simple-bend", "name": "Simple Bend (90°)", "price": 1.50 },
         { "id": "complex-bend", "name": "Complex Bend", "price": 3.00 },
@@ -28,31 +40,55 @@
     {
       "id": "welding",
       "name": "Welding",
-      "description": "MIG, TIG, and spot welding services",
+      "description": "Professional welding services",
       "icon": "weld",
-      "basePrice": 10.00,
-      "pricePerInch": 0.50,
+      "basePrice": 0,
       "included": false,
       "category": "assembly",
-      "options": [
-        { "id": "mig-weld", "name": "MIG Welding", "pricePerInch": 0.50 },
-        { "id": "tig-weld", "name": "TIG Welding", "pricePerInch": 0.85 },
-        { "id": "spot-weld", "name": "Spot Welding", "pricePerSpot": 0.25 }
+      "requiresSelection": true,
+      "types": [
+        {
+          "id": "mig",
+          "name": "MIG Welding",
+          "description": "Fast, versatile welding for most applications",
+          "setupFee": 8.00,
+          "pricePerInch": 0.50
+        },
+        {
+          "id": "tig",
+          "name": "TIG Welding",
+          "description": "Precision welding for clean, strong joints",
+          "setupFee": 12.00,
+          "pricePerInch": 0.85
+        },
+        {
+          "id": "spot",
+          "name": "Spot Welding",
+          "description": "Quick joins for overlapping sheet metal",
+          "setupFee": 5.00,
+          "pricePerSpot": 0.25
+        },
+        {
+          "id": "stick",
+          "name": "Stick Welding",
+          "description": "Heavy-duty welding for structural work",
+          "setupFee": 10.00,
+          "pricePerInch": 0.65
+        }
       ]
     },
     {
       "id": "hardware",
       "name": "Hardware Insertion",
-      "description": "PEM nuts, studs, and standoffs",
+      "description": "Welded nuts and bolts for assembly",
       "icon": "hardware",
       "basePrice": 0,
       "included": false,
       "category": "assembly",
       "options": [
-        { "id": "pem-nut", "name": "PEM Nut", "priceEach": 0.35 },
-        { "id": "pem-stud", "name": "PEM Stud", "priceEach": 0.45 },
-        { "id": "standoff", "name": "Standoff", "priceEach": 0.55 },
-        { "id": "rivet-nut", "name": "Rivet Nut", "priceEach": 0.40 }
+        { "id": "welded-nut", "name": "Welded Nut", "priceEach": 1.25, "description": "Nut welded to surface" },
+        { "id": "welded-bolt", "name": "Welded Bolt", "priceEach": 1.50, "description": "Bolt/stud welded to surface" },
+        { "id": "custom-hardware", "name": "Custom Hardware", "priceEach": 0, "description": "Describe in notes", "requiresNote": true }
       ]
     },
     {
@@ -84,15 +120,6 @@
       "pricePerSqIn": 0.002,
       "included": false,
       "category": "finishing"
-    },
-    {
-      "id": "tumbling",
-      "name": "Tumbling",
-      "description": "Mass finishing for smooth edges",
-      "icon": "tumble",
-      "basePrice": 3.00,
-      "included": false,
-      "category": "finishing"
     }
   ],
   "categories": [
@@ -101,5 +128,14 @@
     { "id": "machining", "name": "Machining", "order": 3 },
     { "id": "assembly", "name": "Assembly", "order": 4 },
     { "id": "finishing", "name": "Finishing", "order": 5 }
-  ]
+  ],
+  "shipping": {
+    "options": [
+      { "id": "local-pickup", "name": "Local Pickup", "price": 0, "description": "Pick up at our facility" },
+      { "id": "ups-ground", "name": "UPS Ground", "price": null, "description": "Calculated at checkout", "calculated": true },
+      { "id": "ups-express", "name": "UPS Express", "price": null, "description": "Calculated at checkout", "calculated": true }
+    ],
+    "taxRate": 0.065,
+    "taxNote": "Arkansas sales tax"
+  }
 }

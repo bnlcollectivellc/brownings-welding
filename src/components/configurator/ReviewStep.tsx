@@ -1,10 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { Edit2, Check, ShoppingCart, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Edit2, ShoppingCart, CheckCircle, AlertCircle, ArrowLeft, Truck, MapPin } from 'lucide-react';
 import { useConfigurator } from '@/store/useConfigurator';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
+
+const TAX_RATE = 0.065; // Arkansas sales tax
+
+const shippingOptions = [
+  { id: 'local-pickup', name: 'Local Pickup', price: 0, description: 'Pick up at our facility in Conway, AR', icon: MapPin },
+  { id: 'ups-ground', name: 'UPS Ground', price: null, description: 'Calculated based on weight & destination', icon: Truck, estimated: 'Est. $15-45' },
+  { id: 'ups-express', name: 'UPS Express', price: null, description: 'Faster delivery, calculated at checkout', icon: Truck, estimated: 'Est. $35-75' },
+];
 
 export default function ReviewStep() {
   const {
@@ -25,6 +33,8 @@ export default function ReviewStep() {
   } = useConfigurator();
 
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle');
+  const [selectedShipping, setSelectedShipping] = useState('local-pickup');
+  const [includeTax, setIncludeTax] = useState(true);
 
   const handleSubmit = async () => {
     setSubmitStatus('submitting');
@@ -50,6 +60,7 @@ export default function ReviewStep() {
         partDimensions,
         priceBreakdown,
         quantity,
+        shipping: selectedShipping,
       });
       setSubmitStatus('success');
     } catch (error) {
@@ -69,6 +80,12 @@ export default function ReviewStep() {
     s => s.id === selectedMaterial?.subcategoryId
   );
   const finishData = finishes.find(f => f.id === selectedFinish?.id);
+
+  // Calculate totals with shipping and tax
+  const subtotal = priceBreakdown?.total || 0;
+  const shippingCost = selectedShipping === 'local-pickup' ? 0 : null;
+  const taxAmount = includeTax ? subtotal * TAX_RATE : 0;
+  const grandTotal = subtotal + (shippingCost || 0) + taxAmount;
 
   const sections = [
     {
@@ -96,7 +113,7 @@ export default function ReviewStep() {
       items: selectedServices.length > 0
         ? selectedServices.map(s => {
           const service = services.find(svc => svc.id === s.id);
-          return { label: service?.name || s.id, value: `+$${service?.basePrice?.toFixed(2) || '0.00'}` };
+          return { label: service?.name || s.id, value: '' };
         })
         : [{ label: 'No additional services', value: '' }],
     },
@@ -200,6 +217,43 @@ export default function ReviewStep() {
         ))}
       </div>
 
+      {/* Shipping Selection */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="p-4 border-b border-gray-100">
+          <h3 className="font-semibold text-browning-charcoal">Shipping</h3>
+        </div>
+        <div className="p-4 space-y-3">
+          {shippingOptions.map((option) => (
+            <label
+              key={option.id}
+              className={`flex items-start gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+                selectedShipping === option.id
+                  ? 'border-browning-red bg-browning-red/5'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <input
+                type="radio"
+                name="shipping"
+                value={option.id}
+                checked={selectedShipping === option.id}
+                onChange={(e) => setSelectedShipping(e.target.value)}
+                className="mt-1"
+              />
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-browning-charcoal">{option.name}</span>
+                  <span className="font-medium text-browning-red">
+                    {option.price === 0 ? 'FREE' : option.estimated || 'TBD'}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500">{option.description}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+
       {/* Price Summary */}
       {priceBreakdown && (
         <div className="bg-browning-red/5 border border-browning-red/20 rounded-xl p-6">
@@ -245,11 +299,35 @@ export default function ReviewStep() {
               </div>
             )}
 
+            <div className="border-t border-gray-200 pt-2 mt-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Shipping</span>
+                <span>{shippingCost === 0 ? 'FREE' : 'TBD at checkout'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Tax (6.5%)</span>
+                <span>${taxAmount.toFixed(2)}</span>
+              </div>
+            </div>
+
             <div className="border-t border-gray-200 pt-3 mt-3">
               <div className="flex justify-between text-lg font-bold">
-                <span className="text-browning-charcoal">Total</span>
-                <span className="text-browning-red">${priceBreakdown.total.toFixed(2)}</span>
+                <span className="text-browning-charcoal">Estimated Total</span>
+                <span className="text-browning-red">
+                  {shippingCost === null ? (
+                    <span>${subtotal.toFixed(2)}+</span>
+                  ) : (
+                    <span>${grandTotal.toFixed(2)}</span>
+                  )}
+                </span>
               </div>
+              {shippingCost === null && (
+                <p className="text-xs text-gray-500 mt-1">* Final shipping calculated at checkout</p>
+              )}
             </div>
           </div>
         </div>
