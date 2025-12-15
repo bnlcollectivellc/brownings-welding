@@ -112,9 +112,12 @@ export default function CADUploadModal({ isOpen, onClose }: CADUploadModalProps)
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle size={32} className="text-green-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Files Uploaded!</h3>
-              <p className="text-gray-600 mb-6">
-                Your CAD files have been uploaded successfully. We&apos;ll process them and get back to you with pricing shortly.
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Files Received!</h3>
+              <p className="text-gray-600 mb-2">
+                Your CAD files have been uploaded successfully.
+              </p>
+              <p className="text-browning-red font-semibold mb-6">
+                Expect a detailed quote within 24 hours.
               </p>
               <button
                 onClick={handleClose}
@@ -218,8 +221,15 @@ export default function CADUploadModal({ isOpen, onClose }: CADUploadModalProps)
                 </div>
               )}
 
+              {/* Notice */}
+              <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="text-amber-800 text-sm text-center">
+                  CAD file quotes require manual review. <span className="font-semibold">Expect pricing within 24 hours.</span>
+                </p>
+              </div>
+
               {/* Security Notice */}
-              <p className="text-center text-gray-500 text-xs mt-6">
+              <p className="text-center text-gray-500 text-xs mt-4">
                 Your design is safe! Any design uploaded is secure, and you retain 100% of the intellectual property.
               </p>
             </>
@@ -247,7 +257,7 @@ export default function CADUploadModal({ isOpen, onClose }: CADUploadModalProps)
                   Uploading...
                 </>
               ) : (
-                'Continue to Pricing'
+                'Submit for Quote'
               )}
             </button>
           </div>

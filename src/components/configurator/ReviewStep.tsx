@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Edit2, ShoppingCart, CheckCircle, AlertCircle, ArrowLeft, Truck, MapPin } from 'lucide-react';
+import { Edit2, ShoppingCart, CheckCircle, AlertCircle, ArrowLeft, Truck, MapPin, Download, FileText, File } from 'lucide-react';
 import { useConfigurator } from '@/store/useConfigurator';
+import { exportToDXF, exportSpecSheet } from '@/utils/dxfExport';
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -72,6 +73,34 @@ export default function ReviewStep() {
   const handleReturnToSite = () => {
     reset();
     closeConfigurator();
+  };
+
+  const handleDownloadDXF = () => {
+    if (!selectedTemplate || !partDimensions) return;
+
+    exportToDXF({
+      template: {
+        id: selectedTemplate.id,
+        name: selectedTemplate.name,
+        parameters: selectedTemplate.parameters,
+      },
+      dimensions: partDimensions,
+      services: selectedServices,
+    });
+  };
+
+  const handleDownloadSpecSheet = () => {
+    if (!selectedTemplate || !partDimensions) return;
+
+    exportSpecSheet({
+      template: {
+        id: selectedTemplate.id,
+        name: selectedTemplate.name,
+        parameters: selectedTemplate.parameters,
+      },
+      dimensions: partDimensions,
+      services: selectedServices,
+    });
   };
 
   // Get full data objects
@@ -329,6 +358,32 @@ export default function ReviewStep() {
                 <p className="text-xs text-gray-500 mt-1">* Final shipping calculated at checkout</p>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Download Files */}
+      {selectedTemplate && partDimensions && (
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="p-4 border-b border-gray-100">
+            <h3 className="font-semibold text-browning-charcoal">Download Files</h3>
+            <p className="text-sm text-gray-500 mt-1">Save your part design for your records</p>
+          </div>
+          <div className="p-4 flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={handleDownloadDXF}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+            >
+              <File size={18} />
+              Download DXF
+            </button>
+            <button
+              onClick={handleDownloadSpecSheet}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
+            >
+              <FileText size={18} />
+              Download Spec Sheet
+            </button>
           </div>
         </div>
       )}
