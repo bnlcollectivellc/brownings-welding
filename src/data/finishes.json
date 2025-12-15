@@ -9,12 +9,27 @@
       "compatibleMaterials": ["all"]
     },
     {
+      "id": "galvanized",
+      "name": "Galvanized",
+      "description": "Zinc-coated for corrosion and rust protection",
+      "priceMultiplier": 1.30,
+      "leadTimeDays": 4,
+      "compatibleMaterials": ["carbon-steel"],
+      "note": "Outsourced service",
+      "options": [
+        { "id": "hot-dip", "name": "Hot-Dip Galvanizing", "upcharge": 0 },
+        { "id": "electro", "name": "Electro-Galvanizing", "upcharge": 5.00 }
+      ],
+      "minOrderQty": 1
+    },
+    {
       "id": "powder-coat",
       "name": "Powder Coating",
       "description": "Durable, even finish in various colors",
       "priceMultiplier": 1.35,
       "leadTimeDays": 3,
-      "compatibleMaterials": ["steel", "aluminum", "galvanized"],
+      "compatibleMaterials": ["carbon-steel", "aluminum"],
+      "note": "Outsourced service",
       "colors": [
         { "id": "black-matte", "name": "Black Matte", "hex": "#1a1a1a", "upcharge": 0 },
         { "id": "black-gloss", "name": "Black Gloss", "hex": "#0a0a0a", "upcharge": 0 },
@@ -33,10 +48,11 @@
     {
       "id": "anodizing",
       "name": "Anodizing",
-      "description": "Electrochemical finish for aluminum",
+      "description": "Electrochemical finish for aluminum - adds durability and corrosion resistance",
       "priceMultiplier": 1.45,
       "leadTimeDays": 5,
       "compatibleMaterials": ["aluminum"],
+      "note": "Outsourced service",
       "colors": [
         { "id": "clear", "name": "Clear", "hex": "#e8e8e8", "upcharge": 0 },
         { "id": "black-anodize", "name": "Black", "hex": "#1a1a1a", "upcharge": 5.00 },
@@ -53,10 +69,11 @@
     {
       "id": "zinc-plating",
       "name": "Zinc Plating",
-      "description": "Corrosion-resistant zinc coating",
+      "description": "Corrosion-resistant zinc coating for durability",
       "priceMultiplier": 1.25,
       "leadTimeDays": 4,
-      "compatibleMaterials": ["steel"],
+      "compatibleMaterials": ["carbon-steel"],
+      "note": "Outsourced service",
       "options": [
         { "id": "clear-zinc", "name": "Clear Zinc", "upcharge": 0 },
         { "id": "yellow-zinc", "name": "Yellow Zinc", "upcharge": 3.00 },
@@ -67,10 +84,11 @@
     {
       "id": "nickel-plating",
       "name": "Nickel Plating",
-      "description": "Decorative and corrosion-resistant",
+      "description": "Decorative finish with corrosion resistance",
       "priceMultiplier": 1.55,
       "leadTimeDays": 5,
-      "compatibleMaterials": ["steel", "copper"],
+      "compatibleMaterials": ["carbon-steel"],
+      "note": "Outsourced service",
       "options": [
         { "id": "bright-nickel", "name": "Bright Nickel", "upcharge": 0 },
         { "id": "electroless-nickel", "name": "Electroless Nickel", "upcharge": 15.00 }
@@ -80,7 +98,7 @@
     {
       "id": "brushed",
       "name": "Brushed Finish",
-      "description": "Linear grain pattern",
+      "description": "Linear grain pattern for a refined look",
       "priceMultiplier": 1.15,
       "leadTimeDays": 2,
       "compatibleMaterials": ["stainless", "aluminum"],
@@ -94,28 +112,31 @@
     {
       "id": "mirror-polish",
       "name": "Mirror Polish",
-      "description": "Highly reflective surface",
+      "description": "Highly reflective surface finish",
       "priceMultiplier": 1.75,
       "leadTimeDays": 5,
       "compatibleMaterials": ["stainless", "aluminum"],
+      "note": "Outsourced service",
       "minOrderQty": 1
     },
     {
       "id": "passivation",
       "name": "Passivation",
-      "description": "Chemical treatment for stainless steel",
+      "description": "Chemical treatment to enhance stainless steel corrosion resistance",
       "priceMultiplier": 1.20,
       "leadTimeDays": 3,
       "compatibleMaterials": ["stainless"],
+      "note": "Outsourced service",
       "minOrderQty": 1
     },
     {
       "id": "chem-film",
       "name": "Chem Film (Chromate)",
-      "description": "Corrosion protection for aluminum",
+      "description": "Corrosion protection for aluminum components",
       "priceMultiplier": 1.18,
       "leadTimeDays": 3,
       "compatibleMaterials": ["aluminum"],
+      "note": "Outsourced service",
       "options": [
         { "id": "clear-chem", "name": "Clear", "upcharge": 0 },
         { "id": "gold-chem", "name": "Gold (MIL-DTL-5541)", "upcharge": 5.00 }

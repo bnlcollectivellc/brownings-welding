@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { ChevronRight, List, Grid, Check } from 'lucide-react';
 import { useConfigurator, MaterialCategory, Subcategory, Thickness } from '@/store/useConfigurator';
 
@@ -158,26 +159,29 @@ export default function MaterialSelector() {
 
       {/* Tile View */}
       {materialViewMode === 'tile' && !expandedCategory && (
-        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {materials.map((category) => (
             <button
               key={category.id}
               onClick={() => handleCategoryClick(category.id)}
-              className="relative rounded-xl border-2 p-3 transition-all hover:shadow-md flex flex-col border-gray-200 bg-white hover:border-gray-300"
+              className="group relative rounded-xl border-2 overflow-hidden transition-all hover:shadow-lg flex flex-col border-gray-200 bg-white hover:border-browning-red/50"
             >
-              {/* Icon Area */}
-              <div className="w-full aspect-square flex items-center justify-center p-2">
-                <span className="text-3xl">
-                  {category.id === 'steel' && '🔩'}
-                  {category.id === 'stainless' && '✨'}
-                  {category.id === 'aluminum' && '🪶'}
-                  {category.id === 'copper' && '🥉'}
-                  {category.id === 'galvanized' && '🛡️'}
-                </span>
+              {/* Image Area */}
+              <div className="w-full aspect-[4/3] relative overflow-hidden">
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               </div>
-              <p className="text-xs text-center text-gray-600 mt-1 truncate w-full">
-                {category.name}
-              </p>
+              {/* Label */}
+              <div className="absolute bottom-0 left-0 right-0 p-3">
+                <p className="text-sm font-semibold text-white text-center">
+                  {category.name}
+                </p>
+              </div>
             </button>
           ))}
         </div>

@@ -17,7 +17,7 @@ const entryCards = [
   },
   {
     icon: Wrench,
-    title: 'Parts Builder',
+    title: 'Sheet Metal Parts Builder',
     description: 'Customize our templates',
     action: 'builder',
   },

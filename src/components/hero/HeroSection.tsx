@@ -87,7 +87,7 @@ export default function HeroSection() {
   const entryCards = [
     {
       icon: Wrench,
-      title: 'Use our Parts Builder',
+      title: 'Sheet Metal Parts Builder',
       description: 'Customize one of our simple parts templates',
       action: 'builder',
     },

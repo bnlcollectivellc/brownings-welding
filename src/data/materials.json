@@ -1,9 +1,10 @@
 {
   "categories": [
     {
-      "id": "steel",
-      "name": "Steel",
-      "icon": "steel",
+      "id": "carbon-steel",
+      "name": "Carbon Steel",
+      "icon": "carbon-steel",
+      "image": "/images/materials/carbon-steel.jpg",
       "description": "Durable and versatile, ideal for structural applications",
       "subcategories": [
         {
@@ -11,15 +12,15 @@
           "name": "Mild Steel",
           "description": "General purpose steel, easy to weld and fabricate",
           "thicknesses": [
-            { "gauge": "24", "inches": 0.024, "mm": 0.61, "pricePerSqIn": 0.008 },
-            { "gauge": "22", "inches": 0.030, "mm": 0.76, "pricePerSqIn": 0.010 },
-            { "gauge": "20", "inches": 0.036, "mm": 0.91, "pricePerSqIn": 0.012 },
-            { "gauge": "18", "inches": 0.048, "mm": 1.22, "pricePerSqIn": 0.015 },
-            { "gauge": "16", "inches": 0.060, "mm": 1.52, "pricePerSqIn": 0.018 },
-            { "gauge": "14", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.022 },
-            { "gauge": "12", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.028 },
-            { "gauge": "11", "inches": 0.120, "mm": 3.05, "pricePerSqIn": 0.032 },
-            { "gauge": "10", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.038 },
+            { "gauge": "24 Gauge", "inches": 0.024, "mm": 0.61, "pricePerSqIn": 0.008 },
+            { "gauge": "22 Gauge", "inches": 0.030, "mm": 0.76, "pricePerSqIn": 0.010 },
+            { "gauge": "20 Gauge", "inches": 0.036, "mm": 0.91, "pricePerSqIn": 0.012 },
+            { "gauge": "18 Gauge", "inches": 0.048, "mm": 1.22, "pricePerSqIn": 0.015 },
+            { "gauge": "16 Gauge", "inches": 0.060, "mm": 1.52, "pricePerSqIn": 0.018 },
+            { "gauge": "14 Gauge", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.022 },
+            { "gauge": "12 Gauge", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.028 },
+            { "gauge": "11 Gauge", "inches": 0.120, "mm": 3.05, "pricePerSqIn": 0.032 },
+            { "gauge": "10 Gauge", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.038 },
             { "gauge": "3/16\"", "inches": 0.188, "mm": 4.76, "pricePerSqIn": 0.052 },
             { "gauge": "1/4\"", "inches": 0.250, "mm": 6.35, "pricePerSqIn": 0.068 },
             { "gauge": "5/16\"", "inches": 0.313, "mm": 7.94, "pricePerSqIn": 0.085 },
@@ -32,10 +33,10 @@
           "name": "Hot Rolled Steel",
           "description": "Economical option with mill scale finish",
           "thicknesses": [
-            { "gauge": "14", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.020 },
-            { "gauge": "12", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.025 },
-            { "gauge": "11", "inches": 0.120, "mm": 3.05, "pricePerSqIn": 0.029 },
-            { "gauge": "10", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.034 },
+            { "gauge": "14 Gauge", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.020 },
+            { "gauge": "12 Gauge", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.025 },
+            { "gauge": "11 Gauge", "inches": 0.120, "mm": 3.05, "pricePerSqIn": 0.029 },
+            { "gauge": "10 Gauge", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.034 },
             { "gauge": "3/16\"", "inches": 0.188, "mm": 4.76, "pricePerSqIn": 0.048 },
             { "gauge": "1/4\"", "inches": 0.250, "mm": 6.35, "pricePerSqIn": 0.062 },
             { "gauge": "5/16\"", "inches": 0.313, "mm": 7.94, "pricePerSqIn": 0.078 },
@@ -52,6 +53,7 @@
       "id": "stainless",
       "name": "Stainless Steel",
       "icon": "stainless",
+      "image": "/images/materials/stainless-steel.png",
       "description": "Corrosion-resistant, ideal for food-grade and outdoor applications",
       "subcategories": [
         {
@@ -59,15 +61,15 @@
           "name": "304 Stainless Steel",
           "description": "Most common stainless, excellent corrosion resistance",
           "thicknesses": [
-            { "gauge": "24", "inches": 0.024, "mm": 0.61, "pricePerSqIn": 0.025 },
-            { "gauge": "22", "inches": 0.030, "mm": 0.76, "pricePerSqIn": 0.030 },
-            { "gauge": "20", "inches": 0.036, "mm": 0.91, "pricePerSqIn": 0.038 },
-            { "gauge": "18", "inches": 0.048, "mm": 1.22, "pricePerSqIn": 0.048 },
-            { "gauge": "16", "inches": 0.060, "mm": 1.52, "pricePerSqIn": 0.058 },
-            { "gauge": "14", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.072 },
-            { "gauge": "12", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.095 },
-            { "gauge": "11", "inches": 0.120, "mm": 3.05, "pricePerSqIn": 0.108 },
-            { "gauge": "10", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.125 },
+            { "gauge": "24 Gauge", "inches": 0.024, "mm": 0.61, "pricePerSqIn": 0.025 },
+            { "gauge": "22 Gauge", "inches": 0.030, "mm": 0.76, "pricePerSqIn": 0.030 },
+            { "gauge": "20 Gauge", "inches": 0.036, "mm": 0.91, "pricePerSqIn": 0.038 },
+            { "gauge": "18 Gauge", "inches": 0.048, "mm": 1.22, "pricePerSqIn": 0.048 },
+            { "gauge": "16 Gauge", "inches": 0.060, "mm": 1.52, "pricePerSqIn": 0.058 },
+            { "gauge": "14 Gauge", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.072 },
+            { "gauge": "12 Gauge", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.095 },
+            { "gauge": "11 Gauge", "inches": 0.120, "mm": 3.05, "pricePerSqIn": 0.108 },
+            { "gauge": "10 Gauge", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.125 },
             { "gauge": "3/16\"", "inches": 0.188, "mm": 4.76, "pricePerSqIn": 0.168 },
             { "gauge": "1/4\"", "inches": 0.250, "mm": 6.35, "pricePerSqIn": 0.225 }
           ]
@@ -77,14 +79,14 @@
           "name": "316 Stainless Steel",
           "description": "Marine grade, superior corrosion resistance",
           "thicknesses": [
-            { "gauge": "24", "inches": 0.024, "mm": 0.61, "pricePerSqIn": 0.032 },
-            { "gauge": "22", "inches": 0.030, "mm": 0.76, "pricePerSqIn": 0.038 },
-            { "gauge": "20", "inches": 0.036, "mm": 0.91, "pricePerSqIn": 0.048 },
-            { "gauge": "18", "inches": 0.048, "mm": 1.22, "pricePerSqIn": 0.062 },
-            { "gauge": "16", "inches": 0.060, "mm": 1.52, "pricePerSqIn": 0.075 },
-            { "gauge": "14", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.092 },
-            { "gauge": "12", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.125 },
-            { "gauge": "10", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.162 },
+            { "gauge": "24 Gauge", "inches": 0.024, "mm": 0.61, "pricePerSqIn": 0.032 },
+            { "gauge": "22 Gauge", "inches": 0.030, "mm": 0.76, "pricePerSqIn": 0.038 },
+            { "gauge": "20 Gauge", "inches": 0.036, "mm": 0.91, "pricePerSqIn": 0.048 },
+            { "gauge": "18 Gauge", "inches": 0.048, "mm": 1.22, "pricePerSqIn": 0.062 },
+            { "gauge": "16 Gauge", "inches": 0.060, "mm": 1.52, "pricePerSqIn": 0.075 },
+            { "gauge": "14 Gauge", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.092 },
+            { "gauge": "12 Gauge", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.125 },
+            { "gauge": "10 Gauge", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.162 },
             { "gauge": "3/16\"", "inches": 0.188, "mm": 4.76, "pricePerSqIn": 0.218 },
             { "gauge": "1/4\"", "inches": 0.250, "mm": 6.35, "pricePerSqIn": 0.288 }
           ]
@@ -95,6 +97,7 @@
       "id": "aluminum",
       "name": "Aluminum",
       "icon": "aluminum",
+      "image": "/images/materials/aluminum.jpg",
       "description": "Lightweight and corrosion-resistant",
       "subcategories": [
         {
@@ -131,66 +134,6 @@
             { "gauge": "0.250\"", "inches": 0.250, "mm": 6.35, "pricePerSqIn": 0.128 },
             { "gauge": "0.375\"", "inches": 0.375, "mm": 9.53, "pricePerSqIn": 0.192 },
             { "gauge": "0.500\"", "inches": 0.500, "mm": 12.70, "pricePerSqIn": 0.255 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "copper",
-      "name": "Copper & Brass",
-      "icon": "copper",
-      "description": "Excellent conductivity and decorative appeal",
-      "subcategories": [
-        {
-          "id": "copper-110",
-          "name": "110 Copper",
-          "description": "Pure copper, excellent electrical conductivity",
-          "thicknesses": [
-            { "gauge": "24", "inches": 0.021, "mm": 0.53, "pricePerSqIn": 0.045 },
-            { "gauge": "22", "inches": 0.025, "mm": 0.64, "pricePerSqIn": 0.055 },
-            { "gauge": "20", "inches": 0.032, "mm": 0.81, "pricePerSqIn": 0.068 },
-            { "gauge": "18", "inches": 0.040, "mm": 1.02, "pricePerSqIn": 0.085 },
-            { "gauge": "16", "inches": 0.051, "mm": 1.30, "pricePerSqIn": 0.108 },
-            { "gauge": "14", "inches": 0.064, "mm": 1.63, "pricePerSqIn": 0.135 },
-            { "gauge": "12", "inches": 0.081, "mm": 2.06, "pricePerSqIn": 0.172 },
-            { "gauge": "10", "inches": 0.102, "mm": 2.59, "pricePerSqIn": 0.215 }
-          ]
-        },
-        {
-          "id": "brass-260",
-          "name": "260 Brass",
-          "description": "Cartridge brass, good formability",
-          "thicknesses": [
-            { "gauge": "24", "inches": 0.021, "mm": 0.53, "pricePerSqIn": 0.038 },
-            { "gauge": "22", "inches": 0.025, "mm": 0.64, "pricePerSqIn": 0.048 },
-            { "gauge": "20", "inches": 0.032, "mm": 0.81, "pricePerSqIn": 0.058 },
-            { "gauge": "18", "inches": 0.040, "mm": 1.02, "pricePerSqIn": 0.072 },
-            { "gauge": "16", "inches": 0.051, "mm": 1.30, "pricePerSqIn": 0.092 },
-            { "gauge": "14", "inches": 0.064, "mm": 1.63, "pricePerSqIn": 0.115 },
-            { "gauge": "12", "inches": 0.081, "mm": 2.06, "pricePerSqIn": 0.145 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "galvanized",
-      "name": "Galvanized Steel",
-      "icon": "galvanized",
-      "description": "Zinc-coated for corrosion protection",
-      "subcategories": [
-        {
-          "id": "g90-galvanized",
-          "name": "G90 Galvanized",
-          "description": "Standard galvanized coating",
-          "thicknesses": [
-            { "gauge": "24", "inches": 0.024, "mm": 0.61, "pricePerSqIn": 0.012 },
-            { "gauge": "22", "inches": 0.030, "mm": 0.76, "pricePerSqIn": 0.015 },
-            { "gauge": "20", "inches": 0.036, "mm": 0.91, "pricePerSqIn": 0.018 },
-            { "gauge": "18", "inches": 0.048, "mm": 1.22, "pricePerSqIn": 0.022 },
-            { "gauge": "16", "inches": 0.060, "mm": 1.52, "pricePerSqIn": 0.028 },
-            { "gauge": "14", "inches": 0.075, "mm": 1.90, "pricePerSqIn": 0.035 },
-            { "gauge": "12", "inches": 0.105, "mm": 2.67, "pricePerSqIn": 0.045 },
-            { "gauge": "10", "inches": 0.135, "mm": 3.43, "pricePerSqIn": 0.058 }
           ]
         }
       ]

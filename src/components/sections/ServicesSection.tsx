@@ -1,39 +1,39 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import { Flame, Scissors, Box, Cog, Zap, Shield } from 'lucide-react';
+import { Flame, Scissors, Box, Cog, CircleDot, Shield } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
 const services = [
   {
     icon: Flame,
     title: 'Welding',
-    description: 'Expert MIG, TIG, and stick welding services for all metals and applications.',
+    description: 'Expert MIG, TIG, spot, and stick welding services for all metals and applications.',
   },
   {
     icon: Scissors,
     title: 'Laser Cutting',
-    description: 'Precision laser cutting for intricate designs and clean edges on various materials.',
+    description: 'Precision laser cutting for intricate designs and clean edges on sheet metal.',
   },
   {
     icon: Box,
     title: 'Sheet Metal Fabrication',
-    description: 'Custom sheet metal work including bending, forming, and assembly.',
+    description: 'Bending, forming, shearing, and rolling for custom sheet metal work.',
   },
   {
     icon: Cog,
     title: 'CNC Machining',
-    description: 'Computer-controlled precision machining for complex parts and prototypes.',
+    description: 'Precision mill and lathe capabilities for complex parts and prototypes.',
   },
   {
-    icon: Zap,
-    title: 'Plasma Cutting',
-    description: 'Fast and efficient plasma cutting for thicker materials and large projects.',
+    icon: CircleDot,
+    title: 'Tube & Bar Processing',
+    description: 'Band saw cutting and tube bending for square and round tubes.',
   },
   {
     icon: Shield,
     title: 'Finishing Services',
-    description: 'Powder coating, anodizing, and other finishing options for durability and aesthetics.',
+    description: 'Powder coating, galvanizing, and plating for durability and corrosion protection.',
   },
 ];
 
