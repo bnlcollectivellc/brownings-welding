@@ -1,21 +1,29 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { X, Upload, ArrowLeft, FileText, Trash2, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface CADUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialFiles?: File[];
 }
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
 
 const ACCEPTED_FILES = ['.ai', '.dxf', '.dwg', '.eps', '.stp', '.step'];
 
-export default function CADUploadModal({ isOpen, onClose }: CADUploadModalProps) {
+export default function CADUploadModal({ isOpen, onClose, initialFiles = [] }: CADUploadModalProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>('idle');
+
+  // Set initial files when modal opens with pre-selected files
+  useEffect(() => {
+    if (isOpen && initialFiles.length > 0) {
+      setUploadedFiles(initialFiles);
+    }
+  }, [isOpen, initialFiles]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();

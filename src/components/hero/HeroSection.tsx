@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Upload, Wrench, PenTool, MessageSquare, ArrowRight } from 'lucide-react';
 import CustomQuoteModal from '@/components/modals/CustomQuoteModal';
 import DesignServicesModal from '@/components/modals/DesignServicesModal';
+import CADUploadModal from '@/components/modals/CADUploadModal';
 import { useConfigurator, EntryPath } from '@/store/useConfigurator';
 
 const ACCEPTED_FILES = ['.ai', '.dxf', '.dwg', '.eps', '.stp', '.step'];
@@ -13,6 +14,8 @@ export default function HeroSection() {
   const [isDragging, setIsDragging] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
+  const [isCADUploadOpen, setIsCADUploadOpen] = useState(false);
+  const [initialFiles, setInitialFiles] = useState<File[]>([]);
   const { openConfigurator } = useConfigurator();
 
   // Staggered fade-in states
@@ -63,15 +66,19 @@ export default function HeroSection() {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    const files = Array.from(e.dataTransfer.files);
-    console.log('Files dropped:', files);
-    // TODO: Handle file upload - Phase 2
+    const files = Array.from(e.dataTransfer.files).slice(0, 10);
+    if (files.length > 0) {
+      setInitialFiles(files);
+      setIsCADUploadOpen(true);
+    }
   }, []);
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
-    console.log('Files selected:', files);
-    // TODO: Handle file upload - Phase 2
+    const files = e.target.files ? Array.from(e.target.files).slice(0, 10) : [];
+    if (files.length > 0) {
+      setInitialFiles(files);
+      setIsCADUploadOpen(true);
+    }
   }, []);
 
   const handleCardClick = (action: string) => {
@@ -253,6 +260,16 @@ export default function HeroSection() {
       <DesignServicesModal
         isOpen={isDesignModalOpen}
         onClose={() => setIsDesignModalOpen(false)}
+      />
+
+      {/* CAD Upload Modal */}
+      <CADUploadModal
+        isOpen={isCADUploadOpen}
+        onClose={() => {
+          setIsCADUploadOpen(false);
+          setInitialFiles([]);
+        }}
+        initialFiles={initialFiles}
       />
     </>
   );
