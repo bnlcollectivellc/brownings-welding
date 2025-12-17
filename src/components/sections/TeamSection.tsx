@@ -6,44 +6,29 @@ import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
 const team = [
   {
-    name: 'Team Member 1',
-    role: 'Founder / CEO',
-    image: '/images/team/team-1.jpg',
+    name: 'Tommy Lin',
+    role: 'CEO',
+    image: '/images/team/tommy-lin.jpg',
   },
   {
-    name: 'Team Member 2',
-    role: 'Operations Manager',
-    image: '/images/team/team-2.jpg',
+    name: 'Tammy Lin',
+    role: 'CFO',
+    image: '/images/team/tammy-lin.jpg',
   },
   {
-    name: 'Team Member 3',
-    role: 'Lead Fabricator',
-    image: '/images/team/team-3.jpg',
+    name: 'Aidan Conley',
+    role: 'Role',
+    image: '/images/team/aidan-conley.jpg',
   },
   {
-    name: 'Team Member 4',
-    role: 'Quality Control',
-    image: '/images/team/team-4.jpg',
+    name: 'Team Member',
+    role: 'Role',
+    image: '/images/team/team-member-1.jpg',
   },
   {
-    name: 'Team Member 5',
-    role: 'Sales Director',
-    image: '/images/team/team-5.jpg',
-  },
-  {
-    name: 'Team Member 7',
-    role: 'Welder',
-    image: '/images/team/team-7.jpg',
-  },
-  {
-    name: 'Team Member 6',
-    role: 'Production Manager',
-    image: '/images/team/team-6.jpg',
-  },
-  {
-    name: 'Team Member 8',
-    role: 'Fabricator',
-    image: '/images/team/team-8.jpg',
+    name: 'Team Member',
+    role: 'Role',
+    image: '/images/team/team-member-2.jpg',
   },
 ];
 
