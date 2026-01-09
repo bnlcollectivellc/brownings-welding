@@ -63,10 +63,14 @@ export default function Navbar() {
               Services
             </button>
             <button
-              onClick={() => scrollToSection('hero')}
-              className="bg-browning-red hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-semibold transition-colors"
+              onClick={() => scrollToSection('about')}
+              className={`font-medium transition-colors ${
+                isScrolled
+                  ? 'text-browning-charcoal hover:text-browning-red'
+                  : 'text-white hover:text-browning-red'
+              }`}
             >
-              Get Your Quote!
+              About
             </button>
             <button
               onClick={() => scrollToSection('team')}
@@ -102,12 +106,12 @@ export default function Navbar() {
                 Services
               </button>
               <button
-                onClick={() => scrollToSection('hero')}
+                onClick={() => scrollToSection('about')}
                 className={`block w-full text-left hover:text-browning-red transition-colors font-medium py-2 ${
                   isScrolled ? 'text-browning-charcoal' : 'text-white'
                 }`}
               >
-                Get Your Quote!
+                About
               </button>
               <button
                 onClick={() => scrollToSection('team')}
