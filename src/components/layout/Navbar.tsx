@@ -54,33 +54,27 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => scrollToSection('services')}
-              className={`font-medium transition-colors ${
-                isScrolled
-                  ? 'text-browning-charcoal hover:text-browning-red'
-                  : 'text-white hover:text-browning-red'
-              }`}
+              className="font-medium transition-colors text-browning-red hover:text-red-700"
             >
               Services
             </button>
             <button
               onClick={() => scrollToSection('about')}
-              className={`font-medium transition-colors ${
-                isScrolled
-                  ? 'text-browning-charcoal hover:text-browning-red'
-                  : 'text-white hover:text-browning-red'
-              }`}
+              className="font-medium transition-colors text-browning-red hover:text-red-700"
             >
               About
             </button>
             <button
               onClick={() => scrollToSection('team')}
-              className={`font-medium transition-colors ${
-                isScrolled
-                  ? 'text-browning-charcoal hover:text-browning-red'
-                  : 'text-white hover:text-browning-red'
-              }`}
+              className="font-medium transition-colors text-browning-red hover:text-red-700"
             >
               Team
+            </button>
+            <button
+              onClick={() => scrollToSection('hero')}
+              className="bg-browning-red hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-semibold transition-colors"
+            >
+              Get Your Quote
             </button>
           </div>
 
@@ -96,30 +90,30 @@ export default function Navbar() {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4">
-            <div className="space-y-2">
+            <div className="space-y-2 text-center">
               <button
                 onClick={() => scrollToSection('services')}
-                className={`block w-full text-left hover:text-browning-red transition-colors font-medium py-2 ${
-                  isScrolled ? 'text-browning-charcoal' : 'text-white'
-                }`}
+                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
               >
                 Services
               </button>
               <button
                 onClick={() => scrollToSection('about')}
-                className={`block w-full text-left hover:text-browning-red transition-colors font-medium py-2 ${
-                  isScrolled ? 'text-browning-charcoal' : 'text-white'
-                }`}
+                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
               >
                 About
               </button>
               <button
                 onClick={() => scrollToSection('team')}
-                className={`block w-full text-left hover:text-browning-red transition-colors font-medium py-2 ${
-                  isScrolled ? 'text-browning-charcoal' : 'text-white'
-                }`}
+                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
               >
                 Team
+              </button>
+              <button
+                onClick={() => scrollToSection('hero')}
+                className="inline-block bg-browning-red hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-semibold transition-colors mt-2"
+              >
+                Get Your Quote
               </button>
             </div>
           </div>
