@@ -19,6 +19,17 @@ const SERVICE_CATEGORIES = [
   'Finishing Services',
 ];
 
+const MATERIALS = [
+  'Mild Steel',
+  'Stainless Steel',
+  'Aluminum',
+  'Galvanized Steel',
+  'Carbon Steel',
+  'Copper',
+  'Brass',
+  'Other',
+];
+
 export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps) {
   const [formData, setFormData] = useState({
     name: '',
@@ -30,10 +41,10 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
     length: '',
     width: '',
     height: '',
-    materials: '',
     timeline: '',
     comments: '',
   });
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [status, setStatus] = useState<FormStatus>('idle');
@@ -44,6 +55,14 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleMaterialToggle = (material: string) => {
+    setSelectedMaterials((prev) =>
+      prev.includes(material)
+        ? prev.filter((m) => m !== material)
+        : [...prev, material]
+    );
   };
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -83,10 +102,10 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
       length: '',
       width: '',
       height: '',
-      materials: '',
       timeline: '',
       comments: '',
     });
+    setSelectedMaterials([]);
     setFiles([]);
     setStatus('idle');
     setErrorMessage('');
@@ -104,6 +123,9 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
+
+      // Append selected materials as comma-separated string
+      formDataToSend.append('materials', selectedMaterials.join(', '));
 
       // Append files
       files.forEach((file) => {
@@ -329,15 +351,44 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Materials</label>
-              <input
-                type="text"
-                name="materials"
-                value={formData.materials}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                placeholder="e.g., Stainless Steel 304, Aluminum 6061"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-2">Materials</label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {MATERIALS.map((material) => (
+                  <label
+                    key={material}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-all ${
+                      selectedMaterials.includes(material)
+                        ? 'border-browning-red bg-red-50 text-browning-red'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedMaterials.includes(material)}
+                      onChange={() => handleMaterialToggle(material)}
+                      className="sr-only"
+                    />
+                    <div
+                      className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${
+                        selectedMaterials.includes(material)
+                          ? 'border-browning-red bg-browning-red'
+                          : 'border-gray-400'
+                      }`}
+                    >
+                      {selectedMaterials.includes(material) && (
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-sm">{material}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div className="mt-4">
