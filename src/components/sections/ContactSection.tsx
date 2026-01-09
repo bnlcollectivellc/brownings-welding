@@ -1,60 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Wrench, PenTool, MessageSquare, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
-import CustomQuoteModal from '@/components/modals/CustomQuoteModal';
-import CADUploadModal from '@/components/modals/CADUploadModal';
-import DesignServicesModal from '@/components/modals/DesignServicesModal';
-import { useConfigurator } from '@/store/useConfigurator';
-
-const entryCards = [
-  {
-    icon: FileText,
-    title: 'Upload CAD',
-    description: 'Upload your CAD file for instant pricing',
-    action: 'upload',
-  },
-  {
-    icon: Wrench,
-    title: 'Sheet Metal Parts Builder',
-    description: 'Customize our templates',
-    action: 'builder',
-  },
-  {
-    icon: PenTool,
-    title: 'Design Services',
-    description: 'We\'ll create it for you',
-    action: 'design',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Custom Quote',
-    description: 'For unique projects',
-    action: 'quote',
-  },
-];
+import QuoteFormModal from '@/components/modals/QuoteFormModal';
 
 export default function ContactSection() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
-  const { openConfigurator } = useConfigurator();
   const [headerRef, headerVisible] = useInView(0.2);
-  const [cardsRef, cardsVisible] = useInView(0.1);
+  const [buttonRef, buttonVisible] = useInView(0.1);
   const [parallaxRef, parallaxOffset] = useParallax(0.2);
-
-  const handleCardClick = (action: string) => {
-    if (action === 'quote') {
-      setIsQuoteModalOpen(true);
-    } else if (action === 'upload') {
-      setIsUploadModalOpen(true);
-    } else if (action === 'design') {
-      setIsDesignModalOpen(true);
-    } else if (action === 'builder') {
-      openConfigurator('builder');
-    }
-  };
 
   return (
     <>
@@ -76,32 +31,24 @@ export default function ContactSection() {
               Ready to start your project?
             </h2>
             <p className="text-white/90 text-sm md:text-lg max-w-2xl mx-auto">
-              Choose how you&apos;d like to get started. Whether you have a complete design
-              or just an idea, we&apos;re here to help bring it to life.
+              Whether you have a complete design or just an idea, we&apos;re here to help bring it to life.
             </p>
           </div>
 
-          {/* Entry Cards - 2 cols on mobile */}
+          {/* Get Your Quote Button */}
           <div
-            ref={cardsRef}
-            className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 transition-all duration-700 delay-200 ${
-              cardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            ref={buttonRef}
+            className={`text-center transition-all duration-700 delay-200 ${
+              buttonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
           >
-            {entryCards.map((card) => (
-              <button
-                key={card.action}
-                onClick={() => handleCardClick(card.action)}
-                className="entry-card bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 md:p-6 text-left hover:bg-white/20 group"
-              >
-                <card.icon className="text-white mb-2 md:mb-4" size={24} />
-                <h3 className="text-white font-semibold text-sm md:text-lg mb-1 md:mb-2">{card.title}</h3>
-                <p className="text-white/80 text-xs md:text-sm mb-2 md:mb-4 hidden md:block">{card.description}</p>
-                <div className="flex items-center text-white font-medium text-sm">
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </div>
-              </button>
-            ))}
+            <button
+              onClick={() => setIsQuoteModalOpen(true)}
+              className="inline-flex items-center gap-3 bg-white text-browning-red px-10 py-4 rounded-full font-bold text-lg md:text-xl transition-all duration-300 hover:bg-browning-dark hover:text-white border-2 border-white hover:border-browning-dark shadow-lg hover:shadow-xl"
+            >
+              Get Your Quote
+              <ArrowRight size={24} />
+            </button>
           </div>
 
           {/* Contact Info */}
@@ -128,22 +75,10 @@ export default function ContactSection() {
         </div>
       </section>
 
-      {/* Custom Quote Modal */}
-      <CustomQuoteModal
+      {/* Quote Form Modal */}
+      <QuoteFormModal
         isOpen={isQuoteModalOpen}
         onClose={() => setIsQuoteModalOpen(false)}
-      />
-
-      {/* CAD Upload Modal */}
-      <CADUploadModal
-        isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-      />
-
-      {/* Design Services Modal */}
-      <DesignServicesModal
-        isOpen={isDesignModalOpen}
-        onClose={() => setIsDesignModalOpen(false)}
       />
     </>
   );

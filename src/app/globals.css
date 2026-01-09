@@ -130,3 +130,17 @@ section {
 .parallax-section {
   will-change: transform;
 }
+
+/* Get Your Quote button pulse animation */
+.quote-btn-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(230, 51, 41, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 28px rgba(230, 51, 41, 0.6);
+  }
+}
