@@ -95,19 +95,25 @@ export default function Navbar() {
             <div className="space-y-2">
               <button
                 onClick={() => scrollToSection('services')}
-                className="block w-full text-left text-white hover:text-browning-red transition-colors font-medium py-2"
+                className={`block w-full text-left hover:text-browning-red transition-colors font-medium py-2 ${
+                  isScrolled ? 'text-browning-charcoal' : 'text-white'
+                }`}
               >
                 Services
               </button>
               <button
                 onClick={() => scrollToSection('hero')}
-                className="block w-full text-left text-white hover:text-browning-red transition-colors font-medium py-2"
+                className={`block w-full text-left hover:text-browning-red transition-colors font-medium py-2 ${
+                  isScrolled ? 'text-browning-charcoal' : 'text-white'
+                }`}
               >
                 Get Your Quote!
               </button>
               <button
                 onClick={() => scrollToSection('team')}
-                className="block w-full text-left text-white hover:text-browning-red transition-colors font-medium py-2"
+                className={`block w-full text-left hover:text-browning-red transition-colors font-medium py-2 ${
+                  isScrolled ? 'text-browning-charcoal' : 'text-white'
+                }`}
               >
                 Team
               </button>
