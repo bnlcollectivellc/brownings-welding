@@ -5,14 +5,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
 const clients = [
-  { name: 'Client One', logo: null },
-  { name: 'Client Two', logo: null },
-  { name: 'Client Three', logo: null },
-  { name: 'Client Four', logo: null },
-  { name: 'Client Five', logo: null },
-  { name: 'Client Six', logo: null },
-  { name: 'Client Seven', logo: null },
-  { name: 'Client Eight', logo: null },
+  { name: 'Banded', logo: '/images/clients/banded.png' },
+  { name: 'Westrock Coffee', logo: '/images/clients/westrock-coffee.png' },
 ];
 
 // Triple the items for seamless infinite scroll
