@@ -20,25 +20,26 @@ export default function ClientsSection() {
   const isScrollingRef = useRef(false);
   const animationRef = useRef<number | null>(null);
   const speedRef = useRef(0.5);
-  const targetSpeedRef = useRef(0.5);
-  const [isHovered, setIsHovered] = useState(false);
+  const isHoveredRef = useRef(false);
+  const [, setForceUpdate] = useState(0); // For re-render on hover state change if needed
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
-  // Initialize scroll position to middle set and start auto-scroll
+  // Initialize scroll position ONCE on mount
   useEffect(() => {
     if (scrollRef.current) {
       const container = scrollRef.current;
       const singleSetWidth = container.scrollWidth / 3;
       container.scrollLeft = singleSetWidth;
     }
+  }, []); // Empty dependency - only runs once
 
-    // Auto-scroll animation with smooth speed transitions
+  // Animation loop - separate effect, no dependencies that would cause re-init
+  useEffect(() => {
     const autoScroll = () => {
       // Smoothly interpolate speed toward target
-      const targetSpeed = isHovered ? 0 : 0.5;
-      targetSpeedRef.current = targetSpeed;
-      speedRef.current += (targetSpeedRef.current - speedRef.current) * 0.05;
+      const targetSpeed = isHoveredRef.current ? 0 : 0.5;
+      speedRef.current += (targetSpeed - speedRef.current) * 0.05;
 
       // Only scroll if speed is meaningful
       if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
@@ -54,7 +55,7 @@ export default function ClientsSection() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isHovered]);
+  }, []); // Empty dependency - animation runs continuously
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -75,6 +76,24 @@ export default function ClientsSection() {
       container.scrollLeft = container.scrollLeft + singleSetWidth;
       setTimeout(() => { isScrollingRef.current = false; }, 50);
     }
+  }, []);
+
+  const handleMouseEnter = useCallback(() => {
+    isHoveredRef.current = true;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    isHoveredRef.current = false;
+  }, []);
+
+  const handleTouchStart = useCallback(() => {
+    isHoveredRef.current = true;
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    setTimeout(() => {
+      isHoveredRef.current = false;
+    }, 2000);
   }, []);
 
   return (
@@ -110,10 +129,10 @@ export default function ClientsSection() {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onTouchStart={() => setIsHovered(true)}
-            onTouchEnd={() => setTimeout(() => setIsHovered(false), 2000)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             className="flex gap-12 md:gap-20 items-center overflow-x-auto scrollbar-hide px-10 py-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
