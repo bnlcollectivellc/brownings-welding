@@ -15,18 +15,18 @@ const SERVICE_CATEGORIES = [
   'Laser Cutting',
   'Sheet Metal Fabrication',
   'CNC Machining',
-  'Tube & Bar Processing',
+  'Tube Inspection',
   'Finishing Services',
+  'Other',
 ];
 
 const MATERIALS = [
-  'Mild Steel',
+  'Steel',
   'Stainless Steel',
   'Aluminum',
-  'Galvanized Steel',
-  'Carbon Steel',
   'Copper',
   'Brass',
+  'Titanium',
   'Other',
 ];
 
@@ -41,7 +41,6 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
     length: '',
     width: '',
     height: '',
-    timeline: '',
     comments: '',
   });
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
@@ -102,7 +101,6 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
       length: '',
       width: '',
       height: '',
-      timeline: '',
       comments: '',
     });
     setSelectedMaterials([]);
@@ -165,9 +163,20 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
         <div className="modal-backdrop absolute inset-0 bg-black/60" onClick={handleClose} />
         <div className="modal-content relative bg-white rounded-2xl p-8 max-w-md w-full text-center">
           <CheckCircle className="mx-auto mb-4 text-green-500" size={64} />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Quote Request Sent!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Thank You for Submitting Your Quote Request!</h2>
+          <p className="text-gray-600 mb-2">
+            A representative from Browning&apos;s Welding will be reaching out to you shortly.
+          </p>
           <p className="text-gray-600 mb-6">
-            Thank you for your interest. Our team will review your request and get back to you within 1-2 business days.
+            Feel free to contact us at{' '}
+            <a href="mailto:info@browningswelding.com" className="text-browning-red hover:underline">
+              info@browningswelding.com
+            </a>{' '}
+            or call our main office at{' '}
+            <a href="tel:501-679-2184" className="text-browning-red hover:underline">
+              501-679-2184
+            </a>{' '}
+            for any additional information!
           </p>
           <button
             onClick={handleClose}
@@ -285,72 +294,9 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
           {/* Project Details */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Project Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Quantity <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  name="quantity"
-                  value={formData.quantity}
-                  onChange={handleInputChange}
-                  required
-                  min="1"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                  placeholder="100"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Timeline</label>
-                <input
-                  type="text"
-                  name="timeline"
-                  value={formData.timeline}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                  placeholder="e.g., 2 weeks, ASAP"
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Length</label>
-                <input
-                  type="text"
-                  name="length"
-                  value={formData.length}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                  placeholder='12"'
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Width</label>
-                <input
-                  type="text"
-                  name="width"
-                  value={formData.width}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                  placeholder='6"'
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Height</label>
-                <input
-                  type="text"
-                  name="height"
-                  value={formData.height}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                  placeholder='3"'
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
+            {/* Materials - Now at top */}
+            <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">Materials</label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {MATERIALS.map((material) => (
@@ -391,7 +337,64 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
               </div>
             </div>
 
-            <div className="mt-4">
+            {/* Quantity */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Quantity <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                name="quantity"
+                value={formData.quantity}
+                onChange={handleInputChange}
+                required
+                min="1"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
+                placeholder="100"
+              />
+            </div>
+
+            {/* Overall Dimensions */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Overall Dimensions (Fabrication)</label>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Length</label>
+                  <input
+                    type="text"
+                    name="length"
+                    value={formData.length}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
+                    placeholder='12"'
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Width</label>
+                  <input
+                    type="text"
+                    name="width"
+                    value={formData.width}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
+                    placeholder='6"'
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Height</label>
+                  <input
+                    type="text"
+                    name="height"
+                    value={formData.height}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
+                    placeholder='3"'
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Additional Comments</label>
               <textarea
                 name="comments"
@@ -399,7 +402,7 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
                 onChange={handleInputChange}
                 rows={3}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors resize-none"
-                placeholder="Any special requirements, tolerances, or other details..."
+                placeholder="General project details, tolerances, coatings, or other information"
               />
             </div>
           </div>

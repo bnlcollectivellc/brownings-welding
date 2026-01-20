@@ -3,40 +3,19 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, User } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
+import Link from 'next/link';
 
-const team = [
-  // Browning Family
-  { name: 'Tommy Browning Sr.', role: 'Founder', image: '/images/team/tommy-browning-sr.jpg' },
+// Management team only for homepage carousel
+const managementTeam = [
   { name: 'Tommy Lynn Browning', role: 'President', image: '/images/team/tommy-lynn-browning.jpg' },
   { name: 'Tammy Browning', role: 'Vice-President', image: '/images/team/tammy-browning.jpg' },
-  // Management
   { name: 'Aidan Conley', role: 'Operations Manager', image: '/images/team/aidan-conley.jpg' },
-  { name: 'Scott Hance', role: 'Shop Floor Manager', image: '/images/team/scott-hance.jpg' },
   { name: 'Josh Cummins', role: 'Design Engineer / Estimator', image: '/images/team/josh-cummins.jpg' },
-  // Lead / Specialized
-  { name: 'Walt Pruitt', role: 'Lead Welder / Fitter', image: '/images/team/walt-pruitt.jpg' },
-  { name: 'Jarrod Short', role: 'Laser Operator', image: '/images/team/jarrod-short.jpg' },
-  { name: 'Leevi Evans', role: 'Saw Operator', image: '/images/team/leevi-evans.jpg' },
-  // Machinists
-  { name: 'Benny Gonzales', role: 'Machinist', image: '/images/team/benny-gonzales.jpg' },
-  { name: 'Riley Short', role: 'Machinist', image: '/images/team/riley-short.jpg' },
-  { name: 'Tom Eades', role: 'Machinist', image: '/images/team/tom-eades.jpg' },
-  { name: 'Trey Scanlon', role: 'Machinist', image: '/images/team/trey-scanlon.jpg' },
-  // Welders
-  { name: 'Bobby Harrison', role: 'Welder', image: '/images/team/bobby-harrison.jpg' },
-  { name: 'Cody Kesterson', role: 'Welder', image: '/images/team/cody-kesterson.jpg' },
-  { name: 'Dixon Hagler', role: 'Welder', image: '/images/team/dixon-hagler.jpg' },
-  { name: 'Jeff Watts', role: 'Welder', image: '/images/team/jeff-watts.jpg' },
-  { name: 'Lain Verser', role: 'Welder', image: '/images/team/lain-verser.jpg' },
-  { name: 'Lane Hayes', role: 'Welder', image: '/images/team/lane-hayes.jpg' },
-  { name: 'Ryan Bixler', role: 'Welder', image: '/images/team/ryan-bixler.jpg' },
-  { name: 'Terry Milliser', role: 'Welder', image: '/images/team/terry-milliser.jpg' },
-  { name: 'Tim Newkirk', role: 'Welder', image: '/images/team/tim-newkirk.jpg' },
-  { name: 'Tommy Newsom', role: 'Welder', image: '/images/team/tommy-newsom.jpg' },
+  { name: 'Scott Hance', role: 'Shop Floor Manager', image: '/images/team/scott-hance.jpg' },
 ];
 
 // Triple the items for seamless infinite scroll
-const infiniteTeam = [...team, ...team, ...team];
+const infiniteTeam = [...managementTeam, ...managementTeam, ...managementTeam];
 
 export default function TeamSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -93,16 +72,18 @@ export default function TeamSection() {
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header - Clickable */}
         <div
           ref={headerRef}
           className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
             headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-browning-charcoal">
-            Meet the Family
-          </h2>
+          <Link href="/team" className="inline-block group">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-browning-charcoal group-hover:text-browning-red transition-colors">
+              Meet the Family
+            </h2>
+          </Link>
         </div>
 
         {/* Carousel Container */}
@@ -126,18 +107,19 @@ export default function TeamSection() {
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {infiniteTeam.map((member, index) => (
-              <div
+              <Link
+                href="/team"
                 key={index}
-                className="flex-shrink-0 w-48 md:w-64"
+                className="flex-shrink-0 w-48 md:w-64 group cursor-pointer"
               >
                 {/* Photo */}
-                <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4">
+                <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
                   {member.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={member.image}
                       alt={member.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-100">
@@ -147,11 +129,11 @@ export default function TeamSection() {
                 </div>
 
                 {/* Info */}
-                <h3 className="text-browning-charcoal font-semibold text-base md:text-lg">
+                <h3 className="text-browning-charcoal font-semibold text-base md:text-lg group-hover:text-browning-red transition-colors">
                   {member.name}
                 </h3>
                 <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

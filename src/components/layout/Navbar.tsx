@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
+import QuoteFormModal from '@/components/modals/QuoteFormModal';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,12 +54,24 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <button
-              onClick={() => scrollToSection('services')}
+            <Link
+              href="/services"
               className="font-medium transition-colors text-browning-red hover:text-red-700"
             >
               Services
-            </button>
+            </Link>
+            <Link
+              href="/industries"
+              className="font-medium transition-colors text-browning-red hover:text-red-700"
+            >
+              Industries
+            </Link>
+            <Link
+              href="/team"
+              className="font-medium transition-colors text-browning-red hover:text-red-700"
+            >
+              Team
+            </Link>
             <button
               onClick={() => scrollToSection('about')}
               className="font-medium transition-colors text-browning-red hover:text-red-700"
@@ -65,13 +79,7 @@ export default function Navbar() {
               About
             </button>
             <button
-              onClick={() => scrollToSection('team')}
-              className="font-medium transition-colors text-browning-red hover:text-red-700"
-            >
-              Team
-            </button>
-            <button
-              onClick={() => scrollToSection('hero')}
+              onClick={() => setIsQuoteModalOpen(true)}
               className="bg-browning-red hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-semibold transition-colors"
             >
               Get Your Quote
@@ -91,12 +99,27 @@ export default function Navbar() {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4">
             <div className="space-y-2 text-center">
-              <button
-                onClick={() => scrollToSection('services')}
+              <Link
+                href="/services"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
               >
                 Services
-              </button>
+              </Link>
+              <Link
+                href="/industries"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
+              >
+                Industries
+              </Link>
+              <Link
+                href="/team"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
+              >
+                Team
+              </Link>
               <button
                 onClick={() => scrollToSection('about')}
                 className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
@@ -104,13 +127,10 @@ export default function Navbar() {
                 About
               </button>
               <button
-                onClick={() => scrollToSection('team')}
-                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
-              >
-                Team
-              </button>
-              <button
-                onClick={() => scrollToSection('hero')}
+                onClick={() => {
+                  setIsQuoteModalOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
                 className="inline-block bg-browning-red hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-semibold transition-colors mt-2"
               >
                 Get Your Quote
@@ -119,6 +139,12 @@ export default function Navbar() {
           </div>
         )}
       </div>
+
+      {/* Quote Form Modal */}
+      <QuoteFormModal
+        isOpen={isQuoteModalOpen}
+        onClose={() => setIsQuoteModalOpen(false)}
+      />
     </nav>
   );
 }

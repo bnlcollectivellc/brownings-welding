@@ -3,10 +3,14 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
+import Link from 'next/link';
 
 const clients = [
   { name: 'Banded', logo: '/images/clients/banded.png' },
   { name: 'Westrock Coffee', logo: '/images/clients/westrock-coffee.png' },
+  { name: 'Snap-On Equipment', logo: '/images/clients/snapon.png' },
+  { name: 'Tyson Foods', logo: '/images/clients/tyson-foods.png' },
+  { name: 'Skippy', logo: '/images/clients/skippy.png' },
 ];
 
 // Triple the items for seamless infinite scroll
@@ -70,11 +74,13 @@ export default function ClientsSection() {
           sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        {/* Section Header */}
+        {/* Section Header - Clickable */}
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal">
-            Who We&apos;ve Created For
-          </h2>
+          <Link href="/industries" className="inline-block group">
+            <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal group-hover:text-browning-red transition-colors">
+              Industries We Serve
+            </h2>
+          </Link>
         </div>
 
         {/* Carousel Container */}
@@ -89,27 +95,28 @@ export default function ClientsSection() {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-6 overflow-x-auto scrollbar-hide px-10"
+            className="flex gap-10 md:gap-16 items-center overflow-x-auto scrollbar-hide px-10"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {infiniteClients.map((client, index) => (
-              <div
+              <Link
+                href="/industries"
                 key={index}
-                className="flex-shrink-0 w-40 h-20 bg-browning-light rounded-xl border border-gray-200 flex items-center justify-center hover:border-browning-red/30 transition-colors"
+                className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300"
               >
                 {client.logo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={client.logo}
                     alt={client.name}
-                    className="max-h-12 max-w-[80%] object-contain"
+                    className="h-12 md:h-16 w-auto object-contain"
                   />
                 ) : (
                   <span className="text-browning-gray font-medium text-sm text-center px-2">
                     {client.name}
                   </span>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
         </div>
