@@ -35,12 +35,9 @@ export default function TeamSection() {
       container.scrollLeft = singleSetWidth;
     }
 
-    // Auto-scroll animation with variable speed
+    // Auto-scroll animation - pauses on hover
     const autoScroll = () => {
-      if (scrollRef.current && !isScrollingRef.current) {
-        // Gradually adjust speed based on hover state (faster resume)
-        const targetSpeed = isHovered ? 0.1 : 0.5;
-        speedRef.current += (targetSpeed - speedRef.current) * 0.1;
+      if (scrollRef.current && !isScrollingRef.current && !isHovered) {
         scrollRef.current.scrollLeft += speedRef.current;
       }
       animationRef.current = requestAnimationFrame(autoScroll);

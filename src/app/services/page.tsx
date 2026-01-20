@@ -42,7 +42,7 @@ const services = [
     icon: Search,
     title: 'Oilfield Tube/Pipe Inspection',
     description: 'Comprehensive tube and pipe inspection services ensuring structural integrity and compliance. Our inspection processes verify quality for critical oilfield applications.',
-    features: ['EMI', 'Descale', 'Rethreading', 'Visual Inspection', 'Quality Assurance', 'Documentation'],
+    features: ['Electromagnetic Interference (EMI)', 'Descale', 'Rethreading', 'Visual Inspection', 'Quality Assurance', 'Documentation'],
   },
   {
     icon: Shield,
@@ -60,7 +60,7 @@ export default function ServicesPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[50vh] md:h-[60vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
         <video
           autoPlay
           loop
@@ -70,7 +70,7 @@ export default function ServicesPage() {
         >
           <source src="/videos/services-bg.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="relative z-10 text-center text-white px-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             Fabrication Services

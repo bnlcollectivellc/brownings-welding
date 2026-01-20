@@ -29,7 +29,7 @@ const services = [
   },
   {
     icon: Search,
-    title: 'Tube Inspection',
+    title: 'Oilfield Tube/Pipe Inspection',
     description: 'Comprehensive tube inspection services ensuring quality and compliance.',
   },
   {

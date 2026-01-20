@@ -29,74 +29,91 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
   const isVisible = alwaysVisible || isScrolled;
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isVisible
-          ? 'opacity-100 bg-white/10 backdrop-blur-md border-b border-white/20'
-          : 'opacity-0 pointer-events-none'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 md:h-20">
-          {/* Logo - Icon Only */}
-          <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/images/logo-icon.png"
-              alt="Browning's Welding"
-              width={50}
-              height={50}
-              className="h-9 md:h-12 w-auto"
-              priority
-            />
-          </Link>
+    <>
+      {/* Mobile hamburger - always visible */}
+      <div className="md:hidden fixed top-0 right-0 z-50 p-4">
+        <button
+          className={`p-2 rounded-full transition-all duration-300 ${
+            isVisible || isMobileMenuOpen
+              ? 'text-browning-charcoal bg-white/80 backdrop-blur-md'
+              : 'text-white bg-black/20 backdrop-blur-sm'
+          }`}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/industries"
-              className="font-medium transition-colors text-browning-red hover:text-red-700"
-            >
-              Industries
+      <nav
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+          isVisible
+            ? 'opacity-100 bg-white/10 backdrop-blur-md border-b border-white/20'
+            : 'opacity-0 pointer-events-none md:opacity-0'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 md:h-20">
+            {/* Logo - Icon Only */}
+            <Link href="/" className="flex-shrink-0">
+              <Image
+                src="/images/logo-icon.png"
+                alt="Browning's Welding"
+                width={50}
+                height={50}
+                className="h-9 md:h-12 w-auto"
+                priority
+              />
             </Link>
-            <Link
-              href="/services"
-              className="font-medium transition-colors text-browning-red hover:text-red-700"
-            >
-              Services
-            </Link>
-            <Link
-              href="/team"
-              className="font-medium transition-colors text-browning-red hover:text-red-700"
-            >
-              Family
-            </Link>
-            <Link
-              href="/about"
-              className="font-medium transition-colors text-browning-red hover:text-red-700"
-            >
-              About
-            </Link>
-            <button
-              onClick={() => setIsQuoteModalOpen(true)}
-              className="bg-browning-red hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-semibold transition-colors"
-            >
-              Get Your Quote
-            </button>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link
+                href="/about"
+                className="font-medium transition-colors text-browning-red hover:text-red-700"
+              >
+                About
+              </Link>
+              <Link
+                href="/industries"
+                className="font-medium transition-colors text-browning-red hover:text-red-700"
+              >
+                Industries
+              </Link>
+              <Link
+                href="/services"
+                className="font-medium transition-colors text-browning-red hover:text-red-700"
+              >
+                Services
+              </Link>
+              <Link
+                href="/team"
+                className="font-medium transition-colors text-browning-red hover:text-red-700"
+              >
+                Family
+              </Link>
+              <button
+                onClick={() => setIsQuoteModalOpen(true)}
+                className="bg-browning-red hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-semibold transition-colors"
+              >
+                Get Your Quote
+              </button>
+            </div>
+
+            {/* Spacer for mobile to keep layout consistent */}
+            <div className="md:hidden w-10" />
           </div>
-
-          {/* Mobile menu button */}
-          <button
-            className={`md:hidden p-2 ${isVisible ? 'text-browning-charcoal' : 'text-white'}`}
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4">
             <div className="space-y-2 text-center">
+              <Link
+                href="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
+              >
+                About
+              </Link>
               <Link
                 href="/industries"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -118,13 +135,6 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
               >
                 Family
               </Link>
-              <Link
-                href="/about"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
-              >
-                About
-              </Link>
               <button
                 onClick={() => {
                   setIsQuoteModalOpen(true);
@@ -138,12 +148,58 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
           </div>
         )}
       </div>
+      </nav>
+
+      {/* Mobile Navigation Overlay */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-40 bg-white/95 backdrop-blur-md pt-20">
+          <div className="space-y-2 text-center px-4">
+            <Link
+              href="/about"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full text-center text-browning-charcoal hover:text-browning-red transition-colors font-medium py-3 text-lg"
+            >
+              About
+            </Link>
+            <Link
+              href="/industries"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full text-center text-browning-charcoal hover:text-browning-red transition-colors font-medium py-3 text-lg"
+            >
+              Industries
+            </Link>
+            <Link
+              href="/services"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full text-center text-browning-charcoal hover:text-browning-red transition-colors font-medium py-3 text-lg"
+            >
+              Services
+            </Link>
+            <Link
+              href="/team"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full text-center text-browning-charcoal hover:text-browning-red transition-colors font-medium py-3 text-lg"
+            >
+              Family
+            </Link>
+            <button
+              onClick={() => {
+                setIsQuoteModalOpen(true);
+                setIsMobileMenuOpen(false);
+              }}
+              className="inline-block bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-full font-semibold transition-colors mt-4"
+            >
+              Get Your Quote
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Quote Form Modal */}
       <QuoteFormModal
         isOpen={isQuoteModalOpen}
         onClose={() => setIsQuoteModalOpen(false)}
       />
-    </nav>
+    </>
   );
 }

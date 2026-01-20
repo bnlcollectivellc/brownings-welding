@@ -67,12 +67,9 @@ export default function IndustriesPage() {
       container.scrollLeft = singleSetWidth;
     }
 
-    // Auto-scroll animation with variable speed
+    // Auto-scroll animation - pauses on hover
     const autoScroll = () => {
-      if (scrollRef.current && !isScrollingRef.current) {
-        // Gradually adjust speed based on hover state (faster resume)
-        const targetSpeed = isHovered ? 0.1 : 0.5;
-        speedRef.current += (targetSpeed - speedRef.current) * 0.1;
+      if (scrollRef.current && !isScrollingRef.current && !isHovered) {
         scrollRef.current.scrollLeft += speedRef.current;
       }
       animationRef.current = requestAnimationFrame(autoScroll);
@@ -113,13 +110,13 @@ export default function IndustriesPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden bg-browning-charcoal">
-        <div className="absolute inset-0 bg-gradient-to-br from-browning-charcoal to-gray-900" />
+      <section className="relative h-[50vh] md:h-[60vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16 bg-browning-charcoal">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-browning-charcoal/50 to-browning-charcoal" />
         <div className="relative z-10 text-center text-white px-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             Industries We Serve
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
             Trusted by leading companies across multiple industries
           </p>
         </div>
