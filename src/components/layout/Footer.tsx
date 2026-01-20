@@ -30,23 +30,23 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#services" className="text-gray-400 hover:text-browning-red transition-colors">
+                <Link href="/industries" className="text-gray-400 hover:text-browning-red transition-colors">
+                  Industries
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className="text-gray-400 hover:text-browning-red transition-colors">
                   Services
                 </Link>
               </li>
               <li>
-                <Link href="#about" className="text-gray-400 hover:text-browning-red transition-colors">
+                <Link href="/team" className="text-gray-400 hover:text-browning-red transition-colors">
+                  Family
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="text-gray-400 hover:text-browning-red transition-colors">
                   About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="#team" className="text-gray-400 hover:text-browning-red transition-colors">
-                  Our Team
-                </Link>
-              </li>
-              <li>
-                <Link href="#contact" className="text-gray-400 hover:text-browning-red transition-colors">
-                  Contact
                 </Link>
               </li>
             </ul>
@@ -117,7 +117,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} Browning&apos;s Welding & Fabrication. All rights reserved.
+            © 2026 Browning&apos;s Welding Service, Inc. All rights reserved.
           </p>
           <p className="text-gray-500 text-sm">
             Manufacturing Excellence • Home Grown Values

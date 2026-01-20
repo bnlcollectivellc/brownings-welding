@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   title: "Browning's Welding & Fabrication | Custom Metal Fabrication",
   description: "Faith, Family, & Fabrication | Since 1972. Get instant quotes on custom laser cut parts with our interactive configurator. Made in the USA.",
   keywords: "welding, fabrication, laser cutting, CNC, metal fabrication, custom parts, sheet metal",
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({

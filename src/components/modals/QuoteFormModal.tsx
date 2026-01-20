@@ -10,16 +10,6 @@ interface QuoteFormModalProps {
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
-const SERVICE_CATEGORIES = [
-  'Welding',
-  'Laser Cutting',
-  'Sheet Metal Fabrication',
-  'CNC Machining',
-  'Tube Inspection',
-  'Finishing Services',
-  'Other',
-];
-
 const MATERIALS = [
   'Steel',
   'Stainless Steel',
@@ -36,11 +26,7 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
     email: '',
     phone: '',
     company: '',
-    serviceCategory: '',
     quantity: '',
-    length: '',
-    width: '',
-    height: '',
     comments: '',
   });
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
@@ -106,11 +92,7 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
       email: '',
       phone: '',
       company: '',
-      serviceCategory: '',
       quantity: '',
-      length: '',
-      width: '',
-      height: '',
       comments: '',
     });
     setSelectedMaterials([]);
@@ -303,25 +285,6 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
             </div>
           </div>
 
-          {/* Service Category */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Service Category</h3>
-            <select
-              name="serviceCategory"
-              value={formData.serviceCategory}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-            >
-              <option value="">Select a service...</option>
-              {SERVICE_CATEGORIES.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
-
           {/* Project Details */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Project Details</h3>
@@ -383,46 +346,6 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
                 placeholder="100"
               />
-            </div>
-
-            {/* Overall Dimensions */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Overall Dimensions (Fabrication)</label>
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">Length</label>
-                  <input
-                    type="text"
-                    name="length"
-                    value={formData.length}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                    placeholder='12"'
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">Width</label>
-                  <input
-                    type="text"
-                    name="width"
-                    value={formData.width}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                    placeholder='6"'
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">Height</label>
-                  <input
-                    type="text"
-                    name="height"
-                    value={formData.height}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-                    placeholder='3"'
-                  />
-                </div>
-              </div>
             </div>
 
             <div>

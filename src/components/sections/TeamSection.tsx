@@ -8,7 +8,7 @@ import Link from 'next/link';
 // Management team only for homepage carousel
 const managementTeam = [
   { name: 'Tommy Lynn Browning', role: 'President', image: '/images/team/tommy-lynn-browning.jpg' },
-  { name: 'Tammy Browning', role: 'Vice-President', image: '/images/team/tammy-browning.jpg' },
+  { name: 'Tammy Browning', role: 'Controller', image: '/images/team/tammy-browning.jpg' },
   { name: 'Aidan Conley', role: 'Operations Manager', image: '/images/team/aidan-conley.jpg' },
   { name: 'Josh Cummins', role: 'Design Engineer / Estimator', image: '/images/team/josh-cummins.jpg' },
   { name: 'Scott Hance', role: 'Shop Floor Manager', image: '/images/team/scott-hance.jpg' },
@@ -38,9 +38,9 @@ export default function TeamSection() {
     // Auto-scroll animation with variable speed
     const autoScroll = () => {
       if (scrollRef.current && !isScrollingRef.current) {
-        // Gradually adjust speed based on hover state
+        // Gradually adjust speed based on hover state (faster resume)
         const targetSpeed = isHovered ? 0.1 : 0.5;
-        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.1;
         scrollRef.current.scrollLeft += speedRef.current;
       }
       animationRef.current = requestAnimationFrame(autoScroll);

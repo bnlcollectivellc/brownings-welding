@@ -10,7 +10,7 @@ const services = [
   {
     icon: Wind,
     title: 'Air & Liquid Cooling Assemblies',
-    description: 'Specialized fabrication of air and liquid cooling assemblies for data centers and industrial applications. Our precision manufacturing ensures optimal thermal performance and reliability.',
+    description: 'Specialized fabrication of air and liquid cooling assemblies for data centers and industrial applications. Our work includes painted and powder coated steel frames, square tubing, angle iron, channel, and pipe welding, as well as mild steel and stainless pipe fitting and welding.',
     features: ['Data Center Cooling', 'Heat Exchangers', 'Coolant Distribution', 'Custom Manifolds', 'Leak Testing', 'Production Assembly'],
     highlight: true,
   },
@@ -21,10 +21,16 @@ const services = [
     features: ['MIG Welding', 'TIG Welding', 'Spot Welding', 'Stick Welding', 'Aluminum Welding', 'Stainless Steel Welding'],
   },
   {
+    icon: Cog,
+    title: 'CNC Machining',
+    description: 'Precision mill and lathe capabilities for complex parts and prototypes. Our CNC department delivers tight-tolerance components with excellent surface finishes.',
+    features: ['CNC Milling', 'CNC Turning', 'Prototyping', 'Production Machining', 'Tight Tolerances', 'Various Materials'],
+  },
+  {
     icon: Scissors,
     title: 'Laser Cutting',
-    description: 'Precision laser cutting for intricate designs and clean edges on sheet metal. Our state-of-the-art fiber laser technology delivers exceptional accuracy and speed for both prototype and production runs.',
-    features: ['Fiber Laser Technology', 'Tight Tolerances', 'Complex Geometries', 'Fast Turnaround', 'Various Materials', 'Production Runs'],
+    description: 'Precision laser cutting for intricate designs and clean edges on sheet metal. Our state-of-the-art CO2 laser technology delivers exceptional accuracy and speed for both prototype and production runs.',
+    features: ['CO2 Laser Technology', 'Fiber Engraving Technology', 'Tight Tolerances', 'Complex Geometries', 'Fast Turnaround', 'Various Materials'],
   },
   {
     icon: Box,
@@ -33,22 +39,16 @@ const services = [
     features: ['CNC Press Brake', 'Shearing', 'Rolling', 'Forming', 'Punching', 'Assembly'],
   },
   {
-    icon: Cog,
-    title: 'CNC Machining',
-    description: 'Precision mill and lathe capabilities for complex parts and prototypes. Our CNC department delivers tight-tolerance components with excellent surface finishes.',
-    features: ['CNC Milling', 'CNC Turning', 'Prototyping', 'Production Machining', 'Tight Tolerances', 'Various Materials'],
-  },
-  {
     icon: Search,
-    title: 'Tube Inspection',
-    description: 'Comprehensive tube inspection services ensuring quality and compliance. Our inspection processes verify dimensional accuracy and structural integrity.',
-    features: ['Dimensional Inspection', 'Visual Inspection', 'Quality Assurance', 'Documentation', 'Compliance Verification'],
+    title: 'Oil Field Tube/Pipe Inspection',
+    description: 'Comprehensive tube and pipe inspection services ensuring structural integrity and compliance. Our inspection processes verify quality for critical oil field applications.',
+    features: ['EMI', 'Descale', 'Rethreading', 'Visual Inspection', 'Quality Assurance', 'Documentation'],
   },
   {
     icon: Shield,
     title: 'Finishing Services',
     description: 'Complete finishing solutions including powder coating, galvanizing, and plating. We coordinate with trusted partners to deliver fully finished parts ready for use.',
-    features: ['Powder Coating', 'Galvanizing', 'Plating', 'Painting', 'Surface Preparation', 'Corrosion Protection'],
+    features: ['Powder Coating', 'Galvanizing', 'Anodizing', 'Plating', 'Painting', 'Surface Preparation'],
   },
 ];
 

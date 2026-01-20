@@ -35,9 +35,9 @@ export default function ClientsSection() {
     // Auto-scroll animation with variable speed
     const autoScroll = () => {
       if (scrollRef.current && !isScrollingRef.current) {
-        // Gradually adjust speed based on hover state
+        // Gradually adjust speed based on hover state (faster resume)
         const targetSpeed = isHovered ? 0.1 : 0.5;
-        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.1;
         scrollRef.current.scrollLeft += speedRef.current;
       }
       animationRef.current = requestAnimationFrame(autoScroll);
@@ -89,7 +89,7 @@ export default function ClientsSection() {
         <div className="text-center mb-10">
           <Link href="/industries" className="inline-block group">
             <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal group-hover:text-browning-red transition-colors">
-              Industries We Serve
+              Our Trusted Partners
             </h2>
           </Link>
         </div>

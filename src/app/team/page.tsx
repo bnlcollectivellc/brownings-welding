@@ -8,10 +8,11 @@ import QuoteFormModal from '@/components/modals/QuoteFormModal';
 import Navbar from '@/components/layout/Navbar';
 
 const allTeamMembers = [
-  // Browning Family
-  { name: 'Tommy Browning Sr.', role: 'Founder', image: '/images/team/tommy-browning-sr.jpg', category: 'Leadership' },
+  // Founders
+  { name: 'Tommy & Peggy Browning', role: 'Founders', image: '/images/team/tommy-peggy-browning.jpg', category: 'Leadership' },
+  // Leadership
   { name: 'Tommy Lynn Browning', role: 'President', image: '/images/team/tommy-lynn-browning.jpg', category: 'Leadership' },
-  { name: 'Tammy Browning', role: 'Vice-President', image: '/images/team/tammy-browning.jpg', category: 'Leadership' },
+  { name: 'Tammy Browning', role: 'Controller', image: '/images/team/tammy-browning.jpg', category: 'Leadership' },
   // Management
   { name: 'Aidan Conley', role: 'Operations Manager', image: '/images/team/aidan-conley.jpg', category: 'Management' },
   { name: 'Scott Hance', role: 'Shop Floor Manager', image: '/images/team/scott-hance.jpg', category: 'Management' },
@@ -51,7 +52,7 @@ export default function TeamPage() {
           src="/images/team-group.jpg"
           alt="Browning's Welding Team"
           fill
-          className="object-cover"
+          className="object-cover object-[center_30%]"
           priority
         />
         <div className="absolute inset-0 bg-black/50" />
@@ -69,8 +70,7 @@ export default function TeamPage() {
       <section className="py-16 bg-browning-light">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-lg text-browning-gray leading-relaxed">
-            {/* Placeholder for team copy */}
-            At Browning&apos;s Welding, we&apos;re more than just a team, we&apos;re a family. With over 50 years of combined experience, our skilled craftsmen bring dedication, precision, and pride to every project. From our leadership to our shop floor, every member shares a commitment to quality and customer satisfaction.
+At Browning&apos;s Welding, we&apos;re more than just a team, we&apos;re a family. With over 50 years in business, our skilled craftsmen bring dedication, precision, and pride to every project. From our leadership to our shop floor, every member shares a commitment to quality and customer satisfaction.
           </p>
         </div>
       </section>

@@ -7,44 +7,44 @@ import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 const testimonials = [
   {
     id: 1,
-    name: 'Josh McKay',
-    text: 'I was in need of custom fabrication and repair work done on my duck boat and motor. Took it to Browning\'s Welding who KNOCKED IT OUT OF THE PARK! Their team was able to complete my project for under the price quoted.',
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: 'Luke Barnett',
-    text: 'I worked with Tommy at Browning Welding for a small machined metal project and was blown away at their in-house abilities. They can make just about anything out of metal. No job was too small.',
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: 'Jake Briley',
-    text: 'Brownings did a fantastic job completely designing and building a piece of equipment for our airport. I would recommend them above all else.',
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: 'Murphy Brown',
-    text: 'Fast and easy to work with. More catered to bigger businesses, but they haven\'t turned us little guys down yet! Great group of guys.',
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: 'John Yates',
-    text: 'Needed the slots elongated on the bracket for my Harley windshield. They did it fast and at a very reasonable price. They did such a good job that you can\'t tell it from factory original. Great business to deal with, highly recommended.',
-    rating: 5,
-  },
-  {
-    id: 6,
     name: 'Paxton Wallace',
+    company: 'G1 Athletics',
     text: 'Great people! They can do anything you need!',
     rating: 5,
   },
   {
-    id: 7,
-    name: 'Scott Havens',
-    text: 'Browning Welding gives you what you ask for with good prices and excellent work. Very good and honest people.',
+    id: 2,
+    name: 'Josh McKay',
+    company: 'RE/MAX Real Estate',
+    text: 'I was in need of custom fabrication and repair work done on my duck boat and motor. Took it to Browning\'s Welding who KNOCKED IT OUT OF THE PARK! Their team was able to complete my project for under the price quoted.',
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: 'Luke Barnett',
+    company: 'Lean Feast',
+    text: 'I worked with Tommy at Browning Welding for a small machined metal project and was blown away at their in-house abilities. They can make just about anything out of metal. No job was too small.',
+    rating: 5,
+  },
+  {
+    id: 4,
+    name: 'Jake Briley',
+    company: 'Conway Municipal Airport',
+    text: 'Brownings did a fantastic job completely designing and building a piece of equipment for our airport. I would recommend them above all else.',
+    rating: 5,
+  },
+  {
+    id: 5,
+    name: 'Murphy Brown',
+    company: 'Central Arkansas Supply',
+    text: 'Fast and easy to work with. More catered to bigger businesses, but they haven\'t turned us little guys down yet! Great group of guys.',
+    rating: 5,
+  },
+  {
+    id: 6,
+    name: 'John Yates',
+    company: null,
+    text: 'Needed the slots elongated on the bracket for my Harley windshield. They did it fast and at a very reasonable price. They did such a good job that you can\'t tell it from factory original. Great business to deal with, highly recommended.',
     rating: 5,
   },
 ];
@@ -151,6 +151,9 @@ export default function TestimonialsSection() {
                 <p className="font-bold text-browning-charcoal">
                   {testimonial.name}
                 </p>
+                {testimonial.company && (
+                  <p className="text-sm text-browning-gray">{testimonial.company}</p>
+                )}
               </div>
             ))}
           </div>

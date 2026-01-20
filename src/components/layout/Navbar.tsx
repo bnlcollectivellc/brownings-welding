@@ -28,14 +28,6 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
 
   const isVisible = alwaysVisible || isScrolled;
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -76,14 +68,14 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
               href="/team"
               className="font-medium transition-colors text-browning-red hover:text-red-700"
             >
-              Team
+              Family
             </Link>
-            <button
-              onClick={() => scrollToSection('about')}
+            <Link
+              href="/about"
               className="font-medium transition-colors text-browning-red hover:text-red-700"
             >
               About
-            </button>
+            </Link>
             <button
               onClick={() => setIsQuoteModalOpen(true)}
               className="bg-browning-red hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-semibold transition-colors"
@@ -124,14 +116,15 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
               >
-                Team
+                Family
               </Link>
-              <button
-                onClick={() => scrollToSection('about')}
+              <Link
+                href="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
               >
                 About
-              </button>
+              </Link>
               <button
                 onClick={() => {
                   setIsQuoteModalOpen(true);

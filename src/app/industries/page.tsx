@@ -2,10 +2,11 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { Server, Utensils, Tractor, Truck, Building2, Trees } from 'lucide-react';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
 import Navbar from '@/components/layout/Navbar';
 
-const industries = [
+const partners = [
   { name: 'Banded', logo: '/images/clients/banded.png', large: true },
   { name: 'Westrock Coffee', logo: '/images/clients/westrock-coffee.png' },
   { name: 'Snap-On Equipment', logo: '/images/clients/snapon.png' },
@@ -13,8 +14,42 @@ const industries = [
   { name: 'Skippy', logo: '/images/clients/skippy.png' },
 ];
 
+const sectors = [
+  {
+    icon: Server,
+    title: 'Data Centers',
+    description: 'Fabrication of steel and aluminum frames for air and liquid cooling assemblies, supporting the rapidly growing data center industry.',
+    highlight: true,
+  },
+  {
+    icon: Utensils,
+    title: 'Food & Beverage',
+    description: 'Stainless steel fabrication and sanitary equipment for food processing and packaging facilities.',
+  },
+  {
+    icon: Tractor,
+    title: 'Agriculture',
+    description: 'Durable equipment repairs and custom fabrication for farming and agricultural operations.',
+  },
+  {
+    icon: Truck,
+    title: 'Heavy Equipment',
+    description: 'Custom machine parts, fixtures, and fabricated products for heavy equipment manufacturing and maintenance.',
+  },
+  {
+    icon: Building2,
+    title: 'Construction',
+    description: 'Structural steel fabrication and pipe assemblies for commercial and industrial construction projects.',
+  },
+  {
+    icon: Trees,
+    title: 'Recreation',
+    description: 'Custom fabrication for outdoor recreation, hunting, and sporting goods industries.',
+  },
+];
+
 // Triple the items for seamless infinite scroll
-const infiniteIndustries = [...industries, ...industries, ...industries];
+const infinitePartners = [...partners, ...partners, ...partners];
 
 export default function IndustriesPage() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
@@ -35,9 +70,9 @@ export default function IndustriesPage() {
     // Auto-scroll animation with variable speed
     const autoScroll = () => {
       if (scrollRef.current && !isScrollingRef.current) {
-        // Gradually adjust speed based on hover state
+        // Gradually adjust speed based on hover state (faster resume)
         const targetSpeed = isHovered ? 0.1 : 0.5;
-        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.1;
         scrollRef.current.scrollLeft += speedRef.current;
       }
       animationRef.current = requestAnimationFrame(autoScroll);
@@ -90,7 +125,7 @@ export default function IndustriesPage() {
         </div>
       </section>
 
-      {/* Industry Description Placeholder */}
+      {/* Industry Description */}
       <section className="py-16 bg-browning-light">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-lg text-browning-gray leading-relaxed">
@@ -99,8 +134,43 @@ export default function IndustriesPage() {
         </div>
       </section>
 
-      {/* Industry Logos Carousel */}
+      {/* Industry Sectors Grid */}
       <section className="py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {sectors.map((sector, index) => (
+              <div
+                key={index}
+                className={`bg-white rounded-2xl p-8 shadow-sm border transition-all hover:shadow-md ${
+                  sector.highlight
+                    ? 'border-browning-red/30 bg-gradient-to-br from-white to-red-50'
+                    : 'border-gray-100'
+                }`}
+              >
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 ${
+                  sector.highlight ? 'bg-browning-red/20' : 'bg-browning-light'
+                }`}>
+                  <sector.icon className={sector.highlight ? 'text-browning-red' : 'text-browning-charcoal'} size={28} />
+                </div>
+
+                <div className="flex items-center gap-3 mb-4">
+                  <h3 className="text-xl font-bold text-browning-charcoal">{sector.title}</h3>
+                  {sector.highlight && (
+                    <span className="text-xs font-semibold text-browning-red bg-browning-red/10 px-2 py-1 rounded-full">
+                      Specialty
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-browning-gray">{sector.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Partners Logos Carousel */}
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal text-center mb-12">
             Our Trusted Partners
@@ -109,10 +179,10 @@ export default function IndustriesPage() {
           {/* Carousel Container */}
           <div className="relative py-4">
             {/* Fade Left */}
-            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
 
             {/* Fade Right */}
-            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
 
             {/* Scrollable Container */}
             <div
@@ -121,7 +191,7 @@ export default function IndustriesPage() {
               className="flex gap-12 md:gap-20 items-center overflow-x-auto scrollbar-hide px-10 py-4"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              {infiniteIndustries.map((industry, index) => (
+              {infinitePartners.map((partner, index) => (
                 <div
                   key={index}
                   className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300"
@@ -130,37 +200,13 @@ export default function IndustriesPage() {
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={industry.logo}
-                    alt={industry.name}
-                    className={`w-auto object-contain ${industry.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
+                    src={partner.logo}
+                    alt={partner.name}
+                    className={`w-auto object-contain ${partner.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
                   />
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Industry Sectors */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal text-center mb-12">
-            Sectors We Support
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { title: 'Data Centers', description: 'Precision cooling assemblies and custom infrastructure components for the rapidly growing data center industry.' },
-              { title: 'Food & Beverage', description: 'Stainless steel fabrication and sanitary equipment for food processing and packaging facilities.' },
-              { title: 'Agriculture', description: 'Durable equipment repairs and custom fabrication for farming and agricultural operations.' },
-              { title: 'Automotive', description: 'Precision tooling, fixtures, and equipment for automotive manufacturing and service.' },
-              { title: 'Construction', description: 'Structural steel fabrication and custom metalwork for commercial and industrial construction.' },
-              { title: 'Recreation', description: 'Custom fabrication for outdoor recreation, hunting, and sporting goods industries.' },
-            ].map((sector, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold text-browning-charcoal mb-2">{sector.title}</h3>
-                <p className="text-browning-gray text-sm">{sector.description}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
