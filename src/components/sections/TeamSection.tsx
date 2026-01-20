@@ -22,6 +22,7 @@ export default function TeamSection() {
   const isScrollingRef = useRef(false);
   const animationRef = useRef<number | null>(null);
   const speedRef = useRef(0.5);
+  const targetSpeedRef = useRef(0.5);
   const [isHovered, setIsHovered] = useState(false);
   const [headerRef, headerVisible] = useInView(0.2);
   const [carouselRef, carouselVisible] = useInView(0.1);
@@ -35,9 +36,15 @@ export default function TeamSection() {
       container.scrollLeft = singleSetWidth;
     }
 
-    // Auto-scroll animation - pauses on hover
+    // Auto-scroll animation with smooth speed transitions
     const autoScroll = () => {
-      if (scrollRef.current && !isScrollingRef.current && !isHovered) {
+      // Smoothly interpolate speed toward target
+      const targetSpeed = isHovered ? 0 : 0.5;
+      targetSpeedRef.current = targetSpeed;
+      speedRef.current += (targetSpeedRef.current - speedRef.current) * 0.05;
+
+      // Only scroll if speed is meaningful
+      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
         scrollRef.current.scrollLeft += speedRef.current;
       }
       animationRef.current = requestAnimationFrame(autoScroll);
@@ -112,6 +119,10 @@ export default function TeamSection() {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onTouchStart={() => setIsHovered(true)}
+            onTouchEnd={() => setTimeout(() => setIsHovered(false), 2000)}
             className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide px-8 md:px-12 pt-4 pb-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
@@ -120,8 +131,6 @@ export default function TeamSection() {
                 href="/team"
                 key={index}
                 className="flex-shrink-0 w-48 md:w-64 group cursor-pointer pt-2"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
               >
                 {/* Photo */}
                 <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">

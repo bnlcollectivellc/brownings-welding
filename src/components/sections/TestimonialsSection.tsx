@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useCallback, useEffect } from 'react';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRef, useCallback, useEffect, useState } from 'react';
+import { Star } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
 const testimonials = [
@@ -55,17 +55,43 @@ const infiniteTestimonials = [...testimonials, ...testimonials, ...testimonials]
 export default function TestimonialsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
+  const animationRef = useRef<number | null>(null);
+  const speedRef = useRef(0.5);
+  const targetSpeedRef = useRef(0.5);
+  const [isHovered, setIsHovered] = useState(false);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
-  // Initialize scroll position to middle set
+  // Initialize scroll position to middle set and start auto-scroll
   useEffect(() => {
     if (scrollRef.current) {
       const container = scrollRef.current;
       const singleSetWidth = container.scrollWidth / 3;
       container.scrollLeft = singleSetWidth;
     }
-  }, []);
+
+    // Auto-scroll animation with smooth speed transitions
+    const autoScroll = () => {
+      // Smoothly interpolate speed toward target
+      const targetSpeed = isHovered ? 0 : 0.5;
+      targetSpeedRef.current = targetSpeed;
+      speedRef.current += (targetSpeedRef.current - speedRef.current) * 0.05;
+
+      // Only scroll if speed is meaningful
+      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
+        scrollRef.current.scrollLeft += speedRef.current;
+      }
+      animationRef.current = requestAnimationFrame(autoScroll);
+    };
+
+    animationRef.current = requestAnimationFrame(autoScroll);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isHovered]);
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -84,16 +110,6 @@ export default function TestimonialsSection() {
       setTimeout(() => { isScrollingRef.current = false; }, 50);
     }
   }, []);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = 320;
-      scrollRef.current.scrollBy({
-        left: direction === 'right' ? scrollAmount : -scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
 
   return (
     <section
@@ -127,6 +143,10 @@ export default function TestimonialsSection() {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onTouchStart={() => setIsHovered(true)}
+            onTouchEnd={() => setTimeout(() => setIsHovered(false), 2000)}
             className="flex gap-6 overflow-x-auto scrollbar-hide px-10"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
@@ -157,24 +177,6 @@ export default function TestimonialsSection() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Navigation Buttons */}
-        <div className="flex justify-center gap-3 mt-8">
-          <button
-            onClick={() => scroll('left')}
-            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
-            aria-label="Previous"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            onClick={() => scroll('right')}
-            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
-            aria-label="Next"
-          >
-            <ChevronRight size={20} />
-          </button>
         </div>
       </div>
     </section>

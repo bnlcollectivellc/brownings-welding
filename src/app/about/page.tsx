@@ -36,20 +36,8 @@ export default function AboutPage() {
       {/* Company History */}
       <section className="py-16 bg-browning-light">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-lg max-w-none">
-            <p className="text-lg text-browning-gray leading-relaxed mb-6">
-              Founded in 1972 by Tommy and Peggy Browning, Browning&apos;s Welding &amp; Fabrication started as a small welding shop in Greenbrier, Arkansas. What began as a one-man operation driven by dedication and craftsmanship has grown into a full-service metal fabrication facility serving customers across the nation.
-            </p>
-            <p className="text-lg text-browning-gray leading-relaxed mb-6">
-              For over 50 years, our commitment to quality has never wavered. From our early days of agricultural repairs to today&apos;s precision cooling assemblies for data centers, we&apos;ve always believed that every weld, every cut, and every bend represents our family&apos;s reputation.
-            </p>
-            <p className="text-lg text-browning-gray leading-relaxed mb-8">
-              Now in our second generation of family leadership, we continue to invest in the latest technology and equipment while honoring the values that built this company: integrity, quality, and treating every customer like family.
-            </p>
-          </div>
-
-          {/* Founders Photo */}
-          <div className="mt-8 flex justify-center">
+          {/* Founders Photo - Above text */}
+          <div className="mb-10 flex justify-center">
             <div className="relative w-full max-w-lg">
               <Image
                 src="/images/team/tommy-peggy-browning.jpg"
@@ -62,6 +50,18 @@ export default function AboutPage() {
                 Tommy and Peggy Browning, Founders
               </p>
             </div>
+          </div>
+
+          <div className="prose prose-lg max-w-none">
+            <p className="text-lg text-browning-gray leading-relaxed mb-6">
+              Founded in 1972 by Tommy and Peggy Browning, Browning&apos;s Welding &amp; Fabrication started as a small welding shop in Greenbrier, Arkansas. What began as a one-man operation driven by dedication and craftsmanship has grown into a full-service metal fabrication facility serving customers across the nation.
+            </p>
+            <p className="text-lg text-browning-gray leading-relaxed mb-6">
+              For over 50 years, our commitment to quality has never wavered. From our early days of agricultural repairs to today&apos;s precision cooling assemblies for data centers, we&apos;ve always believed that every weld, every cut, and every bend represents our family&apos;s reputation.
+            </p>
+            <p className="text-lg text-browning-gray leading-relaxed">
+              Now in our second generation of family leadership, we continue to invest in the latest technology and equipment while honoring the values that built this company: integrity, quality, and treating every customer like family.
+            </p>
           </div>
         </div>
       </section>

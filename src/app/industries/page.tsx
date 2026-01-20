@@ -34,7 +34,7 @@ const sectors = [
   {
     icon: Truck,
     title: 'Heavy Equipment',
-    description: 'Custom machine parts, fixtures, and fabricated products for heavy equipment manufacturing and maintenance.',
+    description: 'Custom machine parts, fixtures, and fabricated products for heavy equipment manufacturing and related industries.',
   },
   {
     icon: Building2,
@@ -57,6 +57,7 @@ export default function IndustriesPage() {
   const isScrollingRef = useRef(false);
   const animationRef = useRef<number | null>(null);
   const speedRef = useRef(0.5);
+  const targetSpeedRef = useRef(0.5);
   const [isHovered, setIsHovered] = useState(false);
 
   // Initialize scroll position to middle set and start auto-scroll
@@ -67,9 +68,15 @@ export default function IndustriesPage() {
       container.scrollLeft = singleSetWidth;
     }
 
-    // Auto-scroll animation - pauses on hover
+    // Auto-scroll animation with smooth speed transitions
     const autoScroll = () => {
-      if (scrollRef.current && !isScrollingRef.current && !isHovered) {
+      // Smoothly interpolate speed toward target
+      const targetSpeed = isHovered ? 0 : 0.5;
+      targetSpeedRef.current = targetSpeed;
+      speedRef.current += (targetSpeedRef.current - speedRef.current) * 0.05;
+
+      // Only scroll if speed is meaningful
+      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
         scrollRef.current.scrollLeft += speedRef.current;
       }
       animationRef.current = requestAnimationFrame(autoScroll);
@@ -185,6 +192,10 @@ export default function IndustriesPage() {
             <div
               ref={scrollRef}
               onScroll={handleScroll}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              onTouchStart={() => setIsHovered(true)}
+              onTouchEnd={() => setTimeout(() => setIsHovered(false), 2000)}
               className="flex gap-12 md:gap-20 items-center overflow-x-auto scrollbar-hide px-10 py-4"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
@@ -192,8 +203,6 @@ export default function IndustriesPage() {
                 <div
                   key={index}
                   className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300"
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

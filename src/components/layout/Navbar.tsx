@@ -30,8 +30,23 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
 
   return (
     <>
-      {/* Mobile hamburger - always visible */}
-      <div className="md:hidden fixed top-0 right-0 z-50 p-4">
+      {/* Mobile top bar - always visible, centered logo and hamburger */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3">
+        {/* Logo */}
+        <Link href="/" className="flex-shrink-0">
+          <Image
+            src="/images/logo-icon.png"
+            alt="Browning's Welding"
+            width={40}
+            height={40}
+            className={`h-8 w-auto transition-all duration-300 ${
+              isVisible || isMobileMenuOpen ? 'opacity-100' : 'opacity-90'
+            }`}
+            priority
+          />
+        </Link>
+
+        {/* Hamburger */}
         <button
           className={`p-2 rounded-full transition-all duration-300 ${
             isVisible || isMobileMenuOpen
@@ -53,14 +68,14 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 md:h-20">
-            {/* Logo - Icon Only */}
-            <Link href="/" className="flex-shrink-0">
+            {/* Logo - Icon Only (desktop) */}
+            <Link href="/" className="flex-shrink-0 hidden md:block">
               <Image
                 src="/images/logo-icon.png"
                 alt="Browning's Welding"
                 width={50}
                 height={50}
-                className="h-9 md:h-12 w-auto"
+                className="h-12 w-auto"
                 priority
               />
             </Link>
@@ -98,55 +113,7 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
                 Get Your Quote
               </button>
             </div>
-
-            {/* Spacer for mobile to keep layout consistent */}
-            <div className="md:hidden w-10" />
           </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden py-4">
-            <div className="space-y-2 text-center">
-              <Link
-                href="/about"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
-              >
-                About
-              </Link>
-              <Link
-                href="/industries"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
-              >
-                Industries
-              </Link>
-              <Link
-                href="/services"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
-              >
-                Services
-              </Link>
-              <Link
-                href="/team"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
-              >
-                Family
-              </Link>
-              <button
-                onClick={() => {
-                  setIsQuoteModalOpen(true);
-                  setIsMobileMenuOpen(false);
-                }}
-                className="inline-block bg-browning-red hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-semibold transition-colors mt-2"
-              >
-                Get Your Quote
-              </button>
-            </div>
-          </div>
-        )}
       </div>
       </nav>
 
