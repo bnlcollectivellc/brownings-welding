@@ -86,14 +86,22 @@ export default function ClientsSection() {
     isHoveredRef.current = false;
   }, []);
 
-  const handleTouchStart = useCallback(() => {
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    // Only pause if touching directly on the carousel content (not page scroll)
+    if (e.target !== scrollRef.current) {
+      isHoveredRef.current = true;
+    }
+  }, []);
+
+  const handleTouchMove = useCallback(() => {
+    // Pause during active drag
     isHoveredRef.current = true;
   }, []);
 
   const handleTouchEnd = useCallback(() => {
     setTimeout(() => {
       isHoveredRef.current = false;
-    }, 2000);
+    }, 1500);
   }, []);
 
   return (
@@ -132,6 +140,7 @@ export default function ClientsSection() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             className="flex gap-12 md:gap-20 items-center overflow-x-auto scrollbar-hide px-10 py-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
