@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, User } from 'lucide-react';
+import { useRef, useEffect, useCallback, useState } from 'react';
+import { User } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
 
@@ -20,18 +20,40 @@ const infiniteTeam = [...managementTeam, ...managementTeam, ...managementTeam];
 export default function TeamSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
+  const animationRef = useRef<number | null>(null);
+  const speedRef = useRef(0.5);
+  const [isHovered, setIsHovered] = useState(false);
   const [headerRef, headerVisible] = useInView(0.2);
   const [carouselRef, carouselVisible] = useInView(0.1);
   const [parallaxRef, parallaxOffset] = useParallax(0.2);
 
-  // Initialize scroll position to middle set
+  // Initialize scroll position to middle set and start auto-scroll
   useEffect(() => {
     if (scrollRef.current) {
       const container = scrollRef.current;
       const singleSetWidth = container.scrollWidth / 3;
       container.scrollLeft = singleSetWidth;
     }
-  }, []);
+
+    // Auto-scroll animation with variable speed
+    const autoScroll = () => {
+      if (scrollRef.current && !isScrollingRef.current) {
+        // Gradually adjust speed based on hover state
+        const targetSpeed = isHovered ? 0.1 : 0.5;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+        scrollRef.current.scrollLeft += speedRef.current;
+      }
+      animationRef.current = requestAnimationFrame(autoScroll);
+    };
+
+    animationRef.current = requestAnimationFrame(autoScroll);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isHovered]);
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -53,16 +75,6 @@ export default function TeamSection() {
       setTimeout(() => { isScrollingRef.current = false; }, 50);
     }
   }, []);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = 280;
-      scrollRef.current.scrollBy({
-        left: direction === 'right' ? scrollAmount : -scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
 
   return (
     <section
@@ -111,6 +123,8 @@ export default function TeamSection() {
                 href="/team"
                 key={index}
                 className="flex-shrink-0 w-48 md:w-64 group cursor-pointer pt-2"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
               >
                 {/* Photo */}
                 <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
@@ -136,24 +150,6 @@ export default function TeamSection() {
               </Link>
             ))}
           </div>
-        </div>
-
-        {/* Navigation Buttons */}
-        <div className="flex justify-center gap-3 mt-6 md:mt-8">
-          <button
-            onClick={() => scroll('left')}
-            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
-            aria-label="Previous"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            onClick={() => scroll('right')}
-            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
-            aria-label="Next"
-          >
-            <ChevronRight size={20} />
-          </button>
         </div>
       </div>
     </section>

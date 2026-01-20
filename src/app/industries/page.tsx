@@ -1,20 +1,77 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
 import Navbar from '@/components/layout/Navbar';
 
 const industries = [
-  { name: 'Banded', logo: '/images/clients/banded.png' },
+  { name: 'Banded', logo: '/images/clients/banded.png', large: true },
   { name: 'Westrock Coffee', logo: '/images/clients/westrock-coffee.png' },
   { name: 'Snap-On Equipment', logo: '/images/clients/snapon.png' },
   { name: 'Tyson Foods', logo: '/images/clients/tyson-foods.png' },
   { name: 'Skippy', logo: '/images/clients/skippy.png' },
 ];
 
+// Triple the items for seamless infinite scroll
+const infiniteIndustries = [...industries, ...industries, ...industries];
+
 export default function IndustriesPage() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isScrollingRef = useRef(false);
+  const animationRef = useRef<number | null>(null);
+  const speedRef = useRef(0.5);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Initialize scroll position to middle set and start auto-scroll
+  useEffect(() => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const singleSetWidth = container.scrollWidth / 3;
+      container.scrollLeft = singleSetWidth;
+    }
+
+    // Auto-scroll animation with variable speed
+    const autoScroll = () => {
+      if (scrollRef.current && !isScrollingRef.current) {
+        // Gradually adjust speed based on hover state
+        const targetSpeed = isHovered ? 0.1 : 0.5;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+        scrollRef.current.scrollLeft += speedRef.current;
+      }
+      animationRef.current = requestAnimationFrame(autoScroll);
+    };
+
+    animationRef.current = requestAnimationFrame(autoScroll);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isHovered]);
+
+  // Handle seamless looping
+  const handleScroll = useCallback(() => {
+    if (isScrollingRef.current || !scrollRef.current) return;
+
+    const container = scrollRef.current;
+    const singleSetWidth = container.scrollWidth / 3;
+
+    // If scrolled to the end (third set), jump to middle set
+    if (container.scrollLeft >= singleSetWidth * 2) {
+      isScrollingRef.current = true;
+      container.scrollLeft = container.scrollLeft - singleSetWidth;
+      setTimeout(() => { isScrollingRef.current = false; }, 50);
+    }
+    // If scrolled to the beginning (first set), jump to middle set
+    else if (container.scrollLeft <= 0) {
+      isScrollingRef.current = true;
+      container.scrollLeft = container.scrollLeft + singleSetWidth;
+      setTimeout(() => { isScrollingRef.current = false; }, 50);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -37,37 +94,54 @@ export default function IndustriesPage() {
       <section className="py-16 bg-browning-light">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-lg text-browning-gray leading-relaxed">
-            {/* Placeholder for industries copy */}
             From food processing giants to outdoor recreation brands, Browning&apos;s Welding serves a diverse range of industries. Our expertise in custom fabrication, precision welding, and specialized cooling assemblies makes us the trusted partner for companies that demand quality and reliability.
           </p>
         </div>
       </section>
 
-      {/* Industry Logos Grid */}
+      {/* Industry Logos Carousel */}
       <section className="py-16 md:py-24">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal text-center mb-12">
             Our Trusted Partners
           </h2>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-16">
-            {industries.map((industry, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={industry.logo}
-                  alt={industry.name}
-                  className="max-h-16 md:max-h-20 w-auto object-contain"
-                />
-              </div>
-            ))}
+
+          {/* Carousel Container */}
+          <div className="relative py-4">
+            {/* Fade Left */}
+            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+
+            {/* Fade Right */}
+            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+            {/* Scrollable Container */}
+            <div
+              ref={scrollRef}
+              onScroll={handleScroll}
+              className="flex gap-12 md:gap-20 items-center overflow-x-auto scrollbar-hide px-10 py-4"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {infiniteIndustries.map((industry, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={industry.logo}
+                    alt={industry.name}
+                    className={`w-auto object-contain ${industry.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Industry Sectors - Placeholder */}
+      {/* Industry Sectors */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal text-center mb-12">

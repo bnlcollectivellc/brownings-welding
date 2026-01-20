@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { X, Upload, FileText, Trash2, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 interface QuoteFormModalProps {
@@ -48,6 +48,16 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
   const [isDragging, setIsDragging] = useState(false);
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  // Handle animation states
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+      setIsClosing(false);
+    }
+  }, [isOpen]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -149,19 +159,32 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
 
   const handleClose = () => {
     if (status !== 'submitting') {
-      resetForm();
-      onClose();
+      setIsClosing(true);
+      setTimeout(() => {
+        resetForm();
+        setIsVisible(false);
+        setIsClosing(false);
+        onClose();
+      }, 200);
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !isVisible) return null;
 
   // Success state
   if (status === 'success') {
     return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div className="modal-backdrop absolute inset-0 bg-black/60" onClick={handleClose} />
-        <div className="modal-content relative bg-white rounded-2xl p-8 max-w-md w-full text-center my-auto">
+      <div
+        className={`fixed inset-0 z-[100] flex items-center justify-center p-4 transition-opacity duration-200 ${
+          isClosing ? 'opacity-0' : 'opacity-100'
+        }`}
+      >
+        <div className="absolute inset-0 bg-black/60" onClick={handleClose} />
+        <div
+          className={`relative bg-white rounded-2xl p-8 max-w-md w-full text-center my-auto transition-all duration-200 ${
+            isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+          }`}
+        >
           <CheckCircle className="mx-auto mb-4 text-green-500" size={64} />
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Thank You for Submitting Your Quote Request!</h2>
           <p className="text-gray-600 mb-2">
@@ -190,9 +213,17 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="modal-backdrop absolute inset-0 bg-black/60" onClick={handleClose} />
-      <div className="modal-content relative bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto my-auto">
+    <div
+      className={`fixed inset-0 z-[100] flex items-center justify-center p-4 transition-opacity duration-200 ${
+        isClosing ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
+      <div className="absolute inset-0 bg-black/60" onClick={handleClose} />
+      <div
+        className={`relative bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto my-auto transition-all duration-200 ${
+          isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+        }`}
+      >
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
           <h2 className="text-xl font-bold text-gray-900">Request a Quote</h2>

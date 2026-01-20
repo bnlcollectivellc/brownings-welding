@@ -1,12 +1,11 @@
 'use client';
 
 import { useRef, useEffect, useCallback, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
 
 const clients = [
-  { name: 'Banded', logo: '/images/clients/banded.png' },
+  { name: 'Banded', logo: '/images/clients/banded.png', large: true },
   { name: 'Westrock Coffee', logo: '/images/clients/westrock-coffee.png' },
   { name: 'Snap-On Equipment', logo: '/images/clients/snapon.png' },
   { name: 'Tyson Foods', logo: '/images/clients/tyson-foods.png' },
@@ -20,7 +19,8 @@ export default function ClientsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
   const animationRef = useRef<number | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const speedRef = useRef(0.5);
+  const [isHovered, setIsHovered] = useState(false);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
@@ -32,10 +32,13 @@ export default function ClientsSection() {
       container.scrollLeft = singleSetWidth;
     }
 
-    // Auto-scroll animation
+    // Auto-scroll animation with variable speed
     const autoScroll = () => {
-      if (!isPaused && scrollRef.current && !isScrollingRef.current) {
-        scrollRef.current.scrollLeft += 0.5;
+      if (scrollRef.current && !isScrollingRef.current) {
+        // Gradually adjust speed based on hover state
+        const targetSpeed = isHovered ? 0.1 : 0.5;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+        scrollRef.current.scrollLeft += speedRef.current;
       }
       animationRef.current = requestAnimationFrame(autoScroll);
     };
@@ -47,7 +50,7 @@ export default function ClientsSection() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPaused]);
+  }, [isHovered]);
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -69,20 +72,6 @@ export default function ClientsSection() {
       setTimeout(() => { isScrollingRef.current = false; }, 50);
     }
   }, []);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      // Pause animation briefly when using arrows
-      setIsPaused(true);
-      const scrollAmount = 200;
-      scrollRef.current.scrollBy({
-        left: direction === 'right' ? scrollAmount : -scrollAmount,
-        behavior: 'smooth',
-      });
-      // Resume after a short delay
-      setTimeout(() => setIsPaused(false), 1000);
-    }
-  };
 
   return (
     <section
@@ -106,7 +95,7 @@ export default function ClientsSection() {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative">
+        <div className="relative py-4">
           {/* Fade Left */}
           <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
 
@@ -117,23 +106,23 @@ export default function ClientsSection() {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-10 md:gap-16 items-center overflow-x-auto scrollbar-hide px-10"
+            className="flex gap-12 md:gap-20 items-center overflow-x-auto scrollbar-hide px-10 py-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {infiniteClients.map((client, index) => (
               <Link
                 href="/industries"
                 key={index}
-                className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-125 transition-all duration-300"
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
+                className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
               >
                 {client.logo ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={client.logo}
                     alt={client.name}
-                    className="h-12 md:h-16 w-auto object-contain"
+                    className={`w-auto object-contain ${client.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
                   />
                 ) : (
                   <span className="text-browning-gray font-medium text-sm text-center px-2">
@@ -143,24 +132,6 @@ export default function ClientsSection() {
               </Link>
             ))}
           </div>
-        </div>
-
-        {/* Navigation Buttons */}
-        <div className="flex justify-center gap-3 mt-8">
-          <button
-            onClick={() => scroll('left')}
-            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
-            aria-label="Previous"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            onClick={() => scroll('right')}
-            className="w-10 h-10 rounded-full border-2 border-browning-red text-browning-red hover:bg-browning-red hover:text-white flex items-center justify-center transition-all"
-            aria-label="Next"
-          >
-            <ChevronRight size={20} />
-          </button>
         </div>
       </div>
     </section>
