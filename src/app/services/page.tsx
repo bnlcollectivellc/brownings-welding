@@ -40,8 +40,8 @@ const services = [
   },
   {
     icon: Search,
-    title: 'Oil Field Tube/Pipe Inspection',
-    description: 'Comprehensive tube and pipe inspection services ensuring structural integrity and compliance. Our inspection processes verify quality for critical oil field applications.',
+    title: 'Oilfield Tube/Pipe Inspection',
+    description: 'Comprehensive tube and pipe inspection services ensuring structural integrity and compliance. Our inspection processes verify quality for critical oilfield applications.',
     features: ['EMI', 'Descale', 'Rethreading', 'Visual Inspection', 'Quality Assurance', 'Documentation'],
   },
   {

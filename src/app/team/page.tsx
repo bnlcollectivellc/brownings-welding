@@ -8,8 +8,8 @@ import QuoteFormModal from '@/components/modals/QuoteFormModal';
 import Navbar from '@/components/layout/Navbar';
 
 const allTeamMembers = [
-  // Founders
-  { name: 'Tommy & Peggy Browning', role: 'Founders', image: '/images/team/tommy-peggy-browning.jpg', category: 'Leadership' },
+  // Founder
+  { name: 'Tommy Browning Sr.', role: 'Founder', image: '/images/team/tommy-browning-sr.jpg', category: 'Leadership' },
   // Leadership
   { name: 'Tommy Lynn Browning', role: 'President', image: '/images/team/tommy-lynn-browning.jpg', category: 'Leadership' },
   { name: 'Tammy Browning', role: 'Controller', image: '/images/team/tammy-browning.jpg', category: 'Leadership' },
@@ -47,15 +47,15 @@ export default function TeamPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section with Team Photo */}
-      <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[50vh] md:h-[60vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
         <Image
           src="/images/team-group.jpg"
           alt="Browning's Welding Team"
           fill
-          className="object-cover object-[center_30%]"
+          className="object-cover object-[center_20%]"
           priority
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="relative z-10 text-center text-white px-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             Meet the Family

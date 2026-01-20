@@ -43,9 +43,25 @@ export default function AboutPage() {
             <p className="text-lg text-browning-gray leading-relaxed mb-6">
               For over 50 years, our commitment to quality has never wavered. From our early days of agricultural repairs to today&apos;s precision cooling assemblies for data centers, we&apos;ve always believed that every weld, every cut, and every bend represents our family&apos;s reputation.
             </p>
-            <p className="text-lg text-browning-gray leading-relaxed">
+            <p className="text-lg text-browning-gray leading-relaxed mb-8">
               Now in our second generation of family leadership, we continue to invest in the latest technology and equipment while honoring the values that built this company: integrity, quality, and treating every customer like family.
             </p>
+          </div>
+
+          {/* Founders Photo */}
+          <div className="mt-8 flex justify-center">
+            <div className="relative w-full max-w-lg">
+              <Image
+                src="/images/team/tommy-peggy-browning.jpg"
+                alt="Tommy and Peggy Browning, Founders"
+                width={600}
+                height={400}
+                className="rounded-2xl shadow-lg w-full h-auto"
+              />
+              <p className="text-center text-browning-gray mt-4 text-sm">
+                Tommy and Peggy Browning, Founders
+              </p>
+            </div>
           </div>
         </div>
       </section>
