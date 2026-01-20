@@ -159,9 +159,9 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
   // Success state
   if (status === 'success') {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div className="modal-backdrop absolute inset-0 bg-black/60" onClick={handleClose} />
-        <div className="modal-content relative bg-white rounded-2xl p-8 max-w-md w-full text-center">
+        <div className="modal-content relative bg-white rounded-2xl p-8 max-w-md w-full text-center my-auto">
           <CheckCircle className="mx-auto mb-4 text-green-500" size={64} />
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Thank You for Submitting Your Quote Request!</h2>
           <p className="text-gray-600 mb-2">
@@ -190,9 +190,9 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="modal-backdrop absolute inset-0 bg-black/60" onClick={handleClose} />
-      <div className="modal-content relative bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="modal-content relative bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto my-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
           <h2 className="text-xl font-bold text-gray-900">Request a Quote</h2>

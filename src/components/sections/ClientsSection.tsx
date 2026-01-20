@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
@@ -19,17 +19,35 @@ const infiniteClients = [...clients, ...clients, ...clients];
 export default function ClientsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
+  const animationRef = useRef<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
-  // Initialize scroll position to middle set
+  // Initialize scroll position to middle set and start auto-scroll
   useEffect(() => {
     if (scrollRef.current) {
       const container = scrollRef.current;
       const singleSetWidth = container.scrollWidth / 3;
       container.scrollLeft = singleSetWidth;
     }
-  }, []);
+
+    // Auto-scroll animation
+    const autoScroll = () => {
+      if (!isPaused && scrollRef.current && !isScrollingRef.current) {
+        scrollRef.current.scrollLeft += 0.5;
+      }
+      animationRef.current = requestAnimationFrame(autoScroll);
+    };
+
+    animationRef.current = requestAnimationFrame(autoScroll);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isPaused]);
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -54,11 +72,15 @@ export default function ClientsSection() {
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
+      // Pause animation briefly when using arrows
+      setIsPaused(true);
       const scrollAmount = 200;
       scrollRef.current.scrollBy({
         left: direction === 'right' ? scrollAmount : -scrollAmount,
         behavior: 'smooth',
       });
+      // Resume after a short delay
+      setTimeout(() => setIsPaused(false), 1000);
     }
   };
 
@@ -102,7 +124,9 @@ export default function ClientsSection() {
               <Link
                 href="/industries"
                 key={index}
-                className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300"
+                className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-125 transition-all duration-300"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
               >
                 {client.logo ? (
                   // eslint-disable-next-line @next/next/no-img-element

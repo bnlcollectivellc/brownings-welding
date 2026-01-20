@@ -4,8 +4,16 @@ import { useState } from 'react';
 import { Flame, Scissors, Box, Cog, Search, Shield, Wind } from 'lucide-react';
 import Link from 'next/link';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
+import Navbar from '@/components/layout/Navbar';
 
 const services = [
+  {
+    icon: Wind,
+    title: 'Air & Liquid Cooling Assemblies',
+    description: 'Specialized fabrication of air and liquid cooling assemblies for data centers and industrial applications. Our precision manufacturing ensures optimal thermal performance and reliability.',
+    features: ['Data Center Cooling', 'Heat Exchangers', 'Coolant Distribution', 'Custom Manifolds', 'Leak Testing', 'Production Assembly'],
+    highlight: true,
+  },
   {
     icon: Flame,
     title: 'Welding',
@@ -42,13 +50,6 @@ const services = [
     description: 'Complete finishing solutions including powder coating, galvanizing, and plating. We coordinate with trusted partners to deliver fully finished parts ready for use.',
     features: ['Powder Coating', 'Galvanizing', 'Plating', 'Painting', 'Surface Preparation', 'Corrosion Protection'],
   },
-  {
-    icon: Wind,
-    title: 'Air & Liquid Cooling Assemblies',
-    description: 'Specialized fabrication of air and liquid cooling assemblies for data centers and industrial applications. Our precision manufacturing ensures optimal thermal performance and reliability.',
-    features: ['Data Center Cooling', 'Heat Exchangers', 'Coolant Distribution', 'Custom Manifolds', 'Leak Testing', 'Production Assembly'],
-    highlight: true,
-  },
 ];
 
 export default function ServicesPage() {
@@ -56,6 +57,8 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Navbar alwaysVisible />
+
       {/* Hero Section */}
       <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
         <video
@@ -82,7 +85,7 @@ export default function ServicesPage() {
       <section className="py-16 bg-browning-light">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-lg text-browning-gray leading-relaxed">
-            Browning&apos;s Welding &amp; Fabrication offers a complete range of metal fabrication services under one roof. With over 50 years of experience and state-of-the-art equipment, we deliver precision, quality, and reliability on every project—from one-off prototypes to high-volume production runs.
+            Browning&apos;s Welding &amp; Fabrication offers a complete range of metal fabrication services under one roof. With over 50 years of experience and state-of-the-art equipment, we deliver precision, quality, and reliability on every project, from one-off prototypes to high-volume production runs.
           </p>
         </div>
       </section>

@@ -6,7 +6,11 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
 
-export default function Navbar() {
+interface NavbarProps {
+  alwaysVisible?: boolean;
+}
+
+export default function Navbar({ alwaysVisible = false }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
@@ -22,6 +26,8 @@ export default function Navbar() {
     };
   }, []);
 
+  const isVisible = alwaysVisible || isScrolled;
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -33,7 +39,7 @@ export default function Navbar() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
+        isVisible
           ? 'opacity-100 bg-white/10 backdrop-blur-md border-b border-white/20'
           : 'opacity-0 pointer-events-none'
       }`}
@@ -55,16 +61,16 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link
-              href="/services"
-              className="font-medium transition-colors text-browning-red hover:text-red-700"
-            >
-              Services
-            </Link>
-            <Link
               href="/industries"
               className="font-medium transition-colors text-browning-red hover:text-red-700"
             >
               Industries
+            </Link>
+            <Link
+              href="/services"
+              className="font-medium transition-colors text-browning-red hover:text-red-700"
+            >
+              Services
             </Link>
             <Link
               href="/team"
@@ -88,7 +94,7 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <button
-            className={`md:hidden p-2 ${isScrolled ? 'text-browning-charcoal' : 'text-white'}`}
+            className={`md:hidden p-2 ${isVisible ? 'text-browning-charcoal' : 'text-white'}`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -100,18 +106,18 @@ export default function Navbar() {
           <div className="md:hidden py-4">
             <div className="space-y-2 text-center">
               <Link
-                href="/services"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
-              >
-                Services
-              </Link>
-              <Link
                 href="/industries"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
               >
                 Industries
+              </Link>
+              <Link
+                href="/services"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center text-browning-red hover:text-red-700 transition-colors font-medium py-2"
+              >
+                Services
               </Link>
               <Link
                 href="/team"

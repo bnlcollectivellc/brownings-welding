@@ -5,6 +5,7 @@ import { User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
+import Navbar from '@/components/layout/Navbar';
 
 const allTeamMembers = [
   // Browning Family
@@ -42,6 +43,8 @@ export default function TeamPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Navbar alwaysVisible />
+
       {/* Hero Section with Team Photo */}
       <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
         <Image
@@ -67,7 +70,7 @@ export default function TeamPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-lg text-browning-gray leading-relaxed">
             {/* Placeholder for team copy */}
-            At Browning&apos;s Welding, we&apos;re more than just a team—we&apos;re a family. With over 50 years of combined experience, our skilled craftsmen bring dedication, precision, and pride to every project. From our leadership to our shop floor, every member shares a commitment to quality and customer satisfaction.
+            At Browning&apos;s Welding, we&apos;re more than just a team, we&apos;re a family. With over 50 years of combined experience, our skilled craftsmen bring dedication, precision, and pride to every project. From our leadership to our shop floor, every member shares a commitment to quality and customer satisfaction.
           </p>
         </div>
       </section>

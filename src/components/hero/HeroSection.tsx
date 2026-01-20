@@ -86,7 +86,7 @@ export default function HeroSection() {
             {/* Faith Section */}
             <div className={`transition-opacity duration-1000 ${showFaith ? 'opacity-100' : 'opacity-0'}`}>
               {/* Since 1972 Badge */}
-              <p className="text-gray-400 text-xs mb-2">Since 1972</p>
+              <p className="text-gray-400 text-xs mb-2">Proudly Made in the USA Since 1972</p>
 
               {/* Header Text */}
               <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2">
@@ -107,9 +107,6 @@ export default function HeroSection() {
                 <ArrowRight size={28} className="transition-transform group-hover:translate-x-1" />
               </button>
 
-              <p className="text-gray-400 text-sm mt-6 max-w-sm mx-auto">
-                Upload your drawings and get a custom quote for your project
-              </p>
             </div>
           </div>
 

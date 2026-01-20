@@ -69,7 +69,7 @@ export default function AboutSection() {
               <p className="text-browning-charcoal text-xl font-semibold italic">
                 &quot;Faith, Family, & Fabrication&quot;
               </p>
-              <p className="text-browning-gray mt-2">— The Browning Family</p>
+              <p className="text-browning-gray mt-2">- The Browning Family</p>
             </div>
           </div>
 

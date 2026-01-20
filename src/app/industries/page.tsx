@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
+import Navbar from '@/components/layout/Navbar';
 
 const industries = [
   { name: 'Banded', logo: '/images/clients/banded.png' },
@@ -17,6 +18,8 @@ export default function IndustriesPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Navbar alwaysVisible />
+
       {/* Hero Section */}
       <section className="relative h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden bg-browning-charcoal">
         <div className="absolute inset-0 bg-gradient-to-br from-browning-charcoal to-gray-900" />

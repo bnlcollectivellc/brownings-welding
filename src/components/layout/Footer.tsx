@@ -17,7 +17,7 @@ export default function Footer() {
               className="h-16 w-auto mb-4"
             />
             <p className="text-gray-400 text-lg mb-4">
-              Faith, Family, & Fabrication — Since 1972
+              Faith, Family, & Fabrication | Since 1972
             </p>
             <div className="flex items-center gap-2 text-white">
               <span className="text-2xl">🇺🇸</span>
