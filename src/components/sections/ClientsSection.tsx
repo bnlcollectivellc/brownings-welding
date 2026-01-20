@@ -5,7 +5,7 @@ import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
 
 const clients = [
-  { name: 'Banded', logo: '/images/clients/banded.png', large: true },
+  { name: 'Banded', logo: '/images/clients/banded-vertical.png', large: true },
   { name: 'Westrock Coffee', logo: '/images/clients/westrock-coffee.png' },
   { name: 'Snap-On Equipment', logo: '/images/clients/snapon.png' },
   { name: 'Tyson Foods', logo: '/images/clients/tyson-foods.png' },
