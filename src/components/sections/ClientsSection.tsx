@@ -7,7 +7,7 @@ import Link from 'next/link';
 const clients = [
   { name: 'Banded', logo: '/images/clients/banded-vertical.png', large: true },
   { name: 'Westrock Coffee', logo: '/images/clients/westrock-coffee.png' },
-  { name: 'Snap-On Equipment', logo: '/images/clients/snapon.png' },
+  { name: 'Snap-On Equipment', logo: '/images/clients/snapon-red.png' },
   { name: 'Tyson Foods', logo: '/images/clients/tyson-foods.png' },
   { name: 'Skippy', logo: '/images/clients/skippy.png' },
 ];
@@ -149,7 +149,7 @@ export default function ClientsSection() {
               <Link
                 href="/industries"
                 key={index}
-                className="flex-shrink-0 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300"
+                className="flex-shrink-0 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
               >
                 {client.logo ? (
                   // eslint-disable-next-line @next/next/no-img-element
