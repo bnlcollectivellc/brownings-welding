@@ -14,7 +14,7 @@ export default function AboutPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section with 1995 Photo */}
-      <section className="relative h-[50vh] md:h-[60vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
+      <section className="relative h-[55vh] md:h-[65vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
         <Image
           src="/images/about/1995-team.jpg"
           alt="Browning's Welding Team in 1995"
