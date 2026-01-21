@@ -19,7 +19,7 @@ export default function AboutPage() {
           src="/images/about/1995-team.jpg"
           alt="Browning's Welding Team in 1995"
           fill
-          className="object-cover object-[center_18%]"
+          className="object-cover object-[center_15%]"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
