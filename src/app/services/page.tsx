@@ -60,7 +60,7 @@ export default function ServicesPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section */}
-      <section className="relative h-[50vh] md:h-[60vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
+      <section className="relative h-[55vh] md:h-[65vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
         <video
           autoPlay
           loop
