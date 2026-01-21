@@ -12,6 +12,7 @@ interface NavbarProps {
 
 export default function Navbar({ alwaysVisible = false }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
@@ -26,10 +27,19 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
     };
   }, []);
 
-  const isVisible = alwaysVisible || isScrolled;
+  const isVisible = alwaysVisible || isScrolled || isHovered;
 
   return (
     <>
+      {/* Hover detection zone for desktop - shows navbar when hovering near top */}
+      {!alwaysVisible && !isScrolled && (
+        <div
+          className="hidden md:block fixed top-0 left-0 right-0 h-24 z-50"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        />
+      )}
+
       {/* Mobile top bar - always visible, centered logo and hamburger */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3">
         {/* Logo */}
@@ -65,6 +75,8 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
             ? 'opacity-100 bg-white/10 backdrop-blur-md border-b border-white/20'
             : 'opacity-0 pointer-events-none md:opacity-0'
         }`}
+        onMouseEnter={() => !alwaysVisible && !isScrolled && setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 md:h-20">
