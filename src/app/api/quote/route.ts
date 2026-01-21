@@ -91,10 +91,9 @@ export async function POST(request: NextRequest) {
     `;
 
     // Send email via Resend
-    // TODO: Change to info@browningswelding.com after testing
     const { error } = await resend.emails.send({
       from: 'Brownings Welding <quotes@browningswelding.com>',
-      to: 'bnlcollectivellc@gmail.com',
+      to: 'info@browningswelding.com',
       replyTo: email,
       subject: `Quote Request: ${serviceCategory} - ${name}${company ? ` (${company})` : ''}`,
       html: emailHtml,
