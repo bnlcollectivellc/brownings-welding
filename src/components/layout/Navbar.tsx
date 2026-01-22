@@ -34,9 +34,10 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
       {/* Hover detection zone for desktop - shows navbar when hovering near top */}
       {!alwaysVisible && !isScrolled && (
         <div
-          className="hidden md:block fixed top-0 left-0 right-0 h-24 z-50"
+          className={`hidden md:block fixed top-0 left-0 right-0 h-24 z-50 ${
+            isHovered ? 'pointer-events-none' : ''
+          }`}
           onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
         />
       )}
 
@@ -70,10 +71,10 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
       </div>
 
       <nav
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 transition-all duration-500 ${
           isVisible
-            ? 'opacity-100 bg-white/10 backdrop-blur-md border-b border-white/20'
-            : 'opacity-0 pointer-events-none md:opacity-0'
+            ? 'opacity-100 bg-white/10 backdrop-blur-md border-b border-white/20 z-50'
+            : 'opacity-0 pointer-events-none md:opacity-0 z-40'
         }`}
         onMouseEnter={() => !alwaysVisible && !isScrolled && setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
