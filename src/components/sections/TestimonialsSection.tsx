@@ -140,22 +140,22 @@ export default function TestimonialsSection() {
     isHoveredRef.current = false;
   }, []);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    // Only pause if touching directly on the carousel content (not page scroll)
-    if (e.target !== scrollRef.current) {
-      isHoveredRef.current = true;
-    }
+  const handleTouchStart = useCallback(() => {
+    // Don't pause on touch start - only pause during active drag
   }, []);
 
   const handleTouchMove = useCallback(() => {
-    // Pause during active drag
+    // Pause during active swipe/drag
     isHoveredRef.current = true;
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    setTimeout(() => {
-      isHoveredRef.current = false;
-    }, 1500);
+    // Resume scrolling 1 second after user stops interacting
+    if (isHoveredRef.current) {
+      setTimeout(() => {
+        isHoveredRef.current = false;
+      }, 1000);
+    }
   }, []);
 
   return (

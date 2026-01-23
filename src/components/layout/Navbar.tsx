@@ -135,6 +135,13 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
         <div className="md:hidden fixed inset-0 z-40 bg-white/95 backdrop-blur-md pt-20">
           <div className="space-y-2 text-center px-4">
             <Link
+              href="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full text-center text-browning-charcoal hover:text-browning-red transition-colors font-medium py-3 text-lg"
+            >
+              Home
+            </Link>
+            <Link
               href="/about"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block w-full text-center text-browning-charcoal hover:text-browning-red transition-colors font-medium py-3 text-lg"
