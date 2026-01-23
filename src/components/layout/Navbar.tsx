@@ -42,7 +42,7 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
       )}
 
       {/* Mobile top bar - always visible, centered logo and hamburger */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex-shrink-0">
           <Image
