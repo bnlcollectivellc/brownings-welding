@@ -114,6 +114,12 @@ section {
   display: none;
 }
 
+/* Carousel touch handling - allow vertical scroll, JS controls horizontal */
+.carousel-scroll {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: auto;
+}
+
 /* Scroll fade-in animation */
 .scroll-fade-in {
   opacity: 0;

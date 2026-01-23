@@ -120,20 +120,29 @@ export default function IndustriesPage() {
     isHoveredRef.current = false;
   }, []);
 
-  const handleTouchStart = useCallback(() => {
-    // Don't pause on touch start - only pause during active drag
+  const touchStartX = useRef(0);
+  const isDragging = useRef(false);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    isDragging.current = false;
   }, []);
 
-  const handleTouchMove = useCallback(() => {
-    // Pause during active swipe/drag
-    isHoveredRef.current = true;
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
+    // Only pause if user is actually swiping horizontally (more than 10px)
+    if (deltaX > 10) {
+      isDragging.current = true;
+      isHoveredRef.current = true;
+    }
   }, []);
 
   const handleTouchEnd = useCallback(() => {
-    // Resume scrolling 1 second after user stops interacting
-    if (isHoveredRef.current) {
+    // Only resume if we were actually dragging
+    if (isDragging.current) {
       setTimeout(() => {
         isHoveredRef.current = false;
+        isDragging.current = false;
       }, 1000);
     }
   }, []);
@@ -223,7 +232,7 @@ export default function IndustriesPage() {
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              className="flex gap-12 md:gap-20 items-center overflow-x-auto scrollbar-hide px-10 py-4"
+              className="flex gap-12 md:gap-20 items-center overflow-x-scroll scrollbar-hide carousel-scroll px-10 py-4"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {infinitePartners.map((partner, index) => (
