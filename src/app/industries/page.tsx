@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import Link from 'next/link';
+import Image from 'next/image';
 import { Server, Utensils, Tractor, Truck, Building2, Trees } from 'lucide-react';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
 import Navbar from '@/components/layout/Navbar';
@@ -59,37 +59,44 @@ export default function IndustriesPage() {
   const speedRef = useRef(0.5);
   const isHoveredRef = useRef(false);
 
-  // Initialize scroll position ONCE on mount
+  // Initialize scroll position and start animation
   useEffect(() => {
-    if (scrollRef.current) {
+    let mounted = true;
+
+    // Small delay to ensure DOM is fully rendered (important for mobile)
+    const initTimeout = setTimeout(() => {
+      if (!mounted || !scrollRef.current) return;
+
       const container = scrollRef.current;
       const singleSetWidth = container.scrollWidth / 3;
       container.scrollLeft = singleSetWidth;
-    }
-  }, []); // Empty dependency - only runs once
 
-  // Animation loop - separate effect, no dependencies that would cause re-init
-  useEffect(() => {
-    const autoScroll = () => {
-      // Smoothly interpolate speed toward target
-      const targetSpeed = isHoveredRef.current ? 0 : 0.5;
-      speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+      // Start animation after positioning
+      const autoScroll = () => {
+        if (!mounted) return;
 
-      // Only scroll if speed is meaningful
-      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
-        scrollRef.current.scrollLeft += speedRef.current;
-      }
+        // Smoothly interpolate speed toward target
+        const targetSpeed = isHoveredRef.current ? 0 : 0.5;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+
+        // Only scroll if speed is meaningful
+        if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
+          scrollRef.current.scrollLeft += speedRef.current;
+        }
+        animationRef.current = requestAnimationFrame(autoScroll);
+      };
+
       animationRef.current = requestAnimationFrame(autoScroll);
-    };
-
-    animationRef.current = requestAnimationFrame(autoScroll);
+    }, 100);
 
     return () => {
+      mounted = false;
+      clearTimeout(initTimeout);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []); // Empty dependency - animation runs continuously
+  }, []); // Empty dependency - runs once on mount
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -152,8 +159,15 @@ export default function IndustriesPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section */}
-      <section className="relative h-[55vh] md:h-[65vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16 bg-browning-charcoal">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-browning-charcoal/50 to-browning-charcoal" />
+      <section className="relative h-[55vh] md:h-[65vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
+        <Image
+          src="/images/industries-hero.jpg"
+          alt="Construction and fabrication work"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="relative z-10 text-center text-white px-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             Industries We Serve
@@ -170,41 +184,6 @@ export default function IndustriesPage() {
           <p className="text-lg text-browning-gray leading-relaxed">
             From food processing giants to outdoor recreation brands, Browning&apos;s Welding serves a diverse range of industries. Our expertise in custom fabrication, precision welding, and specialized cooling assemblies makes us the trusted partner for companies that demand quality and reliability.
           </p>
-        </div>
-      </section>
-
-      {/* Industry Sectors Grid */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {sectors.map((sector, index) => (
-              <div
-                key={index}
-                className={`bg-white rounded-2xl p-8 shadow-sm border transition-all hover:shadow-md ${
-                  sector.highlight
-                    ? 'border-browning-red/30 bg-gradient-to-br from-white to-red-50'
-                    : 'border-gray-100'
-                }`}
-              >
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 ${
-                  sector.highlight ? 'bg-browning-red/20' : 'bg-browning-light'
-                }`}>
-                  <sector.icon className={sector.highlight ? 'text-browning-red' : 'text-browning-charcoal'} size={28} />
-                </div>
-
-                <div className="flex items-center gap-3 mb-4">
-                  <h3 className="text-xl font-bold text-browning-charcoal">{sector.title}</h3>
-                  {sector.highlight && (
-                    <span className="text-xs font-semibold text-browning-red bg-browning-red/10 px-2 py-1 rounded-full">
-                      Specialty
-                    </span>
-                  )}
-                </div>
-
-                <p className="text-browning-gray">{sector.description}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -253,6 +232,41 @@ export default function IndustriesPage() {
         </div>
       </section>
 
+      {/* Industry Sectors Grid */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {sectors.map((sector, index) => (
+              <div
+                key={index}
+                className={`bg-white rounded-2xl p-8 shadow-sm border transition-all hover:shadow-md ${
+                  sector.highlight
+                    ? 'border-browning-red/30 bg-gradient-to-br from-white to-red-50'
+                    : 'border-gray-100'
+                }`}
+              >
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 ${
+                  sector.highlight ? 'bg-browning-red/20' : 'bg-browning-light'
+                }`}>
+                  <sector.icon className={sector.highlight ? 'text-browning-red' : 'text-browning-charcoal'} size={28} />
+                </div>
+
+                <div className="flex items-center gap-3 mb-4">
+                  <h3 className="text-xl font-bold text-browning-charcoal">{sector.title}</h3>
+                  {sector.highlight && (
+                    <span className="text-xs font-semibold text-browning-red bg-browning-red/10 px-2 py-1 rounded-full">
+                      Specialty
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-browning-gray">{sector.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-browning-charcoal">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -268,18 +282,6 @@ export default function IndustriesPage() {
           >
             Get Your Quote
           </button>
-        </div>
-      </section>
-
-      {/* Back to Home */}
-      <section className="py-16">
-        <div className="text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-browning-red hover:text-red-700 font-semibold transition-colors"
-          >
-            &larr; Back to Home
-          </Link>
         </div>
       </section>
 

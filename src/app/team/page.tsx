@@ -47,7 +47,7 @@ export default function TeamPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section with Team Photo */}
-      <section className="relative h-[55vh] md:h-[65vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
+      <section className="relative h-[40vh] md:h-[50vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
         <Image
           src="/images/team-group.jpg"
           alt="Browning's Welding Team"
@@ -126,18 +126,6 @@ At Browning&apos;s Welding, we&apos;re more than just a team, we&apos;re a famil
           >
             Get Your Quote
           </button>
-        </div>
-      </section>
-
-      {/* Back to Home */}
-      <section className="py-16">
-        <div className="text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-browning-red hover:text-red-700 font-semibold transition-colors"
-          >
-            &larr; Back to Home
-          </Link>
         </div>
       </section>
 

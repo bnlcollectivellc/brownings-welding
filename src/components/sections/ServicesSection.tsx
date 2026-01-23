@@ -1,10 +1,9 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { Flame, Scissors, Box, Cog, Search, Shield } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
-import QuoteFormModal from '@/components/modals/QuoteFormModal';
 
 const services = [
   {
@@ -44,7 +43,6 @@ export default function ServicesSection() {
   const [headerRef, headerVisible] = useInView(0.2);
   const [gridRef, gridVisible] = useInView(0.1);
   const [parallaxRef, parallaxOffset] = useParallax(0.3);
-  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -120,22 +118,7 @@ export default function ServicesSection() {
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-12">
-          <button
-            onClick={() => setIsQuoteModalOpen(true)}
-            className="inline-flex items-center gap-2 bg-browning-red hover:bg-red-700 text-white px-7 py-3 rounded-full font-semibold transition-colors"
-          >
-            Get a Quote
-          </button>
-        </div>
       </div>
-
-      {/* Quote Form Modal */}
-      <QuoteFormModal
-        isOpen={isQuoteModalOpen}
-        onClose={() => setIsQuoteModalOpen(false)}
-      />
     </section>
   );
 }

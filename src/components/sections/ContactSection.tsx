@@ -61,7 +61,7 @@ export default function ContactSection() {
                 href="tel:+15016792184"
                 className="text-white font-semibold text-base md:text-lg hover:text-white/80 transition-colors"
               >
-                (501) 679-2184
+                +1 (501) 679-2184
               </a>
               <span className="hidden sm:block text-white/40">|</span>
               <a

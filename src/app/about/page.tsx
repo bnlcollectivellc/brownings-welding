@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Cross, Heart, Cog } from 'lucide-react';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
 import Navbar from '@/components/layout/Navbar';
 
@@ -14,7 +14,7 @@ export default function AboutPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section with 1995 Photo */}
-      <section className="relative h-[55vh] md:h-[65vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
+      <section className="relative h-[40vh] md:h-[50vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
         <Image
           src="/images/about/1995-team.jpg"
           alt="Browning's Welding Team in 1995"
@@ -73,22 +73,28 @@ export default function AboutPage() {
             Our Values
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-8">
-              <div className="text-4xl mb-4">+</div>
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-md hover:border-browning-red/30 transition-all">
+              <div className="bg-browning-light w-14 h-14 rounded-xl flex items-center justify-center mb-6">
+                <Cross className="text-browning-charcoal" size={28} />
+              </div>
               <h3 className="text-xl font-bold text-browning-charcoal mb-4">Faith</h3>
               <p className="text-browning-gray">
                 Our foundation is built on faith, guiding every decision we make and every relationship we build.
               </p>
             </div>
-            <div className="text-center p-8">
-              <div className="text-4xl mb-4">&#9829;</div>
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-md hover:border-browning-red/30 transition-all">
+              <div className="bg-browning-light w-14 h-14 rounded-xl flex items-center justify-center mb-6">
+                <Heart className="text-browning-charcoal" size={28} />
+              </div>
               <h3 className="text-xl font-bold text-browning-charcoal mb-4">Family</h3>
               <p className="text-browning-gray">
                 We treat our employees and customers as family, creating lasting partnerships built on trust.
               </p>
             </div>
-            <div className="text-center p-8">
-              <div className="text-4xl mb-4">&#9881;</div>
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-md hover:border-browning-red/30 transition-all">
+              <div className="bg-browning-light w-14 h-14 rounded-xl flex items-center justify-center mb-6">
+                <Cog className="text-browning-charcoal" size={28} />
+              </div>
               <h3 className="text-xl font-bold text-browning-charcoal mb-4">Fabrication</h3>
               <p className="text-browning-gray">
                 Excellence in craftsmanship is our legacy, delivering precision and quality in every project.
@@ -126,18 +132,6 @@ export default function AboutPage() {
           >
             Get Your Quote
           </button>
-        </div>
-      </section>
-
-      {/* Back to Home */}
-      <section className="py-16">
-        <div className="text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-browning-red hover:text-red-700 font-semibold transition-colors"
-          >
-            &larr; Back to Home
-          </Link>
         </div>
       </section>
 

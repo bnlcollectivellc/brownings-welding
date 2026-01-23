@@ -25,37 +25,44 @@ export default function ClientsSection() {
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
-  // Initialize scroll position ONCE on mount
+  // Initialize scroll position and start animation
   useEffect(() => {
-    if (scrollRef.current) {
+    let mounted = true;
+
+    // Small delay to ensure DOM is fully rendered (important for mobile)
+    const initTimeout = setTimeout(() => {
+      if (!mounted || !scrollRef.current) return;
+
       const container = scrollRef.current;
       const singleSetWidth = container.scrollWidth / 3;
       container.scrollLeft = singleSetWidth;
-    }
-  }, []); // Empty dependency - only runs once
 
-  // Animation loop - separate effect, no dependencies that would cause re-init
-  useEffect(() => {
-    const autoScroll = () => {
-      // Smoothly interpolate speed toward target
-      const targetSpeed = isHoveredRef.current ? 0 : 0.5;
-      speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+      // Start animation after positioning
+      const autoScroll = () => {
+        if (!mounted) return;
 
-      // Only scroll if speed is meaningful
-      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
-        scrollRef.current.scrollLeft += speedRef.current;
-      }
+        // Smoothly interpolate speed toward target
+        const targetSpeed = isHoveredRef.current ? 0 : 0.5;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+
+        // Only scroll if speed is meaningful
+        if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
+          scrollRef.current.scrollLeft += speedRef.current;
+        }
+        animationRef.current = requestAnimationFrame(autoScroll);
+      };
+
       animationRef.current = requestAnimationFrame(autoScroll);
-    };
-
-    animationRef.current = requestAnimationFrame(autoScroll);
+    }, 100);
 
     return () => {
+      mounted = false;
+      clearTimeout(initTimeout);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []); // Empty dependency - animation runs continuously
+  }, []); // Empty dependency - runs once on mount
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {

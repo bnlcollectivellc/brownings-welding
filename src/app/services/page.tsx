@@ -154,18 +154,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Back to Home */}
-      <section className="py-16">
-        <div className="text-center">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-browning-red hover:text-red-700 font-semibold transition-colors"
-          >
-            &larr; Back to Home
-          </Link>
-        </div>
-      </section>
-
       {/* Quote Modal */}
       <QuoteFormModal
         isOpen={isQuoteModalOpen}

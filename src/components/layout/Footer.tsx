@@ -70,7 +70,7 @@ export default function Footer() {
               <li className="flex items-center gap-2 text-gray-400">
                 <Phone size={18} className="text-browning-red flex-shrink-0" />
                 <a href="tel:+15016792184" className="hover:text-browning-red transition-colors">
-                  (501) 679-2184
+                  +1 (501) 679-2184
                 </a>
               </li>
               <li className="flex items-center gap-2 text-gray-400">

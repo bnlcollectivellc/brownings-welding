@@ -117,7 +117,8 @@ section {
 /* Carousel touch handling - allow vertical scroll, JS controls horizontal */
 .carousel-scroll {
   touch-action: pan-y;
-  -webkit-overflow-scrolling: auto;
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
 }
 
 /* Scroll fade-in animation */

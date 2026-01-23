@@ -168,20 +168,22 @@ export default function QuoteFormModal({ isOpen, onClose }: QuoteFormModalProps)
           }`}
         >
           <CheckCircle className="mx-auto mb-4 text-green-500" size={64} />
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Thank You for Submitting Your Quote Request!</h2>
-          <p className="text-gray-600 mb-2">
-            A representative from Browning&apos;s Welding will be reaching out to you shortly.
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Thank you for<br />submitting your quote request!
+          </h2>
+          <p className="text-gray-600 mb-4">
+            A representative will be<br />reaching out to you shortly.
           </p>
           <p className="text-gray-600 mb-6">
-            Feel free to contact us at{' '}
+            Feel free to contact us for any additional information!
+            <br />
             <a href="mailto:info@browningswelding.com" className="text-browning-red hover:underline">
               info@browningswelding.com
-            </a>{' '}
-            or call our main office at{' '}
-            <a href="tel:501-679-2184" className="text-browning-red hover:underline">
-              501-679-2184
-            </a>{' '}
-            for any additional information!
+            </a>
+            <br />
+            <a href="tel:+15016792184" className="text-browning-red hover:underline">
+              +1 (501) 679-2184
+            </a>
           </p>
           <button
             onClick={handleClose}
