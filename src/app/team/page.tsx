@@ -47,7 +47,7 @@ export default function TeamPage() {
       <Navbar alwaysVisible />
 
       {/* Hero Section with Team Photo */}
-      <section className="relative h-[40vh] md:h-[50vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
+      <section className="relative h-[55vh] md:h-[65vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
         <Image
           src="/images/team-group.jpg"
           alt="Browning's Welding Team"
