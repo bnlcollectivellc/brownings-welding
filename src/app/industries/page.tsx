@@ -6,6 +6,7 @@ import { Server, Utensils, Tractor, Truck, Building2, Trees } from 'lucide-react
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
 import Navbar from '@/components/layout/Navbar';
 
+
 const partners = [
   { name: 'Banded', logo: '/images/clients/banded-vertical.png', large: true },
   { name: 'Westrock Coffee', logo: '/images/clients/westrock-coffee.png' },
@@ -59,33 +60,37 @@ export default function IndustriesPage() {
   const speedRef = useRef(0.5);
   const isHoveredRef = useRef(false);
 
-  // Initialize scroll position and start animation
+  // Initialize scroll position and start animation (works on both mobile and desktop)
   useEffect(() => {
     let mounted = true;
+    const container = scrollRef.current;
+    if (!container) return;
 
-    // Small delay to ensure DOM is fully rendered (important for mobile)
-    const initTimeout = setTimeout(() => {
+    // Set initial scroll position to middle set
+    const initScroll = () => {
       if (!mounted || !scrollRef.current) return;
+      const singleSetWidth = scrollRef.current.scrollWidth / 3;
+      scrollRef.current.scrollLeft = singleSetWidth;
+    };
 
-      const container = scrollRef.current;
-      const singleSetWidth = container.scrollWidth / 3;
-      container.scrollLeft = singleSetWidth;
+    // Start animation
+    const autoScroll = () => {
+      if (!mounted) return;
 
-      // Start animation after positioning
-      const autoScroll = () => {
-        if (!mounted) return;
+      const isMobile = window.innerWidth < 768;
+      // On mobile, always scroll. On desktop, pause on hover.
+      const targetSpeed = (isMobile || !isHoveredRef.current) ? 0.5 : 0;
+      speedRef.current += (targetSpeed - speedRef.current) * 0.05;
 
-        // Smoothly interpolate speed toward target
-        const targetSpeed = isHoveredRef.current ? 0 : 0.5;
-        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
+        scrollRef.current.scrollLeft += speedRef.current;
+      }
+      animationRef.current = requestAnimationFrame(autoScroll);
+    };
 
-        // Only scroll if speed is meaningful
-        if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
-          scrollRef.current.scrollLeft += speedRef.current;
-        }
-        animationRef.current = requestAnimationFrame(autoScroll);
-      };
-
+    // Small delay to ensure DOM is ready
+    const initTimeout = setTimeout(() => {
+      initScroll();
       animationRef.current = requestAnimationFrame(autoScroll);
     }, 100);
 
@@ -96,7 +101,7 @@ export default function IndustriesPage() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []); // Empty dependency - runs once on mount
+  }, []);
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -105,14 +110,11 @@ export default function IndustriesPage() {
     const container = scrollRef.current;
     const singleSetWidth = container.scrollWidth / 3;
 
-    // If scrolled to the end (third set), jump to middle set
     if (container.scrollLeft >= singleSetWidth * 2) {
       isScrollingRef.current = true;
       container.scrollLeft = container.scrollLeft - singleSetWidth;
       setTimeout(() => { isScrollingRef.current = false; }, 50);
-    }
-    // If scrolled to the beginning (first set), jump to middle set
-    else if (container.scrollLeft <= 0) {
+    } else if (container.scrollLeft <= 0) {
       isScrollingRef.current = true;
       container.scrollLeft = container.scrollLeft + singleSetWidth;
       setTimeout(() => { isScrollingRef.current = false; }, 50);
@@ -182,7 +184,6 @@ export default function IndustriesPage() {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               className="flex gap-12 md:gap-20 items-center overflow-x-scroll scrollbar-hide carousel-scroll px-10 py-4"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {infinitePartners.map((partner, index) => (
                 <div

@@ -27,33 +27,36 @@ export default function TeamSection() {
   const [carouselRef, carouselVisible] = useInView(0.1);
   const [parallaxRef, parallaxOffset] = useParallax(0.2);
 
-  // Initialize scroll position and start animation
+  // Initialize scroll position and start animation (desktop only - mobile is manual swipe)
   useEffect(() => {
     let mounted = true;
+    const container = scrollRef.current;
+    if (!container) return;
 
-    // Small delay to ensure DOM is fully rendered (important for mobile)
-    const initTimeout = setTimeout(() => {
+    // Set initial scroll position to middle set
+    const initScroll = () => {
       if (!mounted || !scrollRef.current) return;
+      const singleSetWidth = scrollRef.current.scrollWidth / 3;
+      scrollRef.current.scrollLeft = singleSetWidth;
+    };
 
-      const container = scrollRef.current;
-      const singleSetWidth = container.scrollWidth / 3;
-      container.scrollLeft = singleSetWidth;
+    // Start animation
+    const autoScroll = () => {
+      if (!mounted) return;
 
-      // Start animation after positioning
-      const autoScroll = () => {
-        if (!mounted) return;
+      // Always auto-scroll, pause on hover (desktop only)
+      const targetSpeed = isHoveredRef.current ? 0 : 0.5;
+      speedRef.current += (targetSpeed - speedRef.current) * 0.05;
 
-        // Smoothly interpolate speed toward target
-        const targetSpeed = isHoveredRef.current ? 0 : 0.5;
-        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
+        scrollRef.current.scrollLeft += speedRef.current;
+      }
+      animationRef.current = requestAnimationFrame(autoScroll);
+    };
 
-        // Only scroll if speed is meaningful
-        if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
-          scrollRef.current.scrollLeft += speedRef.current;
-        }
-        animationRef.current = requestAnimationFrame(autoScroll);
-      };
-
+    // Small delay to ensure DOM is ready
+    const initTimeout = setTimeout(() => {
+      initScroll();
       animationRef.current = requestAnimationFrame(autoScroll);
     }, 100);
 
@@ -64,7 +67,7 @@ export default function TeamSection() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []); // Empty dependency - runs once on mount
+  }, []);
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -73,14 +76,11 @@ export default function TeamSection() {
     const container = scrollRef.current;
     const singleSetWidth = container.scrollWidth / 3;
 
-    // If scrolled to the end (third set), jump to middle set
     if (container.scrollLeft >= singleSetWidth * 2) {
       isScrollingRef.current = true;
       container.scrollLeft = container.scrollLeft - singleSetWidth;
       setTimeout(() => { isScrollingRef.current = false; }, 50);
-    }
-    // If scrolled to the beginning (first set), jump to middle set
-    else if (container.scrollLeft <= 0) {
+    } else if (container.scrollLeft <= 0) {
       isScrollingRef.current = true;
       container.scrollLeft = container.scrollLeft + singleSetWidth;
       setTimeout(() => { isScrollingRef.current = false; }, 50);
@@ -130,6 +130,13 @@ export default function TeamSection() {
           {/* Fade Right */}
           <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-browning-light to-transparent z-10 pointer-events-none" />
 
+          {/* Mobile clickable overlay - links entire carousel area */}
+          <Link
+            href="/team"
+            className="absolute inset-0 z-20 md:hidden"
+            aria-label="View the team"
+          />
+
           {/* Scrollable Container */}
           <div
             ref={scrollRef}
@@ -137,7 +144,6 @@ export default function TeamSection() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className="flex gap-4 md:gap-6 overflow-x-scroll scrollbar-hide carousel-scroll px-8 md:px-12 pt-4 pb-4"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {infiniteTeam.map((member, index) => (
               <Link

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useCallback, useState } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
 
@@ -21,37 +21,39 @@ export default function ClientsSection() {
   const animationRef = useRef<number | null>(null);
   const speedRef = useRef(0.5);
   const isHoveredRef = useRef(false);
-  const [, setForceUpdate] = useState(0); // For re-render on hover state change if needed
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
-  // Initialize scroll position and start animation
+  // Initialize scroll position and start animation (desktop only - mobile is manual swipe)
   useEffect(() => {
     let mounted = true;
+    const container = scrollRef.current;
+    if (!container) return;
 
-    // Small delay to ensure DOM is fully rendered (important for mobile)
-    const initTimeout = setTimeout(() => {
+    // Set initial scroll position to middle set
+    const initScroll = () => {
       if (!mounted || !scrollRef.current) return;
+      const singleSetWidth = scrollRef.current.scrollWidth / 3;
+      scrollRef.current.scrollLeft = singleSetWidth;
+    };
 
-      const container = scrollRef.current;
-      const singleSetWidth = container.scrollWidth / 3;
-      container.scrollLeft = singleSetWidth;
+    // Start animation
+    const autoScroll = () => {
+      if (!mounted) return;
 
-      // Start animation after positioning
-      const autoScroll = () => {
-        if (!mounted) return;
+      // Always auto-scroll, pause on hover (desktop only)
+      const targetSpeed = isHoveredRef.current ? 0 : 0.5;
+      speedRef.current += (targetSpeed - speedRef.current) * 0.05;
 
-        // Smoothly interpolate speed toward target
-        const targetSpeed = isHoveredRef.current ? 0 : 0.5;
-        speedRef.current += (targetSpeed - speedRef.current) * 0.05;
+      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
+        scrollRef.current.scrollLeft += speedRef.current;
+      }
+      animationRef.current = requestAnimationFrame(autoScroll);
+    };
 
-        // Only scroll if speed is meaningful
-        if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
-          scrollRef.current.scrollLeft += speedRef.current;
-        }
-        animationRef.current = requestAnimationFrame(autoScroll);
-      };
-
+    // Small delay to ensure DOM is ready
+    const initTimeout = setTimeout(() => {
+      initScroll();
       animationRef.current = requestAnimationFrame(autoScroll);
     }, 100);
 
@@ -62,7 +64,7 @@ export default function ClientsSection() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []); // Empty dependency - runs once on mount
+  }, []);
 
   // Handle seamless looping
   const handleScroll = useCallback(() => {
@@ -71,14 +73,11 @@ export default function ClientsSection() {
     const container = scrollRef.current;
     const singleSetWidth = container.scrollWidth / 3;
 
-    // If scrolled to the end (third set), jump to middle set
     if (container.scrollLeft >= singleSetWidth * 2) {
       isScrollingRef.current = true;
       container.scrollLeft = container.scrollLeft - singleSetWidth;
       setTimeout(() => { isScrollingRef.current = false; }, 50);
-    }
-    // If scrolled to the beginning (first set), jump to middle set
-    else if (container.scrollLeft <= 0) {
+    } else if (container.scrollLeft <= 0) {
       isScrollingRef.current = true;
       container.scrollLeft = container.scrollLeft + singleSetWidth;
       setTimeout(() => { isScrollingRef.current = false; }, 50);
@@ -122,6 +121,13 @@ export default function ClientsSection() {
           {/* Fade Right */}
           <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
+          {/* Mobile clickable overlay - links entire carousel area */}
+          <Link
+            href="/industries"
+            className="absolute inset-0 z-20 md:hidden"
+            aria-label="View all industries"
+          />
+
           {/* Scrollable Container */}
           <div
             ref={scrollRef}
@@ -129,7 +135,6 @@ export default function ClientsSection() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className="flex gap-12 md:gap-20 items-center overflow-x-scroll scrollbar-hide carousel-scroll px-10 py-4"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {infiniteClients.map((client, index) => (
               <Link
