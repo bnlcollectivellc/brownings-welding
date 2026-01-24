@@ -127,33 +127,6 @@ export default function IndustriesPage() {
     isHoveredRef.current = false;
   }, []);
 
-  const touchStartX = useRef(0);
-  const isDragging = useRef(false);
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    isDragging.current = false;
-  }, []);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
-    // Only pause if user is actually swiping horizontally (more than 10px)
-    if (deltaX > 10) {
-      isDragging.current = true;
-      isHoveredRef.current = true;
-    }
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    // Only resume if we were actually dragging
-    if (isDragging.current) {
-      setTimeout(() => {
-        isHoveredRef.current = false;
-        isDragging.current = false;
-      }, 1000);
-    }
-  }, []);
-
   return (
     <div className="min-h-screen bg-white">
       <Navbar alwaysVisible />
@@ -208,9 +181,6 @@ export default function IndustriesPage() {
               onScroll={handleScroll}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
               className="flex gap-12 md:gap-20 items-center overflow-x-scroll scrollbar-hide carousel-scroll px-10 py-4"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >

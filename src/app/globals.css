@@ -114,11 +114,19 @@ section {
   display: none;
 }
 
-/* Carousel touch handling - allow vertical scroll, JS controls horizontal */
+/* Carousel - disable manual scrolling on mobile, allow on desktop */
 .carousel-scroll {
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
+  touch-action: none;
+  -webkit-overflow-scrolling: auto;
   will-change: scroll-position;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .carousel-scroll {
+    touch-action: pan-y;
+    pointer-events: auto;
+  }
 }
 
 /* Scroll fade-in animation */

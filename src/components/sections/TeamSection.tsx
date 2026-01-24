@@ -95,33 +95,6 @@ export default function TeamSection() {
     isHoveredRef.current = false;
   }, []);
 
-  const touchStartX = useRef(0);
-  const isDragging = useRef(false);
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    isDragging.current = false;
-  }, []);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current);
-    // Only pause if user is actually swiping horizontally (more than 10px)
-    if (deltaX > 10) {
-      isDragging.current = true;
-      isHoveredRef.current = true;
-    }
-  }, []);
-
-  const handleTouchEnd = useCallback(() => {
-    // Only resume if we were actually dragging
-    if (isDragging.current) {
-      setTimeout(() => {
-        isHoveredRef.current = false;
-        isDragging.current = false;
-      }, 1000);
-    }
-  }, []);
-
   return (
     <section
       id="team"
@@ -163,9 +136,6 @@ export default function TeamSection() {
             onScroll={handleScroll}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
             className="flex gap-4 md:gap-6 overflow-x-scroll scrollbar-hide carousel-scroll px-8 md:px-12 pt-4 pb-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
