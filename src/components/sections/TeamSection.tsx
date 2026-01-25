@@ -61,43 +61,13 @@ export default function TeamSection() {
           aria-label="View the team"
         />
 
-        {/* CSS Animated Carousel Track - faster on mobile */}
-        <div className="flex animate-scroll-left-fast md:animate-scroll-left hover:pause-animation py-4">
-          {/* First set */}
-          {managementTeam.map((member, index) => (
+        {/* CSS Animated Carousel Track - 3 sets for seamless infinite loop */}
+        <div className="flex animate-carousel-mobile md:animate-carousel hover:pause-animation py-4">
+          {/* Render 3 sets for seamless looping (animation scrolls 33.33%) */}
+          {[...managementTeam, ...managementTeam, ...managementTeam].map((member, index) => (
             <Link
               href="/team"
-              key={`a-${index}`}
-              className="flex-shrink-0 w-48 md:w-64 px-2 md:px-3 group cursor-pointer"
-            >
-              {/* Photo */}
-              <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
-                {member.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                    <User className="text-gray-300" size={60} />
-                  </div>
-                )}
-              </div>
-
-              {/* Info */}
-              <h3 className="text-browning-charcoal font-semibold text-base md:text-lg group-hover:text-browning-red transition-colors">
-                {member.name}
-              </h3>
-              <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
-            </Link>
-          ))}
-          {/* Second set (duplicate for seamless loop) */}
-          {managementTeam.map((member, index) => (
-            <Link
-              href="/team"
-              key={`b-${index}`}
+              key={index}
               className="flex-shrink-0 w-48 md:w-64 px-2 md:px-3 group cursor-pointer"
             >
               {/* Photo */}

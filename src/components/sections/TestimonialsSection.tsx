@@ -102,39 +102,12 @@ export default function TestimonialsSection() {
         {/* Fade Right - at screen edge */}
         <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
 
-        {/* CSS Animated Carousel Track - faster on mobile, slower on desktop */}
-        <div className="flex animate-scroll-left md:animate-scroll-left-slow hover:pause-animation">
-          {/* First set */}
-          {testimonials.map((testimonial, index) => (
+        {/* CSS Animated Carousel Track - 3 sets for seamless infinite loop */}
+        <div className="flex animate-carousel-testimonials-mobile md:animate-carousel-testimonials hover:pause-animation">
+          {/* Render 3 sets for seamless looping (animation scrolls 33.33%) */}
+          {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => (
             <div
-              key={`a-${index}`}
-              className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
-            >
-              {/* Review Text */}
-              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
-                &ldquo;{testimonial.text}&rdquo;
-              </p>
-
-              {/* Stars */}
-              <div className="flex items-center gap-0.5 mb-2">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
-                ))}
-              </div>
-
-              {/* Author */}
-              <p className="font-bold text-browning-charcoal">
-                {testimonial.name}
-              </p>
-              {testimonial.company && (
-                <p className="text-sm text-browning-gray">{testimonial.company}</p>
-              )}
-            </div>
-          ))}
-          {/* Second set (duplicate for seamless loop) */}
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={`b-${index}`}
+              key={index}
               className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
             >
               {/* Review Text */}

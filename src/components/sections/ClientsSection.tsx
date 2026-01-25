@@ -52,34 +52,13 @@ export default function ClientsSection() {
           aria-label="View all industries"
         />
 
-        {/* CSS Animated Carousel Track - faster on mobile */}
-        <div className="flex animate-scroll-left-fast md:animate-scroll-left hover:pause-animation">
-          {/* First set */}
-          {clients.map((client, index) => (
+        {/* CSS Animated Carousel Track - 3 sets for seamless infinite loop */}
+        <div className="flex animate-carousel-mobile md:animate-carousel hover:pause-animation">
+          {/* Render 3 sets for seamless looping (animation scrolls 33.33%) */}
+          {[...clients, ...clients, ...clients].map((client, index) => (
             <Link
               href="/industries"
-              key={`a-${index}`}
-              className="flex-shrink-0 px-6 md:px-10 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
-            >
-              {client.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={client.logo}
-                  alt={client.name}
-                  className={`w-auto object-contain ${client.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
-                />
-              ) : (
-                <span className="text-browning-gray font-medium text-sm text-center px-2">
-                  {client.name}
-                </span>
-              )}
-            </Link>
-          ))}
-          {/* Second set (duplicate for seamless loop) */}
-          {clients.map((client, index) => (
-            <Link
-              href="/industries"
-              key={`b-${index}`}
+              key={index}
               className="flex-shrink-0 px-6 md:px-10 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
             >
               {client.logo ? (
