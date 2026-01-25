@@ -52,10 +52,10 @@ export default function ClientsSection() {
           aria-label="View all industries"
         />
 
-        {/* CSS Animated Carousel Track - 3 sets for seamless infinite loop */}
+        {/* CSS Animated Carousel Track - 2 sets for seamless infinite loop */}
         <div className="flex animate-carousel-mobile md:animate-carousel hover:pause-animation">
-          {/* Render 3 sets for seamless looping (animation scrolls 33.33%) */}
-          {[...clients, ...clients, ...clients].map((client, index) => (
+          {/* Render 2 sets - animation scrolls exactly 50% then loops seamlessly */}
+          {[...clients, ...clients].map((client, index) => (
             <Link
               href="/industries"
               key={index}

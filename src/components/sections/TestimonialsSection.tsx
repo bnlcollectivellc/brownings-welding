@@ -102,10 +102,10 @@ export default function TestimonialsSection() {
         {/* Fade Right - at screen edge */}
         <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
 
-        {/* CSS Animated Carousel Track - 3 sets for seamless infinite loop */}
+        {/* CSS Animated Carousel Track - 2 sets for seamless infinite loop */}
         <div className="flex animate-carousel-testimonials-mobile md:animate-carousel-testimonials hover:pause-animation">
-          {/* Render 3 sets for seamless looping (animation scrolls 33.33%) */}
-          {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => (
+          {/* Render 2 sets - animation scrolls exactly 50% then loops seamlessly */}
+          {[...testimonials, ...testimonials].map((testimonial, index) => (
             <div
               key={index}
               className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"

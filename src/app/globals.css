@@ -156,37 +156,40 @@ section {
   }
 }
 
-/* Infinite scroll carousel animations - scrolls 33.33% (1 of 3 sets) for seamless loop */
+/* Infinite scroll carousel animations
+   Uses 2 sets of items, scrolls exactly 50% for seamless loop
+   The key is using calc(50%) for pixel-perfect positioning */
 @keyframes scroll-infinite {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-33.333%);
+    transform: translateX(-50%);
   }
 }
 
-/* Desktop: Partners/Team carousel - 25s (reduced 25% from 20s would be 15s, but slowing down means longer) */
-/* Actually "reduce speed by 25%" = make it 25% slower = 20s * 1.25 = 25s */
+/* Desktop: Partners/Team carousel - 25s */
 .animate-carousel {
   animation: scroll-infinite 25s linear infinite;
+  will-change: transform;
 }
 
 /* Desktop: Testimonials carousel - slower */
 .animate-carousel-testimonials {
   animation: scroll-infinite 50s linear infinite;
+  will-change: transform;
 }
 
-/* Mobile: Partners/Team carousel - 2x faster than desktop = 25s / 2 = 12.5s, then 2x faster = 6.25s */
-/* Previous was 7s, now 2x faster = 3.5s */
+/* Mobile: Partners/Team carousel - fast */
 .animate-carousel-mobile {
   animation: scroll-infinite 3.5s linear infinite;
+  will-change: transform;
 }
 
-/* Mobile: Testimonials carousel - 2x faster than previous */
-/* Previous mobile was 20s, now 2x faster = 10s */
+/* Mobile: Testimonials carousel */
 .animate-carousel-testimonials-mobile {
   animation: scroll-infinite 10s linear infinite;
+  will-change: transform;
 }
 
 /* Pause animation on hover (desktop only) */

@@ -61,10 +61,10 @@ export default function TeamSection() {
           aria-label="View the team"
         />
 
-        {/* CSS Animated Carousel Track - 3 sets for seamless infinite loop */}
+        {/* CSS Animated Carousel Track - 2 sets for seamless infinite loop */}
         <div className="flex animate-carousel-mobile md:animate-carousel hover:pause-animation py-4">
-          {/* Render 3 sets for seamless looping (animation scrolls 33.33%) */}
-          {[...managementTeam, ...managementTeam, ...managementTeam].map((member, index) => (
+          {/* Render 2 sets - animation scrolls exactly 50% then loops seamlessly */}
+          {[...managementTeam, ...managementTeam].map((member, index) => (
             <Link
               href="/team"
               key={index}
