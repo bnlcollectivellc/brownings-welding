@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
@@ -69,9 +70,54 @@ const testimonials = [
   },
 ];
 
+// Triple for seamless infinite scroll
+const infiniteTestimonials = [...testimonials, ...testimonials, ...testimonials];
+
 export default function TestimonialsSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
+
+  // Seamless infinite scroll animation
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    // Start in the middle set
+    const singleSetWidth = container.scrollWidth / 3;
+    container.scrollLeft = singleSetWidth;
+
+    let lastTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+
+      if (!container) return;
+
+      // Speed: pixels per millisecond (desktop: 0.02 slower, mobile: 0.05)
+      const isMobile = window.innerWidth < 768;
+      const speed = isMobile ? 0.05 : 0.02;
+
+      container.scrollLeft += speed * deltaTime;
+
+      // Seamless loop: when we've scrolled past the middle set, jump back
+      if (container.scrollLeft >= singleSetWidth * 2) {
+        container.scrollLeft -= singleSetWidth;
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
 
   return (
     <section
@@ -102,10 +148,12 @@ export default function TestimonialsSection() {
         {/* Fade Right - at screen edge */}
         <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
 
-        {/* CSS Animated Carousel Track - 2 sets for seamless infinite loop */}
-        <div className="flex animate-carousel-testimonials-mobile md:animate-carousel-testimonials hover:pause-animation">
-          {/* Render 2 sets - animation scrolls exactly 50% then loops seamlessly */}
-          {[...testimonials, ...testimonials].map((testimonial, index) => (
+        {/* Scrollable Carousel Track */}
+        <div
+          ref={scrollRef}
+          className="flex overflow-x-hidden"
+        >
+          {infiniteTestimonials.map((testimonial, index) => (
             <div
               key={index}
               className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useEffect } from 'react';
 import { User } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
@@ -13,10 +14,55 @@ const managementTeam = [
   { name: 'Scott Hance', role: 'Shop Floor Manager', image: '/images/team/scott-hance.jpg' },
 ];
 
+// Triple for seamless infinite scroll
+const infiniteTeam = [...managementTeam, ...managementTeam, ...managementTeam];
+
 export default function TeamSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
   const [headerRef, headerVisible] = useInView(0.2);
   const [carouselRef, carouselVisible] = useInView(0.1);
   const [parallaxRef, parallaxOffset] = useParallax(0.2);
+
+  // Seamless infinite scroll animation
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    // Start in the middle set
+    const singleSetWidth = container.scrollWidth / 3;
+    container.scrollLeft = singleSetWidth;
+
+    let lastTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+
+      if (!container) return;
+
+      // Speed: pixels per millisecond (desktop: 0.03, mobile: 0.08)
+      const isMobile = window.innerWidth < 768;
+      const speed = isMobile ? 0.08 : 0.03;
+
+      container.scrollLeft += speed * deltaTime;
+
+      // Seamless loop: when we've scrolled past the middle set, jump back
+      if (container.scrollLeft >= singleSetWidth * 2) {
+        container.scrollLeft -= singleSetWidth;
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
 
   return (
     <section
@@ -61,10 +107,12 @@ export default function TeamSection() {
           aria-label="View the team"
         />
 
-        {/* CSS Animated Carousel Track - 2 sets for seamless infinite loop */}
-        <div className="flex animate-carousel-mobile md:animate-carousel hover:pause-animation py-4">
-          {/* Render 2 sets - animation scrolls exactly 50% then loops seamlessly */}
-          {[...managementTeam, ...managementTeam].map((member, index) => (
+        {/* Scrollable Carousel Track */}
+        <div
+          ref={scrollRef}
+          className="flex overflow-x-hidden py-4"
+        >
+          {infiniteTeam.map((member, index) => (
             <Link
               href="/team"
               key={index}
