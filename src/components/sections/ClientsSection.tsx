@@ -21,13 +21,13 @@ export default function ClientsSection() {
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
+      {/* Section Header - inside container */}
       <div
         ref={sectionRef}
         className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
           sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        {/* Section Header - Clickable */}
         <div className="text-center mb-10">
           <Link href="/industries" className="inline-block group">
             <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal group-hover:text-browning-red transition-colors">
@@ -35,67 +35,67 @@ export default function ClientsSection() {
             </h2>
           </Link>
         </div>
+      </div>
 
-        {/* Carousel Container */}
-        <div className="relative py-4">
-          {/* Fade Left */}
-          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+      {/* Carousel Container - full width for edge-to-edge fades */}
+      <div className="relative py-4">
+        {/* Fade Left - at screen edge */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
 
-          {/* Fade Right */}
-          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+        {/* Fade Right - at screen edge */}
+        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-          {/* Mobile clickable overlay - links entire carousel area */}
-          <Link
-            href="/industries"
-            className="absolute inset-0 z-20 md:hidden"
-            aria-label="View all industries"
-          />
+        {/* Mobile clickable overlay - links entire carousel area */}
+        <Link
+          href="/industries"
+          className="absolute inset-0 z-20 md:hidden"
+          aria-label="View all industries"
+        />
 
-          {/* CSS Animated Carousel Track */}
-          <div className="flex animate-scroll-left hover:pause-animation">
-            {/* First set */}
-            {clients.map((client, index) => (
-              <Link
-                href="/industries"
-                key={`a-${index}`}
-                className="flex-shrink-0 px-6 md:px-10 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
-              >
-                {client.logo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={client.logo}
-                    alt={client.name}
-                    className={`w-auto object-contain ${client.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
-                  />
-                ) : (
-                  <span className="text-browning-gray font-medium text-sm text-center px-2">
-                    {client.name}
-                  </span>
-                )}
-              </Link>
-            ))}
-            {/* Second set (duplicate for seamless loop) */}
-            {clients.map((client, index) => (
-              <Link
-                href="/industries"
-                key={`b-${index}`}
-                className="flex-shrink-0 px-6 md:px-10 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
-              >
-                {client.logo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={client.logo}
-                    alt={client.name}
-                    className={`w-auto object-contain ${client.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
-                  />
-                ) : (
-                  <span className="text-browning-gray font-medium text-sm text-center px-2">
-                    {client.name}
-                  </span>
-                )}
-              </Link>
-            ))}
-          </div>
+        {/* CSS Animated Carousel Track - faster on mobile */}
+        <div className="flex animate-scroll-left-fast md:animate-scroll-left hover:pause-animation">
+          {/* First set */}
+          {clients.map((client, index) => (
+            <Link
+              href="/industries"
+              key={`a-${index}`}
+              className="flex-shrink-0 px-6 md:px-10 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
+            >
+              {client.logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={client.logo}
+                  alt={client.name}
+                  className={`w-auto object-contain ${client.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
+                />
+              ) : (
+                <span className="text-browning-gray font-medium text-sm text-center px-2">
+                  {client.name}
+                </span>
+              )}
+            </Link>
+          ))}
+          {/* Second set (duplicate for seamless loop) */}
+          {clients.map((client, index) => (
+            <Link
+              href="/industries"
+              key={`b-${index}`}
+              className="flex-shrink-0 px-6 md:px-10 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
+            >
+              {client.logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={client.logo}
+                  alt={client.name}
+                  className={`w-auto object-contain ${client.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
+                />
+              ) : (
+                <span className="text-browning-gray font-medium text-sm text-center px-2">
+                  {client.name}
+                </span>
+              )}
+            </Link>
+          ))}
         </div>
       </div>
     </section>

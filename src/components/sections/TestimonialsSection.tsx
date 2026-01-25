@@ -80,84 +80,84 @@ export default function TestimonialsSection() {
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
+      {/* Section Header - inside container */}
       <div
         ref={sectionRef}
         className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
           sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        {/* Section Header */}
         <div className="text-center mb-10">
           <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal">
             What Our Customers Say
           </h2>
         </div>
+      </div>
 
-        {/* Carousel Container */}
-        <div className="relative">
-          {/* Fade Left */}
-          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
+      {/* Carousel Container - full width for edge-to-edge fades */}
+      <div className="relative">
+        {/* Fade Left - at screen edge */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
 
-          {/* Fade Right */}
-          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
+        {/* Fade Right - at screen edge */}
+        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
 
-          {/* CSS Animated Carousel Track - slower animation */}
-          <div className="flex animate-scroll-left-slow hover:pause-animation">
-            {/* First set */}
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={`a-${index}`}
-                className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
-              >
-                {/* Review Text */}
-                <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
-                  &ldquo;{testimonial.text}&rdquo;
-                </p>
+        {/* CSS Animated Carousel Track - faster on mobile, slower on desktop */}
+        <div className="flex animate-scroll-left md:animate-scroll-left-slow hover:pause-animation">
+          {/* First set */}
+          {testimonials.map((testimonial, index) => (
+            <div
+              key={`a-${index}`}
+              className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
+            >
+              {/* Review Text */}
+              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
+                &ldquo;{testimonial.text}&rdquo;
+              </p>
 
-                {/* Stars */}
-                <div className="flex items-center gap-0.5 mb-2">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
-                  ))}
-                </div>
-
-                {/* Author */}
-                <p className="font-bold text-browning-charcoal">
-                  {testimonial.name}
-                </p>
-                {testimonial.company && (
-                  <p className="text-sm text-browning-gray">{testimonial.company}</p>
-                )}
+              {/* Stars */}
+              <div className="flex items-center gap-0.5 mb-2">
+                {[...Array(testimonial.rating)].map((_, i) => (
+                  <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
+                ))}
               </div>
-            ))}
-            {/* Second set (duplicate for seamless loop) */}
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={`b-${index}`}
-                className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
-              >
-                {/* Review Text */}
-                <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
-                  &ldquo;{testimonial.text}&rdquo;
-                </p>
 
-                {/* Stars */}
-                <div className="flex items-center gap-0.5 mb-2">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
-                  ))}
-                </div>
+              {/* Author */}
+              <p className="font-bold text-browning-charcoal">
+                {testimonial.name}
+              </p>
+              {testimonial.company && (
+                <p className="text-sm text-browning-gray">{testimonial.company}</p>
+              )}
+            </div>
+          ))}
+          {/* Second set (duplicate for seamless loop) */}
+          {testimonials.map((testimonial, index) => (
+            <div
+              key={`b-${index}`}
+              className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
+            >
+              {/* Review Text */}
+              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
+                &ldquo;{testimonial.text}&rdquo;
+              </p>
 
-                {/* Author */}
-                <p className="font-bold text-browning-charcoal">
-                  {testimonial.name}
-                </p>
-                {testimonial.company && (
-                  <p className="text-sm text-browning-gray">{testimonial.company}</p>
-                )}
+              {/* Stars */}
+              <div className="flex items-center gap-0.5 mb-2">
+                {[...Array(testimonial.rating)].map((_, i) => (
+                  <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
+                ))}
               </div>
-            ))}
-          </div>
+
+              {/* Author */}
+              <p className="font-bold text-browning-charcoal">
+                {testimonial.name}
+              </p>
+              {testimonial.company && (
+                <p className="text-sm text-browning-gray">{testimonial.company}</p>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>

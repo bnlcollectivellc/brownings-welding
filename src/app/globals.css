@@ -183,6 +183,11 @@ section {
   animation: scroll-left-slow 40s linear infinite;
 }
 
+/* Fast animation for mobile (3x faster for partners/team) */
+.animate-scroll-left-fast {
+  animation: scroll-left 7s linear infinite;
+}
+
 /* Pause animation on hover (desktop only) */
 @media (hover: hover) {
   .hover\:pause-animation:hover {

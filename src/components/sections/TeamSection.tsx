@@ -25,8 +25,8 @@ export default function TeamSection() {
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
+      {/* Section Header - inside container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header - Clickable */}
         <div
           ref={headerRef}
           className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
@@ -39,90 +39,90 @@ export default function TeamSection() {
             </h2>
           </Link>
         </div>
+      </div>
 
-        {/* Carousel Container */}
-        <div
-          ref={carouselRef}
-          className={`relative transition-all duration-700 delay-200 ${
-            carouselVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
-          {/* Fade Left */}
-          <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-browning-light to-transparent z-10 pointer-events-none" />
+      {/* Carousel Container - full width for edge-to-edge fades */}
+      <div
+        ref={carouselRef}
+        className={`relative transition-all duration-700 delay-200 ${
+          carouselVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
+        {/* Fade Left - at screen edge */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-r from-browning-light to-transparent z-10 pointer-events-none" />
 
-          {/* Fade Right */}
-          <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-browning-light to-transparent z-10 pointer-events-none" />
+        {/* Fade Right - at screen edge */}
+        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-l from-browning-light to-transparent z-10 pointer-events-none" />
 
-          {/* Mobile clickable overlay - links entire carousel area */}
-          <Link
-            href="/team"
-            className="absolute inset-0 z-20 md:hidden"
-            aria-label="View the team"
-          />
+        {/* Mobile clickable overlay - links entire carousel area */}
+        <Link
+          href="/team"
+          className="absolute inset-0 z-20 md:hidden"
+          aria-label="View the team"
+        />
 
-          {/* CSS Animated Carousel Track */}
-          <div className="flex animate-scroll-left hover:pause-animation py-4">
-            {/* First set */}
-            {managementTeam.map((member, index) => (
-              <Link
-                href="/team"
-                key={`a-${index}`}
-                className="flex-shrink-0 w-48 md:w-64 px-2 md:px-3 group cursor-pointer"
-              >
-                {/* Photo */}
-                <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
-                  {member.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                      <User className="text-gray-300" size={60} />
-                    </div>
-                  )}
-                </div>
+        {/* CSS Animated Carousel Track - faster on mobile */}
+        <div className="flex animate-scroll-left-fast md:animate-scroll-left hover:pause-animation py-4">
+          {/* First set */}
+          {managementTeam.map((member, index) => (
+            <Link
+              href="/team"
+              key={`a-${index}`}
+              className="flex-shrink-0 w-48 md:w-64 px-2 md:px-3 group cursor-pointer"
+            >
+              {/* Photo */}
+              <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
+                {member.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                    <User className="text-gray-300" size={60} />
+                  </div>
+                )}
+              </div>
 
-                {/* Info */}
-                <h3 className="text-browning-charcoal font-semibold text-base md:text-lg group-hover:text-browning-red transition-colors">
-                  {member.name}
-                </h3>
-                <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
-              </Link>
-            ))}
-            {/* Second set (duplicate for seamless loop) */}
-            {managementTeam.map((member, index) => (
-              <Link
-                href="/team"
-                key={`b-${index}`}
-                className="flex-shrink-0 w-48 md:w-64 px-2 md:px-3 group cursor-pointer"
-              >
-                {/* Photo */}
-                <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
-                  {member.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                      <User className="text-gray-300" size={60} />
-                    </div>
-                  )}
-                </div>
+              {/* Info */}
+              <h3 className="text-browning-charcoal font-semibold text-base md:text-lg group-hover:text-browning-red transition-colors">
+                {member.name}
+              </h3>
+              <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
+            </Link>
+          ))}
+          {/* Second set (duplicate for seamless loop) */}
+          {managementTeam.map((member, index) => (
+            <Link
+              href="/team"
+              key={`b-${index}`}
+              className="flex-shrink-0 w-48 md:w-64 px-2 md:px-3 group cursor-pointer"
+            >
+              {/* Photo */}
+              <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
+                {member.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                    <User className="text-gray-300" size={60} />
+                  </div>
+                )}
+              </div>
 
-                {/* Info */}
-                <h3 className="text-browning-charcoal font-semibold text-base md:text-lg group-hover:text-browning-red transition-colors">
-                  {member.name}
-                </h3>
-                <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
-              </Link>
-            ))}
-          </div>
+              {/* Info */}
+              <h3 className="text-browning-charcoal font-semibold text-base md:text-lg group-hover:text-browning-red transition-colors">
+                {member.name}
+              </h3>
+              <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
