@@ -20,6 +20,7 @@ const infiniteTeam = [...managementTeam, ...managementTeam, ...managementTeam];
 export default function TeamSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
+  const initializedRef = useRef(false);
   const [headerRef, headerVisible] = useInView(0.2);
   const [carouselRef, carouselVisible] = useInView(0.1);
   const [parallaxRef, parallaxOffset] = useParallax(0.2);
@@ -29,33 +30,42 @@ export default function TeamSection() {
     const container = scrollRef.current;
     if (!container) return;
 
-    // Start in the middle set
-    const singleSetWidth = container.scrollWidth / 3;
-    container.scrollLeft = singleSetWidth;
+    // Wait for next frame to ensure layout is complete
+    requestAnimationFrame(() => {
+      if (!container || initializedRef.current) return;
 
-    let lastTime = performance.now();
+      const singleSetWidth = container.scrollWidth / 3;
+      container.scrollLeft = singleSetWidth;
+      initializedRef.current = true;
 
-    const animate = (currentTime: number) => {
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
+      let lastTime = performance.now();
 
-      if (!container) return;
+      const animate = (currentTime: number) => {
+        const deltaTime = Math.min(currentTime - lastTime, 50); // Cap delta to prevent jumps after tab switch
+        lastTime = currentTime;
 
-      // Speed: pixels per millisecond (desktop: 0.03, mobile: 0.08)
-      const isMobile = window.innerWidth < 768;
-      const speed = isMobile ? 0.08 : 0.03;
+        if (!container) return;
 
-      container.scrollLeft += speed * deltaTime;
+        // Speed: pixels per millisecond
+        // Desktop: 0.05, Mobile: 0.1
+        const isMobile = window.innerWidth < 768;
+        const speed = isMobile ? 0.1 : 0.05;
 
-      // Seamless loop: when we've scrolled past the middle set, jump back
-      if (container.scrollLeft >= singleSetWidth * 2) {
-        container.scrollLeft -= singleSetWidth;
-      }
+        container.scrollLeft += speed * deltaTime;
+
+        // Recalculate on each frame for accuracy
+        const setWidth = container.scrollWidth / 3;
+
+        // Seamless loop: when we've scrolled past the middle set, jump back
+        if (container.scrollLeft >= setWidth * 2) {
+          container.scrollLeft -= setWidth;
+        }
+
+        animationRef.current = requestAnimationFrame(animate);
+      };
 
       animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
+    });
 
     return () => {
       if (animationRef.current) {
