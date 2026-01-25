@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
 import { User } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
@@ -14,91 +13,15 @@ const managementTeam = [
   { name: 'Scott Hance', role: 'Shop Floor Manager', image: '/images/team/scott-hance.jpg' },
 ];
 
-// Triple the items for seamless infinite scroll
-const infiniteTeam = [...managementTeam, ...managementTeam, ...managementTeam];
-
 export default function TeamSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isScrollingRef = useRef(false);
-  const animationRef = useRef<number | null>(null);
-  const speedRef = useRef(0.5);
-  const isHoveredRef = useRef(false);
   const [headerRef, headerVisible] = useInView(0.2);
   const [carouselRef, carouselVisible] = useInView(0.1);
   const [parallaxRef, parallaxOffset] = useParallax(0.2);
 
-  // Initialize scroll position and start animation (desktop only - mobile is manual swipe)
-  useEffect(() => {
-    let mounted = true;
-    const container = scrollRef.current;
-    if (!container) return;
-
-    // Set initial scroll position to middle set
-    const initScroll = () => {
-      if (!mounted || !scrollRef.current) return;
-      const singleSetWidth = scrollRef.current.scrollWidth / 3;
-      scrollRef.current.scrollLeft = singleSetWidth;
-    };
-
-    // Start animation
-    const autoScroll = () => {
-      if (!mounted) return;
-
-      // Always auto-scroll, pause on hover (desktop only)
-      const targetSpeed = isHoveredRef.current ? 0 : 0.5;
-      speedRef.current += (targetSpeed - speedRef.current) * 0.05;
-
-      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
-        scrollRef.current.scrollLeft += speedRef.current;
-      }
-      animationRef.current = requestAnimationFrame(autoScroll);
-    };
-
-    // Small delay to ensure DOM is ready
-    const initTimeout = setTimeout(() => {
-      initScroll();
-      animationRef.current = requestAnimationFrame(autoScroll);
-    }, 100);
-
-    return () => {
-      mounted = false;
-      clearTimeout(initTimeout);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
-
-  // Handle seamless looping
-  const handleScroll = useCallback(() => {
-    if (isScrollingRef.current || !scrollRef.current) return;
-
-    const container = scrollRef.current;
-    const singleSetWidth = container.scrollWidth / 3;
-
-    if (container.scrollLeft >= singleSetWidth * 2) {
-      isScrollingRef.current = true;
-      container.scrollLeft = container.scrollLeft - singleSetWidth;
-      setTimeout(() => { isScrollingRef.current = false; }, 50);
-    } else if (container.scrollLeft <= 0) {
-      isScrollingRef.current = true;
-      container.scrollLeft = container.scrollLeft + singleSetWidth;
-      setTimeout(() => { isScrollingRef.current = false; }, 50);
-    }
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    isHoveredRef.current = true;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    isHoveredRef.current = false;
-  }, []);
-
   return (
     <section
       id="team"
-      className="bg-browning-light py-16 md:py-24"
+      className="bg-browning-light py-16 md:py-24 overflow-hidden"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
@@ -137,19 +60,44 @@ export default function TeamSection() {
             aria-label="View the team"
           />
 
-          {/* Scrollable Container */}
-          <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            className="flex gap-4 md:gap-6 overflow-x-scroll scrollbar-hide carousel-scroll px-8 md:px-12 pt-4 pb-4"
-          >
-            {infiniteTeam.map((member, index) => (
+          {/* CSS Animated Carousel Track */}
+          <div className="flex animate-scroll-left hover:pause-animation py-4">
+            {/* First set */}
+            {managementTeam.map((member, index) => (
               <Link
                 href="/team"
-                key={index}
-                className="flex-shrink-0 w-48 md:w-64 group cursor-pointer pt-2"
+                key={`a-${index}`}
+                className="flex-shrink-0 w-48 md:w-64 px-2 md:px-3 group cursor-pointer"
+              >
+                {/* Photo */}
+                <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
+                  {member.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                      <User className="text-gray-300" size={60} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <h3 className="text-browning-charcoal font-semibold text-base md:text-lg group-hover:text-browning-red transition-colors">
+                  {member.name}
+                </h3>
+                <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
+              </Link>
+            ))}
+            {/* Second set (duplicate for seamless loop) */}
+            {managementTeam.map((member, index) => (
+              <Link
+                href="/team"
+                key={`b-${index}`}
+                className="flex-shrink-0 w-48 md:w-64 px-2 md:px-3 group cursor-pointer"
               >
                 {/* Photo */}
                 <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">

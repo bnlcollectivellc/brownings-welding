@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef, useCallback, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
@@ -70,90 +69,14 @@ const testimonials = [
   },
 ];
 
-// Triple for infinite scroll
-const infiniteTestimonials = [...testimonials, ...testimonials, ...testimonials];
-
 export default function TestimonialsSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isScrollingRef = useRef(false);
-  const animationRef = useRef<number | null>(null);
-  const speedRef = useRef(0.5);
-  const isHoveredRef = useRef(false);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
-
-  // Initialize scroll position and start animation (desktop only - mobile is manual swipe)
-  useEffect(() => {
-    let mounted = true;
-    const container = scrollRef.current;
-    if (!container) return;
-
-    // Set initial scroll position to middle set
-    const initScroll = () => {
-      if (!mounted || !scrollRef.current) return;
-      const singleSetWidth = scrollRef.current.scrollWidth / 3;
-      scrollRef.current.scrollLeft = singleSetWidth;
-    };
-
-    // Start animation (50% slower than other carousels)
-    const autoScroll = () => {
-      if (!mounted) return;
-
-      // Always auto-scroll, pause on hover (desktop only)
-      const targetSpeed = isHoveredRef.current ? 0 : 0.25;
-      speedRef.current += (targetSpeed - speedRef.current) * 0.05;
-
-      if (scrollRef.current && !isScrollingRef.current && Math.abs(speedRef.current) > 0.01) {
-        scrollRef.current.scrollLeft += speedRef.current;
-      }
-      animationRef.current = requestAnimationFrame(autoScroll);
-    };
-
-    // Small delay to ensure DOM is ready
-    const initTimeout = setTimeout(() => {
-      initScroll();
-      animationRef.current = requestAnimationFrame(autoScroll);
-    }, 100);
-
-    return () => {
-      mounted = false;
-      clearTimeout(initTimeout);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
-
-  // Handle seamless looping
-  const handleScroll = useCallback(() => {
-    if (isScrollingRef.current || !scrollRef.current) return;
-
-    const container = scrollRef.current;
-    const singleSetWidth = container.scrollWidth / 3;
-
-    if (container.scrollLeft >= singleSetWidth * 2) {
-      isScrollingRef.current = true;
-      container.scrollLeft = container.scrollLeft - singleSetWidth;
-      setTimeout(() => { isScrollingRef.current = false; }, 50);
-    } else if (container.scrollLeft <= 0) {
-      isScrollingRef.current = true;
-      container.scrollLeft = container.scrollLeft + singleSetWidth;
-      setTimeout(() => { isScrollingRef.current = false; }, 50);
-    }
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    isHoveredRef.current = true;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    isHoveredRef.current = false;
-  }, []);
 
   return (
     <section
       id="testimonials"
-      className="bg-gray-50 py-16"
+      className="bg-gray-50 py-16 overflow-hidden"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
@@ -178,18 +101,40 @@ export default function TestimonialsSection() {
           {/* Fade Right */}
           <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
 
-          {/* Scrollable Container */}
-          <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            className="flex gap-6 overflow-x-scroll scrollbar-hide carousel-scroll px-10"
-          >
-            {infiniteTestimonials.map((testimonial, index) => (
+          {/* CSS Animated Carousel Track - slower animation */}
+          <div className="flex animate-scroll-left-slow hover:pause-animation">
+            {/* First set */}
+            {testimonials.map((testimonial, index) => (
               <div
-                key={index}
-                className="flex-shrink-0 w-80 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
+                key={`a-${index}`}
+                className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
+              >
+                {/* Review Text */}
+                <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
+                  &ldquo;{testimonial.text}&rdquo;
+                </p>
+
+                {/* Stars */}
+                <div className="flex items-center gap-0.5 mb-2">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
+                  ))}
+                </div>
+
+                {/* Author */}
+                <p className="font-bold text-browning-charcoal">
+                  {testimonial.name}
+                </p>
+                {testimonial.company && (
+                  <p className="text-sm text-browning-gray">{testimonial.company}</p>
+                )}
+              </div>
+            ))}
+            {/* Second set (duplicate for seamless loop) */}
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={`b-${index}`}
+                className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
               >
                 {/* Review Text */}
                 <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
