@@ -12,10 +12,30 @@ export default function ServicesPage() {
     <div className="min-h-screen bg-white">
       <Navbar alwaysVisible />
 
-      {/* Services Showcase - Full Page */}
-      <div className="pt-14 md:pt-20">
-        <ServicesShowcase showLinecard={true} />
-      </div>
+      {/* Hero Section */}
+      <section className="relative h-[55vh] md:h-[65vh] flex items-end justify-center overflow-hidden pb-12 md:pb-16">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/videos/services-bg.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="relative z-10 text-center text-white px-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            Fabrication Services
+          </h1>
+          <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+            From concept to completion, comprehensive metal fabrication solutions
+          </p>
+        </div>
+      </section>
+
+      {/* Services Showcase */}
+      <ServicesShowcase showLinecard={true} />
 
       {/* CTA Section */}
       <section className="py-16 bg-browning-charcoal">
