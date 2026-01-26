@@ -397,15 +397,24 @@ interface ServicesShowcaseProps {
   showLinecard?: boolean;
 }
 
-export default function ServicesShowcase({ showLinecard = false }: ServicesShowcaseProps) {
+export default function ServicesShowcase({ showLinecard = true }: ServicesShowcaseProps) {
   const [activeService, setActiveService] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLinecardModalOpen, setIsLinecardModalOpen] = useState(false);
-  const [headerRef, headerVisible] = useInView(0.2);
-  const [contentRef, contentVisible] = useInView(0.2);
+  const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.1);
 
+  const handleServiceChange = (index: number) => {
+    if (index === activeService || isTransitioning) return;
+
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setActiveService(index);
+      setTimeout(() => setIsTransitioning(false), 50);
+    }, 200);
+  };
+
   const currentService = services[activeService];
-  const IconComponent = currentService.icon;
 
   return (
     <section
@@ -415,124 +424,92 @@ export default function ServicesShowcase({ showLinecard = false }: ServicesShowc
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div
-          ref={headerRef}
-          className={`mb-16 transition-all duration-700 ${
-            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
-          <span className="text-browning-red font-semibold text-sm uppercase tracking-wider">
-            Services
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4">
-            Full-Service Fabrication
-          </h2>
-          <p className="text-browning-gray text-lg mt-4 max-w-2xl">
-            From concept to completion, we provide comprehensive metal fabrication services
-            backed by 50+ years of manufacturing excellence.
-          </p>
-        </div>
-
         {/* Main Content Grid */}
         <div
-          ref={contentRef}
-          className={`grid lg:grid-cols-2 gap-12 items-start transition-all duration-700 delay-200 ${
-            contentVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          ref={sectionRef}
+          className={`grid lg:grid-cols-2 gap-12 lg:gap-16 items-start transition-all duration-700 ${
+            sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          {/* Left - Service Selector List */}
-          <div className="space-y-3">
-            {services.map((service, index) => {
-              const ServiceIcon = service.icon;
-              const isActive = index === activeService;
-
-              return (
-                <button
-                  key={service.id}
-                  onClick={() => setActiveService(index)}
-                  className={`w-full text-left p-4 rounded-2xl border transition-all duration-200 group flex items-center gap-4 ${
-                    isActive
-                      ? 'bg-white border-browning-red/30 shadow-lg'
-                      : 'bg-white/50 border-gray-200 hover:bg-white hover:border-browning-red/30 hover:shadow-md'
-                  }`}
-                >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
-                    isActive ? 'bg-browning-red/10' : 'bg-gray-100 group-hover:bg-browning-red/10'
-                  }`}>
-                    <ServiceIcon
-                      className={`transition-colors ${
-                        isActive ? 'text-browning-red' : 'text-browning-gray group-hover:text-browning-red'
-                      }`}
-                      size={24}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className={`font-semibold transition-colors ${
-                      isActive ? 'text-browning-red' : 'text-browning-charcoal group-hover:text-browning-red'
-                    }`}>
-                      {service.title}
-                    </h3>
-                    <p className="text-browning-gray text-sm line-clamp-1">
-                      {service.features.slice(0, 3).join(' • ')}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
-
-            {/* Linecard Download */}
-            {showLinecard && (
-              <div className="pt-4">
-                <button
-                  onClick={() => setIsLinecardModalOpen(true)}
-                  className="inline-flex items-center gap-2 text-browning-red hover:text-red-700 font-semibold transition-colors"
-                >
-                  <Download size={18} />
-                  Download Capabilities Linecard
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Right - Service Detail with 3D Wireframe */}
-          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-browning-red/30 hover:shadow-lg transition-all">
-            {/* 3D Wireframe */}
-            <div className="relative h-64 md:h-80 bg-browning-light/50">
-              <WireframeObject
-                serviceId={currentService.id}
-                color="#E63329"
-              />
-              {/* Title overlay at bottom */}
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3 inline-flex items-center gap-3">
-                  <div className="bg-browning-red/10 w-10 h-10 rounded-lg flex items-center justify-center">
-                    <IconComponent className="text-browning-red" size={20} />
-                  </div>
-                  <h3 className="font-bold text-browning-charcoal text-lg">
-                    {currentService.title}
-                  </h3>
-                </div>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="p-6">
-              <p className="text-browning-gray leading-relaxed mb-6">
+          {/* Left Side - Content + Capabilities List */}
+          <div className="space-y-6">
+            {/* Header Content - constrained to left side */}
+            <div
+              className={`transition-all duration-300 ${
+                isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
+              }`}
+            >
+              <span className="text-browning-red font-semibold text-sm uppercase tracking-wider">
+                Services
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4">
+                {currentService.title}
+              </h2>
+              <p className="text-browning-gray text-base md:text-lg mt-4 line-clamp-3">
                 {currentService.description}
               </p>
 
-              {/* Feature Tags */}
-              <div className="flex flex-wrap gap-2">
+              {/* Feature Tags - below description */}
+              <div className="flex flex-wrap gap-2 mt-4">
                 {currentService.features.map((feature, index) => (
                   <span
                     key={index}
-                    className="text-xs font-medium text-browning-charcoal bg-browning-light border border-gray-200 px-3 py-1.5 rounded-full"
+                    className="text-xs font-medium text-browning-charcoal bg-white border border-gray-200 px-3 py-1.5 rounded-full"
                   >
                     {feature}
                   </span>
                 ))}
               </div>
+            </div>
+
+            {/* Capabilities List - simple clickable titles */}
+            <div className="pt-6 border-t border-gray-200">
+              <h3 className="text-xs font-semibold text-browning-gray uppercase tracking-wider mb-3">
+                Capabilities
+              </h3>
+              <ul className="space-y-1">
+                {services.map((service, index) => (
+                  <li key={service.id}>
+                    <button
+                      onClick={() => handleServiceChange(index)}
+                      className={`w-full text-left py-2 px-3 rounded transition-all duration-200 border-l-2 ${
+                        index === activeService
+                          ? 'text-browning-red border-browning-red bg-white/50'
+                          : 'text-browning-charcoal border-transparent hover:text-browning-red hover:border-browning-red/50'
+                      }`}
+                    >
+                      <span className="text-sm md:text-base">{service.title}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Linecard Download Button */}
+            {showLinecard && (
+              <div className="pt-2">
+                <button
+                  onClick={() => setIsLinecardModalOpen(true)}
+                  className="inline-flex items-center gap-2 text-browning-red hover:text-white border border-browning-red hover:bg-browning-red px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm"
+                >
+                  <Download size={16} />
+                  See Our Capabilities Matrix
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Right Side - 3D Wireframe */}
+          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] bg-white border border-gray-200 rounded-2xl overflow-hidden">
+            <div
+              className={`absolute inset-0 transition-opacity duration-300 ${
+                isTransitioning ? 'opacity-0' : 'opacity-100'
+              }`}
+            >
+              <WireframeObject
+                serviceId={currentService.id}
+                color="#E63329"
+              />
             </div>
           </div>
         </div>
