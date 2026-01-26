@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Download, X, CheckCircle, Loader2, Thermometer, Search, Flame, Cpu, Zap, Building2, Wrench } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
-import Image from 'next/image';
 
 // Service data with all 7 services - Air & Liquid Cooling first, Oilfield Pipe/Tube Inspection second
 const services = [
@@ -13,7 +12,6 @@ const services = [
     description: 'Specialized fabrication of air and liquid cooling assemblies for data centers and industrial applications. Our work includes painted and powder coated steel frames, square tubing, angle iron, channel, and pipe welding.',
     features: ['Data Center Cooling', 'Heat Exchangers', 'Coolant Distribution', 'Custom Manifolds', 'Leak Testing', 'Production Assembly'],
     icon: Thermometer,
-    image: '/images/materials/aluminum.jpg',
   },
   {
     id: 'pipe',
@@ -21,7 +19,6 @@ const services = [
     description: 'Comprehensive oilfield tube and pipe inspection services ensuring structural integrity and compliance. Our processes include electromagnetic interference testing, descaling, rethreading, and thorough quality documentation.',
     features: ['EMI Inspection', 'Descale', 'Rethreading', 'Visual Inspection', 'Quality Assurance', 'Documentation'],
     icon: Search,
-    image: '/images/materials/carbon-steel.jpg',
   },
   {
     id: 'welding',
@@ -29,7 +26,6 @@ const services = [
     description: 'Expert MIG, TIG, spot, and stick welding services for all metals and applications. Our certified welders bring decades of experience to every project, ensuring strong, precise welds that meet the highest industry standards.',
     features: ['MIG Welding', 'TIG Welding', 'Spot Welding', 'Stick Welding', 'Aluminum Welding', 'Stainless Steel'],
     icon: Flame,
-    image: '/images/materials/stainless-steel.png',
   },
   {
     id: 'cnc',
@@ -37,7 +33,6 @@ const services = [
     description: 'Precision mill and lathe capabilities for complex parts and prototypes. Our CNC department delivers tight-tolerance components with excellent surface finishes using state-of-the-art Haas equipment.',
     features: ['CNC Milling', 'CNC Turning', 'Prototyping', 'Production Runs', '0.0005" Tolerances', 'Various Materials'],
     icon: Cpu,
-    image: '/images/materials/aluminum.jpg',
   },
   {
     id: 'laser',
@@ -45,7 +40,6 @@ const services = [
     description: 'Precision laser cutting for intricate designs and clean edges on sheet metal. Our state-of-the-art CO2 laser technology delivers exceptional accuracy and speed for both prototype and production runs.',
     features: ['CO2 Laser', 'Fiber Engraving', '0.0005" Tolerances', 'Up to 945 IPM', 'Complex Geometries', 'Fast Turnaround'],
     icon: Zap,
-    image: '/images/materials/carbon-steel.jpg',
   },
   {
     id: 'structural',
@@ -53,7 +47,6 @@ const services = [
     description: 'Comprehensive bending, forming, shearing, and rolling capabilities for custom structural and sheet metal work. From simple brackets to complex enclosures and frames, we handle projects of all sizes.',
     features: ['Press Brake', 'Rolling', 'Shearing', 'Forming', 'Tube Bending', 'Assembly'],
     icon: Building2,
-    image: '/images/materials/stainless-steel.png',
   },
   {
     id: 'custom',
@@ -61,9 +54,244 @@ const services = [
     description: 'Complete custom part fabrication with finishing solutions including powder coating, galvanizing, and plating. We deliver fully finished parts ready for use, coordinating with trusted partners for specialized finishes.',
     features: ['Powder Coating', 'Galvanizing', 'Anodizing', 'Plating', 'Painting', 'Surface Prep'],
     icon: Wrench,
-    image: '/images/materials/aluminum.jpg',
   },
 ];
+
+// 3D Wireframe component that rotates
+function WireframeObject({ serviceId, color }: { serviceId: string; color: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number>(0);
+  const rotationRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // 3D projection - 25% larger (scale multiplier 1.25)
+    const project = (x: number, y: number, z: number, rotX: number, rotY: number) => {
+      const cosY = Math.cos(rotY);
+      const sinY = Math.sin(rotY);
+      const x1 = x * cosY - z * sinY;
+      const z1 = x * sinY + z * cosY;
+
+      const cosX = Math.cos(rotX);
+      const sinX = Math.sin(rotX);
+      const y1 = y * cosX - z1 * sinX;
+      const z2 = y * sinX + z1 * cosX;
+
+      const scale = 300 / (300 + z2);
+      // Apply 1.25x size multiplier
+      const px = x1 * scale * 1.25;
+      const py = y1 * scale * 1.25;
+
+      return { x: px, y: py, z: z2 };
+    };
+
+    const getVertices = (id: string): [number, number, number][] => {
+      const size = 80;
+      switch (id) {
+        case 'cooling':
+          return [
+            [-size, -size * 1.2, -size * 0.4], [size, -size * 1.2, -size * 0.4],
+            [size, size * 1.2, -size * 0.4], [-size, size * 1.2, -size * 0.4],
+            [-size, -size * 1.2, size * 0.4], [size, -size * 1.2, size * 0.4],
+            [size, size * 1.2, size * 0.4], [-size, size * 1.2, size * 0.4],
+            [-size * 0.7, -size * 0.8, -size * 0.4], [size * 0.7, -size * 0.8, -size * 0.4],
+            [-size * 0.7, -size * 0.4, -size * 0.4], [size * 0.7, -size * 0.4, -size * 0.4],
+            [-size * 0.7, 0, -size * 0.4], [size * 0.7, 0, -size * 0.4],
+            [-size * 0.7, size * 0.4, -size * 0.4], [size * 0.7, size * 0.4, -size * 0.4],
+            [-size * 0.7, size * 0.8, -size * 0.4], [size * 0.7, size * 0.8, -size * 0.4],
+          ];
+        case 'cnc':
+          return [
+            [-size, -size * 0.6, -size], [size, -size * 0.6, -size],
+            [size, size * 0.6, -size], [-size, size * 0.6, -size],
+            [-size, -size * 0.6, size], [size, -size * 0.6, size],
+            [size, size * 0.6, size], [-size, size * 0.6, size],
+            [0, -size * 0.6, 0], [0, -size * 1.2, 0],
+            [-size * 0.2, -size * 1.2, -size * 0.2], [size * 0.2, -size * 1.2, -size * 0.2],
+            [size * 0.2, -size * 1.2, size * 0.2], [-size * 0.2, -size * 1.2, size * 0.2],
+          ];
+        case 'laser':
+          return [
+            [-size * 1.2, 0, -size], [size * 1.2, 0, -size],
+            [size * 1.2, 0, size], [-size * 1.2, 0, size],
+            [-size * 0.8, 0, -size * 0.6], [size * 0.8, 0, -size * 0.6],
+            [-size * 0.8, 0, -size * 0.2], [size * 0.8, 0, -size * 0.2],
+            [-size * 0.8, 0, size * 0.2], [size * 0.8, 0, size * 0.2],
+            [-size * 0.8, 0, size * 0.6], [size * 0.8, 0, size * 0.6],
+            [-size * 0.3, 0, 0], [size * 0.3, 0, 0],
+          ];
+        case 'pipe':
+          const pipeVerts: [number, number, number][] = [];
+          const segments = 16;
+          const radius = size * 0.5;
+          const length = size * 1.5;
+          for (let i = 0; i < segments; i++) {
+            const angle = (i / segments) * Math.PI * 2;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            pipeVerts.push([x, y, -length]);
+            pipeVerts.push([x, y, length]);
+          }
+          return pipeVerts;
+        case 'welding':
+          // Torch/flame shape
+          return [
+            [0, -size * 1.2, 0], [0, size * 0.4, 0], // main shaft
+            [-size * 0.3, size * 0.4, -size * 0.3], [size * 0.3, size * 0.4, -size * 0.3],
+            [size * 0.3, size * 0.4, size * 0.3], [-size * 0.3, size * 0.4, size * 0.3],
+            [0, size * 1.2, 0], // flame tip
+            [-size * 0.15, size * 0.8, 0], [size * 0.15, size * 0.8, 0],
+          ];
+        case 'structural':
+          // I-beam shape
+          return [
+            [-size, -size, -size * 0.2], [size, -size, -size * 0.2],
+            [size, -size, size * 0.2], [-size, -size, size * 0.2],
+            [-size, size, -size * 0.2], [size, size, -size * 0.2],
+            [size, size, size * 0.2], [-size, size, size * 0.2],
+            [-size * 0.3, -size, 0], [size * 0.3, -size, 0],
+            [-size * 0.3, size, 0], [size * 0.3, size, 0],
+          ];
+        default:
+          return [
+            [-size, -size, -size], [size, -size, -size],
+            [size, size, -size], [-size, size, -size],
+            [-size, -size, size], [size, -size, size],
+            [size, size, size], [-size, size, size],
+          ];
+      }
+    };
+
+    const getEdges = (id: string): [number, number][] => {
+      switch (id) {
+        case 'cooling':
+          return [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7],
+            [8, 9], [10, 11], [12, 13], [14, 15], [16, 17],
+          ];
+        case 'cnc':
+          return [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7],
+            [8, 9],
+            [10, 11], [11, 12], [12, 13], [13, 10],
+          ];
+        case 'laser':
+          return [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [6, 7], [8, 9], [10, 11],
+            [12, 13],
+          ];
+        case 'pipe':
+          const pipeEdges: [number, number][] = [];
+          const segments = 16;
+          for (let i = 0; i < segments; i++) {
+            const next = (i + 1) % segments;
+            pipeEdges.push([i * 2, next * 2]);
+            pipeEdges.push([i * 2 + 1, next * 2 + 1]);
+            pipeEdges.push([i * 2, i * 2 + 1]);
+          }
+          return pipeEdges;
+        case 'welding':
+          return [
+            [0, 1], [1, 2], [1, 3], [1, 4], [1, 5],
+            [2, 3], [3, 4], [4, 5], [5, 2],
+            [2, 6], [3, 6], [4, 6], [5, 6],
+            [7, 8],
+          ];
+        case 'structural':
+          return [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7],
+            [8, 9], [10, 11], [8, 10], [9, 11],
+          ];
+        default:
+          return [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7],
+          ];
+      }
+    };
+
+    const vertices = getVertices(serviceId);
+    const edges = getEdges(serviceId);
+
+    const animate = () => {
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      rotationRef.current.y += 0.008;
+      rotationRef.current.x = Math.sin(Date.now() * 0.0005) * 0.2;
+
+      const centerX = rect.width / 2;
+      // Raise by 20% of section height (move center up)
+      const centerY = rect.height / 2 - rect.height * 0.2;
+
+      const projected = vertices.map(([x, y, z]) =>
+        project(x, y, z, rotationRef.current.x, rotationRef.current.y)
+      );
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.9;
+
+      edges.forEach(([start, end]) => {
+        if (start < projected.length && end < projected.length) {
+          const p1 = projected[start];
+          const p2 = projected[end];
+
+          ctx.beginPath();
+          ctx.moveTo(centerX + p1.x, centerY + p1.y);
+          ctx.lineTo(centerX + p2.x, centerY + p2.y);
+          ctx.stroke();
+        }
+      });
+
+      ctx.fillStyle = color;
+      projected.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(centerX + p.x, centerY + p.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationRef.current);
+    };
+  }, [serviceId, color]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="w-full h-full"
+      style={{ display: 'block' }}
+    />
+  );
+}
 
 // Email capture modal for linecard download
 function LinecardModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -267,17 +495,15 @@ export default function ServicesShowcase({ showLinecard = false }: ServicesShowc
             )}
           </div>
 
-          {/* Right - Service Detail Card */}
+          {/* Right - Service Detail with 3D Wireframe */}
           <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-browning-red/30 hover:shadow-lg transition-all">
-            {/* Image */}
-            <div className="relative h-48 md:h-64 overflow-hidden">
-              <Image
-                src={currentService.image}
-                alt={currentService.title}
-                fill
-                className="object-cover"
+            {/* 3D Wireframe */}
+            <div className="relative h-64 md:h-80 bg-browning-light/50">
+              <WireframeObject
+                serviceId={currentService.id}
+                color="#E63329"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              {/* Title overlay at bottom */}
               <div className="absolute bottom-4 left-4 right-4">
                 <div className="bg-white/90 backdrop-blur-sm rounded-xl p-3 inline-flex items-center gap-3">
                   <div className="bg-browning-red/10 w-10 h-10 rounded-lg flex items-center justify-center">
