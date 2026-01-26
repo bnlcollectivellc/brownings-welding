@@ -137,14 +137,14 @@ export default function ClientsSection() {
             <Link
               href="/industries"
               key={index}
-              className="flex-shrink-0 px-6 md:px-10 lg:px-12 xl:px-16 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
+              className="flex-shrink-0 w-[40vw] md:w-[25vw] lg:w-[20vw] xl:w-[16vw] px-4 md:px-8 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
             >
               {client.logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={client.logo}
                   alt={client.name}
-                  className={`w-auto object-contain ${client.large ? 'h-20 md:h-28 lg:h-32 xl:h-36' : 'h-16 md:h-20 lg:h-24 xl:h-28'}`}
+                  className={`w-auto max-w-full object-contain ${client.large ? 'h-20 md:h-24 lg:h-28' : 'h-14 md:h-18 lg:h-22'}`}
                 />
               ) : (
                 <span className="text-browning-gray font-medium text-sm text-center px-2">

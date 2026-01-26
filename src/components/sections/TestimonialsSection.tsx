@@ -186,7 +186,7 @@ export default function TestimonialsSection() {
           {infiniteTestimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-80 lg:w-96 xl:w-[420px] mx-3 lg:mx-4 bg-white rounded-xl border border-gray-200 p-6 lg:p-8 hover:border-browning-red/30 transition-colors"
+              className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] xl:w-[28vw] 2xl:w-[22vw] mx-3 lg:mx-4 bg-white rounded-xl border border-gray-200 p-6 lg:p-8 hover:border-browning-red/30 transition-colors"
             >
               {/* Review Text */}
               <p className="text-gray-700 text-sm lg:text-base leading-relaxed mb-4 line-clamp-4">
