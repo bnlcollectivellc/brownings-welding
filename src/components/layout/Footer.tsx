@@ -79,6 +79,12 @@ export default function Footer() {
                   info@browningswelding.com
                 </a>
               </li>
+              <li className="flex items-center gap-2 text-gray-400">
+                <Mail size={18} className="text-browning-red flex-shrink-0" />
+                <a href="mailto:Careers@browningswelding.com" className="hover:text-browning-red transition-colors">
+                  Careers@browningswelding.com
+                </a>
+              </li>
             </ul>
 
             {/* Social Links */}

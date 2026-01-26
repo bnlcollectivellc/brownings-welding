@@ -5,6 +5,7 @@ import { User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import QuoteFormModal from '@/components/modals/QuoteFormModal';
+import JobApplicationModal from '@/components/modals/JobApplicationModal';
 import Navbar from '@/components/layout/Navbar';
 
 const allTeamMembers = [
@@ -37,10 +38,13 @@ const allTeamMembers = [
   { name: 'Terry Milliser', role: 'Welder', image: '/images/team/terry-milliser.jpg', category: 'Welders' },
   { name: 'Tim Newkirk', role: 'Welder', image: '/images/team/tim-newkirk.jpg', category: 'Welders' },
   { name: 'Tommy Newsom', role: 'Welder', image: '/images/team/tommy-newsom.jpg', category: 'Welders' },
+  // Placeholder for new team members
+  { name: 'You?', role: 'Apply Now!', image: '/images/team/placeholder-silhouette.svg', category: 'Join Us', isPlaceholder: true },
 ];
 
 export default function TeamPage() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white">
@@ -69,8 +73,17 @@ export default function TeamPage() {
       {/* Team Description Placeholder */}
       <section className="py-16 bg-browning-light">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-lg text-browning-gray leading-relaxed">
+          <p className="text-lg text-browning-gray leading-relaxed mb-4">
 At Browning&apos;s Welding, we&apos;re more than just a team, we&apos;re a family. With over 50 years in business, our skilled craftsmen bring dedication, precision, and pride to every project. From our leadership to our shop floor, every member shares a commitment to quality and customer satisfaction.
+          </p>
+          <p className="text-lg text-browning-gray leading-relaxed">
+            Interested in joining our team?{' '}
+            <button
+              onClick={() => setIsJobModalOpen(true)}
+              className="text-browning-red hover:text-red-700 font-semibold underline underline-offset-2 transition-colors"
+            >
+              Click here!
+            </button>
           </p>
         </div>
       </section>
@@ -79,34 +92,64 @@ At Browning&apos;s Welding, we&apos;re more than just a team, we&apos;re a famil
       <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
-            {allTeamMembers.map((member, index) => (
-              <div
-                key={index}
-                className="group"
-              >
-                {/* Photo */}
-                <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4">
-                  {member.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                      <User className="text-gray-300" size={60} />
-                    </div>
-                  )}
-                </div>
+            {allTeamMembers.map((member, index) => {
+              const isPlaceholder = 'isPlaceholder' in member && member.isPlaceholder;
 
-                {/* Info */}
-                <h3 className="text-browning-charcoal font-semibold text-sm md:text-base">
-                  {member.name}
-                </h3>
-                <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
-              </div>
-            ))}
+              if (isPlaceholder) {
+                return (
+                  <button
+                    key={index}
+                    onClick={() => setIsJobModalOpen(true)}
+                    className="group text-left"
+                  >
+                    {/* Photo */}
+                    <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4 group-hover:ring-4 group-hover:ring-browning-red/30 transition-all">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+
+                    {/* Info */}
+                    <h3 className="text-browning-charcoal font-semibold text-sm md:text-base group-hover:text-browning-red transition-colors">
+                      {member.name}
+                    </h3>
+                    <p className="text-browning-red font-semibold text-xs md:text-sm">{member.role}</p>
+                  </button>
+                );
+              }
+
+              return (
+                <div
+                  key={index}
+                  className="group"
+                >
+                  {/* Photo */}
+                  <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4">
+                    {member.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                        <User className="text-gray-300" size={60} />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <h3 className="text-browning-charcoal font-semibold text-sm md:text-base">
+                    {member.name}
+                  </h3>
+                  <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -133,6 +176,12 @@ At Browning&apos;s Welding, we&apos;re more than just a team, we&apos;re a famil
       <QuoteFormModal
         isOpen={isQuoteModalOpen}
         onClose={() => setIsQuoteModalOpen(false)}
+      />
+
+      {/* Job Application Modal */}
+      <JobApplicationModal
+        isOpen={isJobModalOpen}
+        onClose={() => setIsJobModalOpen(false)}
       />
     </div>
   );

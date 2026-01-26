@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
 
@@ -18,58 +18,78 @@ const infiniteClients = [...clients, ...clients, ...clients];
 export default function ClientsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
-  const initializedRef = useRef(false);
+  const lastTimeRef = useRef<number>(0);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
-  // Seamless infinite scroll animation
-  useEffect(() => {
+  const startAnimation = useCallback(() => {
     const container = scrollRef.current;
     if (!container) return;
 
-    // Wait for next frame to ensure layout is complete
-    requestAnimationFrame(() => {
-      if (!container || initializedRef.current) return;
+    // Cancel any existing animation
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
 
-      const singleSetWidth = container.scrollWidth / 3;
+    // Initialize scroll position to middle set
+    const singleSetWidth = container.scrollWidth / 3;
+    if (container.scrollLeft < singleSetWidth * 0.5 || container.scrollLeft > singleSetWidth * 2.5) {
       container.scrollLeft = singleSetWidth;
-      initializedRef.current = true;
+    }
 
-      let lastTime = performance.now();
+    lastTimeRef.current = performance.now();
 
-      const animate = (currentTime: number) => {
-        const deltaTime = Math.min(currentTime - lastTime, 50); // Cap delta to prevent jumps after tab switch
-        lastTime = currentTime;
+    const animate = (currentTime: number) => {
+      const container = scrollRef.current;
+      if (!container) return;
 
-        if (!container) return;
+      const deltaTime = Math.min(currentTime - lastTimeRef.current, 50);
+      lastTimeRef.current = currentTime;
 
-        // Speed: pixels per millisecond
-        // Desktop: 0.05, Mobile: 0.1
-        const isMobile = window.innerWidth < 768;
-        const speed = isMobile ? 0.1 : 0.05;
+      // Speed: pixels per millisecond
+      const isMobile = window.innerWidth < 768;
+      const speed = isMobile ? 0.1 : 0.05;
 
-        container.scrollLeft += speed * deltaTime;
+      container.scrollLeft += speed * deltaTime;
 
-        // Recalculate on each frame for accuracy
-        const setWidth = container.scrollWidth / 3;
+      const setWidth = container.scrollWidth / 3;
 
-        // Seamless loop: when we've scrolled past the middle set, jump back
-        if (container.scrollLeft >= setWidth * 2) {
-          container.scrollLeft -= setWidth;
-        }
-
-        animationRef.current = requestAnimationFrame(animate);
-      };
+      // Seamless loop
+      if (container.scrollLeft >= setWidth * 2) {
+        container.scrollLeft -= setWidth;
+      }
 
       animationRef.current = requestAnimationFrame(animate);
-    });
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+  }, []);
+
+  // Start animation on mount and handle visibility changes
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const initTimeout = setTimeout(() => {
+      startAnimation();
+    }, 100);
+
+    // Handle tab visibility changes
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        lastTimeRef.current = performance.now();
+        startAnimation();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
+      clearTimeout(initTimeout);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []);
+  }, [startAnimation]);
 
   return (
     <section
@@ -117,14 +137,14 @@ export default function ClientsSection() {
             <Link
               href="/industries"
               key={index}
-              className="flex-shrink-0 px-6 md:px-10 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
+              className="flex-shrink-0 px-6 md:px-10 lg:px-12 xl:px-16 flex items-center justify-center grayscale-0 md:grayscale md:hover:grayscale-0 opacity-100 md:opacity-70 md:hover:opacity-100 hover:scale-110 transition-all duration-300"
             >
               {client.logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={client.logo}
                   alt={client.name}
-                  className={`w-auto object-contain ${client.large ? 'h-20 md:h-28' : 'h-16 md:h-20'}`}
+                  className={`w-auto object-contain ${client.large ? 'h-20 md:h-28 lg:h-32 xl:h-36' : 'h-16 md:h-20 lg:h-24 xl:h-28'}`}
                 />
               ) : (
                 <span className="text-browning-gray font-medium text-sm text-center px-2">

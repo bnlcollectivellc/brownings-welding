@@ -123,7 +123,7 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
                 onClick={() => setIsQuoteModalOpen(true)}
                 className="bg-browning-red hover:bg-red-700 text-white px-5 py-2.5 rounded-full font-semibold transition-colors"
               >
-                Get Your Quote
+                Contact Us
               </button>
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function Navbar({ alwaysVisible = false }: NavbarProps) {
               }}
               className="inline-block bg-browning-red hover:bg-red-700 text-white px-8 py-3 rounded-full font-semibold transition-colors mt-4"
             >
-              Get Your Quote
+              Contact Us
             </button>
           </div>
         </div>

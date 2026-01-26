@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { Star } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
@@ -76,58 +76,78 @@ const infiniteTestimonials = [...testimonials, ...testimonials, ...testimonials]
 export default function TestimonialsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
-  const initializedRef = useRef(false);
+  const lastTimeRef = useRef<number>(0);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
 
-  // Seamless infinite scroll animation
-  useEffect(() => {
+  const startAnimation = useCallback(() => {
     const container = scrollRef.current;
     if (!container) return;
 
-    // Wait for next frame to ensure layout is complete
-    requestAnimationFrame(() => {
-      if (!container || initializedRef.current) return;
+    // Cancel any existing animation
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
 
-      const singleSetWidth = container.scrollWidth / 3;
+    // Initialize scroll position to middle set
+    const singleSetWidth = container.scrollWidth / 3;
+    if (container.scrollLeft < singleSetWidth * 0.5 || container.scrollLeft > singleSetWidth * 2.5) {
       container.scrollLeft = singleSetWidth;
-      initializedRef.current = true;
+    }
 
-      let lastTime = performance.now();
+    lastTimeRef.current = performance.now();
 
-      const animate = (currentTime: number) => {
-        const deltaTime = Math.min(currentTime - lastTime, 50); // Cap delta to prevent jumps after tab switch
-        lastTime = currentTime;
+    const animate = (currentTime: number) => {
+      const container = scrollRef.current;
+      if (!container) return;
 
-        if (!container) return;
+      const deltaTime = Math.min(currentTime - lastTimeRef.current, 50);
+      lastTimeRef.current = currentTime;
 
-        // Speed: pixels per millisecond (slower for testimonials to allow reading)
-        // Desktop: 0.03, Mobile: 0.06
-        const isMobile = window.innerWidth < 768;
-        const speed = isMobile ? 0.06 : 0.03;
+      // Speed: pixels per millisecond (slower for testimonials)
+      const isMobile = window.innerWidth < 768;
+      const speed = isMobile ? 0.06 : 0.03;
 
-        container.scrollLeft += speed * deltaTime;
+      container.scrollLeft += speed * deltaTime;
 
-        // Recalculate on each frame for accuracy
-        const setWidth = container.scrollWidth / 3;
+      const setWidth = container.scrollWidth / 3;
 
-        // Seamless loop: when we've scrolled past the middle set, jump back
-        if (container.scrollLeft >= setWidth * 2) {
-          container.scrollLeft -= setWidth;
-        }
-
-        animationRef.current = requestAnimationFrame(animate);
-      };
+      // Seamless loop
+      if (container.scrollLeft >= setWidth * 2) {
+        container.scrollLeft -= setWidth;
+      }
 
       animationRef.current = requestAnimationFrame(animate);
-    });
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+  }, []);
+
+  // Start animation on mount and handle visibility changes
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const initTimeout = setTimeout(() => {
+      startAnimation();
+    }, 100);
+
+    // Handle tab visibility changes
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        lastTimeRef.current = performance.now();
+        startAnimation();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
+      clearTimeout(initTimeout);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []);
+  }, [startAnimation]);
 
   return (
     <section
@@ -166,26 +186,26 @@ export default function TestimonialsSection() {
           {infiniteTestimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-80 mx-3 bg-white rounded-xl border border-gray-200 p-6 hover:border-browning-red/30 transition-colors"
+              className="flex-shrink-0 w-80 lg:w-96 xl:w-[420px] mx-3 lg:mx-4 bg-white rounded-xl border border-gray-200 p-6 lg:p-8 hover:border-browning-red/30 transition-colors"
             >
               {/* Review Text */}
-              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-4">
+              <p className="text-gray-700 text-sm lg:text-base leading-relaxed mb-4 line-clamp-4">
                 &ldquo;{testimonial.text}&rdquo;
               </p>
 
               {/* Stars */}
               <div className="flex items-center gap-0.5 mb-2">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
+                  <Star key={i} size={14} className="text-yellow-400 fill-yellow-400 lg:w-4 lg:h-4" />
                 ))}
               </div>
 
               {/* Author */}
-              <p className="font-bold text-browning-charcoal">
+              <p className="font-bold text-browning-charcoal lg:text-lg">
                 {testimonial.name}
               </p>
               {testimonial.company && (
-                <p className="text-sm text-browning-gray">{testimonial.company}</p>
+                <p className="text-sm lg:text-base text-browning-gray">{testimonial.company}</p>
               )}
             </div>
           ))}
