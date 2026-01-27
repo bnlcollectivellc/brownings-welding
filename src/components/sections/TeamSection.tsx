@@ -5,6 +5,10 @@ import { User } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
 
+interface TeamSectionProps {
+  onJoinClick?: () => void;
+}
+
 // Management team only for homepage carousel
 const managementTeam = [
   { name: 'Tommy Lynn Browning', role: 'President', image: '/images/team/tommy-lynn-browning.jpg' },
@@ -17,7 +21,7 @@ const managementTeam = [
 // Triple for seamless infinite scroll
 const infiniteTeam = [...managementTeam, ...managementTeam, ...managementTeam];
 
-export default function TeamSection() {
+export default function TeamSection({ onJoinClick }: TeamSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
@@ -173,6 +177,18 @@ export default function TeamSection() {
           ))}
         </div>
       </div>
+
+      {/* Join the Family CTA */}
+      {onJoinClick && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 md:mt-12 text-center">
+          <button
+            onClick={onJoinClick}
+            className="inline-flex items-center gap-2 bg-browning-red hover:bg-red-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-colors"
+          >
+            Join the Family
+          </button>
+        </div>
+      )}
     </section>
   );
 }

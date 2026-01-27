@@ -93,7 +93,7 @@ export default function ClientsSection() {
 
   return (
     <section
-      className="bg-white py-14 overflow-hidden"
+      className="bg-white pt-7 md:pt-14 pb-14 overflow-hidden"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >

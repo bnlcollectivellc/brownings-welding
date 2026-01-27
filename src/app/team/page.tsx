@@ -89,7 +89,7 @@ At Browning&apos;s Welding, we&apos;re more than just a team, we&apos;re a famil
       </section>
 
       {/* Team Grid */}
-      <section className="py-16 md:py-24">
+      <section className="pt-8 md:pt-24 pb-16 md:pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
             {allTeamMembers.map((member, index) => {

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Download, X, CheckCircle, Loader2, Thermometer, Search, Flame, Cpu, Zap, Building2, Wrench } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Service data with all 7 services - Air & Liquid Cooling first, Oilfield Pipe/Tube Inspection second
 const services = [
@@ -13,6 +14,7 @@ const services = [
     description: 'Specialized fabrication of air and liquid cooling assemblies for data centers and industrial applications. Our work includes painted and powder coated steel frames, square tubing, angle iron, channel, and pipe welding.',
     features: ['Data Center Cooling', 'Heat Exchangers', 'Coolant Distribution', 'Custom Manifolds', 'Leak Testing', 'Production Assembly'],
     icon: Thermometer,
+    background: { type: 'image' as const, src: '/images/services/cooling.jpg' },
   },
   {
     id: 'pipe',
@@ -20,6 +22,7 @@ const services = [
     description: 'Comprehensive oilfield tube and pipe inspection services ensuring structural integrity and compliance. Our processes include electromagnetic interference testing, descaling, rethreading, and thorough quality documentation.',
     features: ['EMI Inspection', 'Descale', 'Rethreading', 'Visual Inspection', 'Quality Assurance', 'Documentation'],
     icon: Search,
+    background: { type: 'image' as const, src: '/images/services/oilfield.jpg' },
   },
   {
     id: 'welding',
@@ -27,6 +30,7 @@ const services = [
     description: 'Expert MIG, TIG, spot, and stick welding services for all metals and applications. Our certified welders bring decades of experience to every project, ensuring strong, precise welds that meet the highest industry standards.',
     features: ['MIG Welding', 'TIG Welding', 'Spot Welding', 'Stick Welding', 'Aluminum Welding', 'Stainless Steel'],
     icon: Flame,
+    background: { type: 'video' as const, src: '/videos/services/welding.mp4' },
   },
   {
     id: 'cnc',
@@ -34,6 +38,7 @@ const services = [
     description: 'Precision mill and lathe capabilities for complex parts and prototypes. Our CNC department delivers tight-tolerance components with excellent surface finishes using state-of-the-art Haas equipment.',
     features: ['CNC Milling', 'CNC Turning', 'Prototyping', 'Production Runs', '0.0005" Tolerances', 'Various Materials'],
     icon: Cpu,
+    background: { type: 'image' as const, src: '/images/services/cnc.png' },
   },
   {
     id: 'laser',
@@ -41,6 +46,7 @@ const services = [
     description: 'Precision laser cutting for intricate designs and clean edges on sheet metal. Our state-of-the-art CO2 laser technology delivers exceptional accuracy and speed for both prototype and production runs.',
     features: ['CO2 Laser', 'Fiber Engraving', '0.0005" Tolerances', 'Up to 945 IPM', 'Complex Geometries', 'Fast Turnaround'],
     icon: Zap,
+    background: { type: 'video' as const, src: '/videos/services/laser.mp4' },
   },
   {
     id: 'structural',
@@ -48,6 +54,7 @@ const services = [
     description: 'Comprehensive bending, forming, shearing, and rolling capabilities for custom structural and sheet metal work. From simple brackets to complex enclosures and frames, we handle projects of all sizes.',
     features: ['Press Brake', 'Rolling', 'Shearing', 'Forming', 'Tube Bending', 'Assembly'],
     icon: Building2,
+    background: { type: 'video' as const, src: '/videos/services/structural.mp4' },
   },
   {
     id: 'custom',
@@ -55,14 +62,34 @@ const services = [
     description: 'Complete custom part fabrication with finishing solutions including powder coating, galvanizing, and plating. We deliver fully finished parts ready for use, coordinating with trusted partners for specialized finishes.',
     features: ['Powder Coating', 'Galvanizing', 'Anodizing', 'Plating', 'Painting', 'Surface Prep'],
     icon: Wrench,
+    background: { type: 'image' as const, src: '/images/services/finishing.jpg' },
   },
 ];
 
-// 3D Wireframe component that rotates
-function WireframeObject({ serviceId, color, mobileScale = 1 }: { serviceId: string; color: string; mobileScale?: number }) {
+// 3D Wireframe component that rotates with hover pause
+function WireframeObject({
+  serviceId,
+  color,
+  mobileScale = 1,
+  isPaused = false
+}: {
+  serviceId: string;
+  color: string;
+  mobileScale?: number;
+  isPaused?: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const rotationRef = useRef({ x: 0, y: 0 });
+  const isPausedRef = useRef(isPaused);
+  const targetSpeedRef = useRef(0.008);
+  const currentSpeedRef = useRef(0.008);
+
+  // Update paused ref when prop changes
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+    targetSpeedRef.current = isPaused ? 0 : 0.008;
+  }, [isPaused]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -240,7 +267,11 @@ function WireframeObject({ serviceId, color, mobileScale = 1 }: { serviceId: str
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
 
-      rotationRef.current.y += 0.008;
+      // Smooth speed transition
+      const speedDiff = targetSpeedRef.current - currentSpeedRef.current;
+      currentSpeedRef.current += speedDiff * 0.05;
+
+      rotationRef.current.y += currentSpeedRef.current;
       rotationRef.current.x = Math.sin(Date.now() * 0.0005) * 0.2;
 
       const centerX = rect.width / 2;
@@ -294,6 +325,58 @@ function WireframeObject({ serviceId, color, mobileScale = 1 }: { serviceId: str
   );
 }
 
+// Background media component
+function ServiceBackground({
+  service,
+  isActive,
+  isTransitioning
+}: {
+  service: typeof services[0];
+  isActive: boolean;
+  isTransitioning: boolean;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isActive) {
+        videoRef.current.play().catch(() => {});
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isActive]);
+
+  return (
+    <div
+      className={`absolute inset-0 transition-opacity duration-500 ${
+        isActive && !isTransitioning ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
+      {service.background.type === 'video' ? (
+        <video
+          ref={videoRef}
+          src={service.background.src}
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      ) : (
+        <Image
+          src={service.background.src}
+          alt={service.title}
+          fill
+          className="object-cover"
+          priority={service.id === 'cooling'}
+        />
+      )}
+      {/* White overlay for text readability */}
+      <div className="absolute inset-0 bg-white/70" />
+    </div>
+  );
+}
+
 // Email capture modal for linecard download
 function LinecardModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [email, setEmail] = useState('');
@@ -313,9 +396,10 @@ function LinecardModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
       if (!response.ok) throw new Error('Failed to submit');
 
       setStatus('success');
+      // Trigger download
       setTimeout(() => {
         const link = document.createElement('a');
-        link.href = '/docs/brownings-linecard.pdf';
+        link.href = '/BWS-Linecard.pdf';
         link.download = 'Brownings-Capabilities-Linecard.pdf';
         link.click();
       }, 1000);
@@ -341,13 +425,13 @@ function LinecardModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
           <div className="text-center py-4">
             <CheckCircle className="mx-auto mb-4 text-green-500" size={48} />
             <h3 className="text-xl font-bold text-browning-charcoal mb-2">Download Starting!</h3>
-            <p className="text-browning-gray">Your linecard download should begin automatically.</p>
+            <p className="text-browning-gray">Your linecard download should begin automatically. We&apos;ve also sent a copy to your email.</p>
           </div>
         ) : (
           <>
             <h3 className="text-xl font-bold text-browning-charcoal mb-2">Download Capabilities Linecard</h3>
             <p className="text-browning-gray mb-6">
-              Enter your email to download our complete capabilities and capacity matrix.
+              Enter your email to download our complete capabilities and capacity matrix. We&apos;ll also send you a copy.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -402,6 +486,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
   const [activeService, setActiveService] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isLinecardModalOpen, setIsLinecardModalOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.1);
   const [isMobile, setIsMobile] = useState(false);
@@ -486,11 +571,25 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
   return (
     <section
       id="services"
-      className="bg-browning-light pt-12 pb-24"
+      className="relative overflow-hidden"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
-      <div ref={sectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Background images/videos for each service */}
+      <div className="absolute inset-0">
+        {services.map((service, index) => (
+          <ServiceBackground
+            key={service.id}
+            service={service}
+            isActive={index === activeService}
+            isTransitioning={isTransitioning}
+          />
+        ))}
+        {/* Fallback background */}
+        <div className="absolute inset-0 bg-browning-light -z-10" />
+      </div>
+
+      <div ref={sectionRef} className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24">
         {/* Mobile Layout */}
         <div
           className={`lg:hidden transition-all duration-700 ${
@@ -554,7 +653,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
                   handleServiceChange(index);
                   resetAutoAdvance();
                 }}
-                className="flex-1 h-1 rounded-full overflow-hidden bg-gray-200"
+                className="flex-1 h-1 rounded-full overflow-hidden bg-gray-300/50"
               >
                 <div
                   className={`h-full transition-all duration-300 ${
@@ -587,7 +686,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
                 {currentService.features.map((feature, index) => (
                   <span
                     key={index}
-                    className="text-xs font-medium text-browning-charcoal bg-white border border-gray-200 px-3 py-1.5 rounded-full"
+                    className="text-xs font-medium text-browning-charcoal bg-white/80 border border-gray-200 px-3 py-1.5 rounded-full"
                   >
                     {feature}
                   </span>
@@ -600,7 +699,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
               <div className="pt-6">
                 <button
                   onClick={() => setIsLinecardModalOpen(true)}
-                  className="inline-flex items-center gap-2 text-browning-red hover:text-white border border-browning-red hover:bg-browning-red px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm"
+                  className="inline-flex items-center gap-2 text-browning-red hover:text-white border border-browning-red hover:bg-browning-red px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm bg-white/50"
                 >
                   <Download size={16} />
                   See Our Capabilities Matrix
@@ -644,7 +743,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
                   {currentService.features.map((feature, index) => (
                     <span
                       key={index}
-                      className="text-xs font-medium text-browning-charcoal bg-white border border-gray-200 px-3 py-1.5 rounded-full"
+                      className="text-xs font-medium text-browning-charcoal bg-white/80 border border-gray-200 px-3 py-1.5 rounded-full"
                     >
                       {feature}
                     </span>
@@ -654,7 +753,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
             </div>
 
             {/* Capabilities List */}
-            <div className="pt-6 border-t border-gray-200">
+            <div className="pt-6 border-t border-gray-300/50">
               <h3 className="text-xs font-semibold text-browning-gray uppercase tracking-wider mb-3">
                 Capabilities
               </h3>
@@ -681,7 +780,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
               <div className="pt-2">
                 <button
                   onClick={() => setIsLinecardModalOpen(true)}
-                  className="inline-flex items-center gap-2 text-browning-red hover:text-white border border-browning-red hover:bg-browning-red px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm"
+                  className="inline-flex items-center gap-2 text-browning-red hover:text-white border border-browning-red hover:bg-browning-red px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm bg-white/50"
                 >
                   <Download size={16} />
                   See Our Capabilities Matrix
@@ -690,8 +789,13 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
             )}
           </div>
 
-          {/* Right Side - 3D Wireframe (no bounding box) */}
-          <Link href="/services" className="block">
+          {/* Right Side - 3D Wireframe with hover pause */}
+          <Link
+            href="/services"
+            className="block"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
             <div className="relative h-[400px] md:h-[500px] lg:h-[600px]">
               <div
                 className={`absolute inset-0 transition-opacity duration-300 ${
@@ -701,6 +805,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
                 <WireframeObject
                   serviceId={currentService.id}
                   color="#E63329"
+                  isPaused={isHovering}
                 />
               </div>
             </div>

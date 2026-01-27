@@ -36,7 +36,7 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="bg-browning-light py-24"
+      className="bg-browning-light pt-12 md:pt-24 pb-24"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
