@@ -163,7 +163,7 @@ export default function IndustriesPage() {
       </section>
 
       {/* Partners Logos Carousel */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl font-bold text-browning-charcoal text-center mb-12">
             Our Trusted Partners
@@ -172,10 +172,10 @@ export default function IndustriesPage() {
           {/* Carousel Container */}
           <div className="relative py-4">
             {/* Fade Left */}
-            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
+            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
 
             {/* Fade Right */}
-            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
             {/* Scrollable Container */}
             <div
@@ -204,7 +204,7 @@ export default function IndustriesPage() {
       </section>
 
       {/* Industry Sectors Grid */}
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-24 bg-browning-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {sectors.map((sector, index) => (

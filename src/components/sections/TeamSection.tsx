@@ -51,7 +51,7 @@ export default function TeamSection() {
 
       // Speed: pixels per millisecond
       const isMobile = window.innerWidth < 768;
-      const speed = isMobile ? 0.1 : 0.05;
+      const speed = isMobile ? 0.05 : 0.05;
 
       container.scrollLeft += speed * deltaTime;
 

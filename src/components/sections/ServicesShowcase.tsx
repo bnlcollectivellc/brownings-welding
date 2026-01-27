@@ -486,7 +486,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
   return (
     <section
       id="services"
-      className="bg-browning-light py-24"
+      className="bg-browning-light pt-12 pb-24"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >

@@ -3,6 +3,7 @@
 import { Award, Users, Factory, Heart } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const highlights = [
   {
@@ -40,7 +41,25 @@ export default function AboutSection() {
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        {/* Mobile: Photo above content */}
+        <div className="lg:hidden mb-8">
+          <div
+            className={`transition-all duration-700 ${
+              leftVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
+              <Image
+                src="/images/team/tommy-peggy-browning.jpg"
+                alt="Tommy and Peggy Browning"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Left - Content */}
           <div
             ref={leftRef}
@@ -67,35 +86,58 @@ export default function AboutSection() {
               bracket or a complex industrial project.
             </p>
 
-            {/* Tagline */}
-            <div className="bg-white border-l-4 border-browning-red p-6 rounded-r-xl shadow-sm">
-              <p className="text-browning-charcoal text-xl font-semibold italic">
-                &quot;Faith, Family, & Fabrication&quot;
-              </p>
-              <p className="text-browning-gray mt-2">- The Browning Family</p>
+            {/* Desktop: Quote + Cards in a row */}
+            <div className="hidden lg:flex gap-4 items-stretch">
+              {/* Tagline */}
+              <div className="bg-white border-l-4 border-browning-red p-6 rounded-r-xl shadow-sm flex-1 flex flex-col justify-center">
+                <p className="text-browning-charcoal text-xl font-semibold italic">
+                  &quot;Faith, Family, & Fabrication&quot;
+                </p>
+                <p className="text-browning-gray mt-2">- The Browning Family</p>
+              </div>
+
+              {/* Compact Cards */}
+              {highlights.map((item) => (
+                <Link
+                  href="/about"
+                  key={item.label}
+                  className="bg-white border border-gray-200 rounded-2xl p-4 text-center hover:border-browning-red/30 hover:shadow-lg transition-all group flex-1 flex flex-col justify-center"
+                >
+                  <div className="bg-browning-red/10 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <item.icon className="text-browning-red" size={20} />
+                  </div>
+                  <h3 className="text-browning-charcoal font-bold text-sm mb-0.5 group-hover:text-browning-red transition-colors">{item.label}</h3>
+                  <p className="text-browning-gray text-xs">{item.description}</p>
+                </Link>
+              ))}
+            </div>
+
+            {/* Mobile: Tagline only */}
+            <div className="lg:hidden">
+              <div className="bg-white border-l-4 border-browning-red p-6 rounded-r-xl shadow-sm">
+                <p className="text-browning-charcoal text-xl font-semibold italic">
+                  &quot;Faith, Family, & Fabrication&quot;
+                </p>
+                <p className="text-browning-gray mt-2">- The Browning Family</p>
+              </div>
             </div>
           </div>
 
-          {/* Right - Stats/Highlights */}
+          {/* Right - Tommy & Peggy Photo (Desktop only) */}
           <div
             ref={rightRef}
-            className={`grid grid-cols-2 gap-6 transition-all duration-700 delay-200 ${
+            className={`hidden lg:block transition-all duration-700 delay-200 ${
               rightVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
             }`}
           >
-            {highlights.map((item) => (
-              <Link
-                href="/about"
-                key={item.label}
-                className="bg-white border border-gray-200 rounded-2xl p-6 text-center hover:border-browning-red/30 hover:shadow-lg transition-all group"
-              >
-                <div className="bg-browning-red/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="text-browning-red" size={32} />
-                </div>
-                <h3 className="text-browning-charcoal font-bold text-xl mb-1 group-hover:text-browning-red transition-colors">{item.label}</h3>
-                <p className="text-browning-gray text-sm">{item.description}</p>
-              </Link>
-            ))}
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
+              <Image
+                src="/images/team/tommy-peggy-browning.jpg"
+                alt="Tommy and Peggy Browning"
+                fill
+                className="object-cover"
+              />
+            </div>
           </div>
         </div>
       </div>
