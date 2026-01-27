@@ -93,7 +93,7 @@ export default function ClientsSection() {
 
   return (
     <section
-      className="bg-white py-16 overflow-hidden"
+      className="bg-white py-14 overflow-hidden"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
@@ -114,7 +114,7 @@ export default function ClientsSection() {
       </div>
 
       {/* Carousel Container - full width for edge-to-edge fades */}
-      <div className="relative py-4">
+      <div className="relative overflow-hidden">
         {/* Fade Left - at screen edge */}
         <div className="absolute left-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
 

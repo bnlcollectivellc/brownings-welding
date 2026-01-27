@@ -97,7 +97,7 @@ export default function TeamSection() {
   return (
     <section
       id="team"
-      className="bg-browning-light py-16 md:py-24 overflow-hidden"
+      className="bg-white py-16 md:py-24 overflow-hidden"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
@@ -125,10 +125,10 @@ export default function TeamSection() {
         }`}
       >
         {/* Fade Left - at screen edge */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-r from-browning-light to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
 
         {/* Fade Right - at screen edge */}
-        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-l from-browning-light to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
         {/* Mobile clickable overlay - links entire carousel area */}
         <Link

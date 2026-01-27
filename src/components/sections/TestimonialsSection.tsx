@@ -152,7 +152,7 @@ export default function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="bg-gray-50 py-16 overflow-hidden"
+      className="bg-white py-16 overflow-hidden"
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
@@ -173,10 +173,10 @@ export default function TestimonialsSection() {
       {/* Carousel Container - full width for edge-to-edge fades */}
       <div className="relative">
         {/* Fade Left - at screen edge */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
 
         {/* Fade Right - at screen edge */}
-        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
         {/* Scrollable Carousel Track */}
         <div
