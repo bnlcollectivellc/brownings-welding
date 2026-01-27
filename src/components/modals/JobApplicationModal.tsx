@@ -265,24 +265,21 @@ export default function JobApplicationModal({ isOpen, onClose }: JobApplicationM
 
           {/* Position */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Position Interest</h3>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Position Interested In <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="position"
-                value={formData.position}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
-              >
-                <option value="">Select a position...</option>
-                {POSITIONS.map((pos) => (
-                  <option key={pos} value={pos}>{pos}</option>
-                ))}
-              </select>
-            </div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Position Interested In <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="position"
+              value={formData.position}
+              onChange={handleInputChange}
+              required
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-browning-red focus:border-transparent transition-colors"
+            >
+              <option value="">Select a position...</option>
+              {POSITIONS.map((pos) => (
+                <option key={pos} value={pos}>{pos}</option>
+              ))}
+            </select>
           </div>
 
           {/* Message */}

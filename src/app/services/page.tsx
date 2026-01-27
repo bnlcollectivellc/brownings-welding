@@ -34,6 +34,15 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* Services Description */}
+      <section className="py-16 bg-browning-light">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-lg text-browning-gray leading-relaxed">
+            Browning&apos;s Welding &amp; Fabrication offers a complete range of metal fabrication services under one roof. With over 50 years of experience and state-of-the-art equipment, we deliver precision, quality, and reliability on every project—from one-off prototypes to high-volume production runs.
+          </p>
+        </div>
+      </section>
+
       {/* Services Showcase */}
       <ServicesShowcase showLinecard={true} />
 

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Download, X, CheckCircle, Loader2, Thermometer, Search, Flame, Cpu, Zap, Building2, Wrench } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
+import Link from 'next/link';
 
 // Service data with all 7 services - Air & Liquid Cooling first, Oilfield Pipe/Tube Inspection second
 const services = [
@@ -58,7 +59,7 @@ const services = [
 ];
 
 // 3D Wireframe component that rotates
-function WireframeObject({ serviceId, color }: { serviceId: string; color: string }) {
+function WireframeObject({ serviceId, color, mobileScale = 1 }: { serviceId: string; color: string; mobileScale?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const rotationRef = useRef({ x: 0, y: 0 });
@@ -79,7 +80,7 @@ function WireframeObject({ serviceId, color }: { serviceId: string; color: strin
     resize();
     window.addEventListener('resize', resize);
 
-    // 3D projection - 25% larger (scale multiplier 1.25)
+    // 3D projection - 25% larger (scale multiplier 1.25), with optional mobile scale
     const project = (x: number, y: number, z: number, rotX: number, rotY: number) => {
       const cosY = Math.cos(rotY);
       const sinY = Math.sin(rotY);
@@ -92,9 +93,9 @@ function WireframeObject({ serviceId, color }: { serviceId: string; color: strin
       const z2 = y * sinX + z1 * cosX;
 
       const scale = 300 / (300 + z2);
-      // Apply 1.25x size multiplier
-      const px = x1 * scale * 1.25;
-      const py = y1 * scale * 1.25;
+      // Apply 1.25x size multiplier, then mobile scale
+      const px = x1 * scale * 1.25 * mobileScale;
+      const py = y1 * scale * 1.25 * mobileScale;
 
       return { x: px, y: py, z: z2 };
     };
@@ -243,8 +244,8 @@ function WireframeObject({ serviceId, color }: { serviceId: string; color: strin
       rotationRef.current.x = Math.sin(Date.now() * 0.0005) * 0.2;
 
       const centerX = rect.width / 2;
-      // Raise by 20% of section height (move center up)
-      const centerY = rect.height / 2 - rect.height * 0.2;
+      // Lower by 10% of section height (move center down)
+      const centerY = rect.height / 2 + rect.height * 0.1;
 
       const projected = vertices.map(([x, y, z]) =>
         project(x, y, z, rotationRef.current.x, rotationRef.current.y)
@@ -282,7 +283,7 @@ function WireframeObject({ serviceId, color }: { serviceId: string; color: strin
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationRef.current);
     };
-  }, [serviceId, color]);
+  }, [serviceId, color, mobileScale]);
 
   return (
     <canvas
@@ -403,8 +404,20 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
   const [isLinecardModalOpen, setIsLinecardModalOpen] = useState(false);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.1);
+  const [isMobile, setIsMobile] = useState(false);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const autoAdvanceRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleServiceChange = (index: number) => {
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleServiceChange = useCallback((index: number) => {
     if (index === activeService || isTransitioning) return;
 
     setIsTransitioning(true);
@@ -412,6 +425,60 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
       setActiveService(index);
       setTimeout(() => setIsTransitioning(false), 50);
     }, 200);
+  }, [activeService, isTransitioning]);
+
+  // Auto-advance on mobile every 6 seconds
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const startAutoAdvance = () => {
+      autoAdvanceRef.current = setInterval(() => {
+        setActiveService(prev => (prev + 1) % services.length);
+      }, 6000);
+    };
+
+    startAutoAdvance();
+
+    return () => {
+      if (autoAdvanceRef.current) clearInterval(autoAdvanceRef.current);
+    };
+  }, [isMobile]);
+
+  // Reset auto-advance timer on manual interaction
+  const resetAutoAdvance = useCallback(() => {
+    if (autoAdvanceRef.current) {
+      clearInterval(autoAdvanceRef.current);
+      autoAdvanceRef.current = setInterval(() => {
+        setActiveService(prev => (prev + 1) % services.length);
+      }, 6000);
+    }
+  }, []);
+
+  // Touch handlers for swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    const minSwipe = 50;
+
+    if (Math.abs(diff) > minSwipe) {
+      if (diff > 0) {
+        // Swipe left - next
+        const next = (activeService + 1) % services.length;
+        handleServiceChange(next);
+      } else {
+        // Swipe right - prev
+        const prev = activeService === 0 ? services.length - 1 : activeService - 1;
+        handleServiceChange(prev);
+      }
+      resetAutoAdvance();
+    }
   };
 
   const currentService = services[activeService];
@@ -423,34 +490,100 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Content Grid */}
+      <div ref={sectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Mobile Layout */}
         <div
-          ref={sectionRef}
-          className={`grid lg:grid-cols-2 gap-12 lg:gap-16 items-start transition-all duration-700 ${
+          className={`lg:hidden transition-all duration-700 ${
             sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          {/* Left Side - Content + Capabilities List */}
-          <div className="space-y-6">
-            {/* Header Content - constrained to left side */}
+          {/* Services Label - hyperlinked */}
+          <Link href="/services" className="inline-block group">
+            <span className="text-browning-red font-semibold text-sm uppercase tracking-wider group-hover:text-red-700 transition-colors">
+              Services
+            </span>
+          </Link>
+
+          {/* 3D Wireframe - tap left/right to navigate, centered and 50% smaller */}
+          <div className="relative h-[200px] mt-4">
+            {/* Left tap area - previous */}
+            <button
+              onClick={() => {
+                const prev = activeService === 0 ? services.length - 1 : activeService - 1;
+                handleServiceChange(prev);
+                resetAutoAdvance();
+              }}
+              className="absolute left-0 top-0 w-1/2 h-full z-10"
+              aria-label="Previous service"
+            />
+            {/* Right tap area - next */}
+            <button
+              onClick={() => {
+                const next = (activeService + 1) % services.length;
+                handleServiceChange(next);
+                resetAutoAdvance();
+              }}
+              className="absolute right-0 top-0 w-1/2 h-full z-10"
+              aria-label="Next service"
+            />
+            {/* Wireframe with fade transition */}
             <div
-              className={`transition-all duration-300 ${
-                isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
+              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${
+                isTransitioning ? 'opacity-0' : 'opacity-100'
               }`}
             >
-              <span className="text-browning-red font-semibold text-sm uppercase tracking-wider">
-                Services
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4">
+              <div className="w-[60%] h-full">
+                <WireframeObject
+                  serviceId={currentService.id}
+                  color="#E63329"
+                  mobileScale={0.5}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="flex gap-1 mt-4 mb-6">
+            {services.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  handleServiceChange(index);
+                  resetAutoAdvance();
+                }}
+                className="flex-1 h-1 rounded-full overflow-hidden bg-gray-200"
+              >
+                <div
+                  className={`h-full transition-all duration-300 ${
+                    index === activeService ? 'bg-browning-red w-full' : 'bg-transparent w-0'
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+
+          {/* Service Content - fade transition */}
+          <div
+            className={`transition-opacity duration-500 ${
+              isTransitioning ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
+            {/* Service Title - hyperlinked */}
+            <Link href="/services" className="block group">
+              <h2 className="text-2xl font-bold text-browning-charcoal group-hover:text-browning-red transition-colors">
                 {currentService.title}
               </h2>
-              <p className="text-browning-gray text-base md:text-lg mt-4 line-clamp-3">
-                {currentService.description}
-              </p>
+            </Link>
+            <p className="text-browning-gray text-base mt-3">
+              {currentService.description}
+            </p>
 
-              {/* Feature Tags - below description */}
-              <div className="flex flex-wrap gap-2 mt-4">
+            {/* Feature Tags - full width on mobile */}
+            <div className="mt-4">
+              <div className="flex flex-wrap gap-2">
                 {currentService.features.map((feature, index) => (
                   <span
                     key={index}
@@ -462,7 +595,65 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
               </div>
             </div>
 
-            {/* Capabilities List - simple clickable titles */}
+            {/* Linecard Download Button */}
+            {showLinecard && (
+              <div className="pt-6">
+                <button
+                  onClick={() => setIsLinecardModalOpen(true)}
+                  className="inline-flex items-center gap-2 text-browning-red hover:text-white border border-browning-red hover:bg-browning-red px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm"
+                >
+                  <Download size={16} />
+                  See Our Capabilities Matrix
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div
+          className={`hidden lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-start transition-all duration-700 ${
+            sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
+          {/* Left Side - Content + Capabilities List */}
+          <div className="space-y-6">
+            {/* Header Content */}
+            <div
+              className={`transition-all duration-300 ${
+                isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
+              }`}
+            >
+              <Link href="/services" className="inline-block group">
+                <span className="text-browning-red font-semibold text-sm uppercase tracking-wider group-hover:text-red-700 transition-colors">
+                  Services
+                </span>
+              </Link>
+              <Link href="/services" className="block group">
+                <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4 group-hover:text-browning-red transition-colors">
+                  {currentService.title}
+                </h2>
+              </Link>
+              <p className="text-browning-gray text-base md:text-lg mt-4 line-clamp-3">
+                {currentService.description}
+              </p>
+
+              {/* Feature Tags - wider container for 2 lines max */}
+              <div className="mt-4 max-w-[85%]">
+                <div className="flex flex-wrap gap-2">
+                  {currentService.features.map((feature, index) => (
+                    <span
+                      key={index}
+                      className="text-xs font-medium text-browning-charcoal bg-white border border-gray-200 px-3 py-1.5 rounded-full"
+                    >
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Capabilities List */}
             <div className="pt-6 border-t border-gray-200">
               <h3 className="text-xs font-semibold text-browning-gray uppercase tracking-wider mb-3">
                 Capabilities
@@ -499,19 +690,21 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
             )}
           </div>
 
-          {/* Right Side - 3D Wireframe */}
-          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] bg-white border border-gray-200 rounded-2xl overflow-hidden">
-            <div
-              className={`absolute inset-0 transition-opacity duration-300 ${
-                isTransitioning ? 'opacity-0' : 'opacity-100'
-              }`}
-            >
-              <WireframeObject
-                serviceId={currentService.id}
-                color="#E63329"
-              />
+          {/* Right Side - 3D Wireframe (no bounding box) */}
+          <Link href="/services" className="block">
+            <div className="relative h-[400px] md:h-[500px] lg:h-[600px]">
+              <div
+                className={`absolute inset-0 transition-opacity duration-300 ${
+                  isTransitioning ? 'opacity-0' : 'opacity-100'
+                }`}
+              >
+                <WireframeObject
+                  serviceId={currentService.id}
+                  color="#E63329"
+                />
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
 
