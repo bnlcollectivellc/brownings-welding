@@ -275,8 +275,8 @@ function WireframeObject({
       rotationRef.current.x = Math.sin(Date.now() * 0.0005) * 0.2;
 
       const centerX = rect.width / 2;
-      // Lower by 10% of section height (move center down)
-      const centerY = rect.height / 2 + rect.height * 0.1;
+      // Center vertically (removed the 10% offset that was causing cutoff)
+      const centerY = rect.height / 2;
 
       const projected = vertices.map(([x, y, z]) =>
         project(x, y, z, rotationRef.current.x, rotationRef.current.y)
@@ -371,8 +371,8 @@ function ServiceBackground({
           priority={service.id === 'cooling'}
         />
       )}
-      {/* White overlay for text readability */}
-      <div className="absolute inset-0 bg-white/70" />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/50" />
     </div>
   );
 }
@@ -586,7 +586,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
           />
         ))}
         {/* Fallback background */}
-        <div className="absolute inset-0 bg-browning-light -z-10" />
+        <div className="absolute inset-0 bg-browning-charcoal -z-10" />
       </div>
 
       <div ref={sectionRef} className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24">
@@ -607,7 +607,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
           </Link>
 
           {/* 3D Wireframe - tap left/right to navigate, centered and 50% smaller */}
-          <div className="relative h-[200px] mt-4">
+          <div className="relative h-[220px] mt-4">
             {/* Left tap area - previous */}
             <button
               onClick={() => {
@@ -653,7 +653,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
                   handleServiceChange(index);
                   resetAutoAdvance();
                 }}
-                className="flex-1 h-1 rounded-full overflow-hidden bg-gray-300/50"
+                className="flex-1 h-1 rounded-full overflow-hidden bg-white/30"
               >
                 <div
                   className={`h-full transition-all duration-300 ${
@@ -672,11 +672,11 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
           >
             {/* Service Title - hyperlinked */}
             <Link href="/services" className="block group">
-              <h2 className="text-2xl font-bold text-browning-charcoal group-hover:text-browning-red transition-colors">
+              <h2 className="text-2xl font-bold text-white group-hover:text-browning-red transition-colors">
                 {currentService.title}
               </h2>
             </Link>
-            <p className="text-browning-gray text-base mt-3">
+            <p className="text-gray-200 text-base mt-3">
               {currentService.description}
             </p>
 
@@ -686,7 +686,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
                 {currentService.features.map((feature, index) => (
                   <span
                     key={index}
-                    className="text-xs font-medium text-browning-charcoal bg-white/80 border border-gray-200 px-3 py-1.5 rounded-full"
+                    className="text-xs font-medium text-white bg-white/20 border border-white/30 px-3 py-1.5 rounded-full"
                   >
                     {feature}
                   </span>
@@ -699,7 +699,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
               <div className="pt-6">
                 <button
                   onClick={() => setIsLinecardModalOpen(true)}
-                  className="inline-flex items-center gap-2 text-browning-red hover:text-white border border-browning-red hover:bg-browning-red px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm bg-white/50"
+                  className="inline-flex items-center gap-2 text-white hover:text-browning-charcoal border border-white hover:bg-white px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm bg-white/10"
                 >
                   <Download size={16} />
                   See Our Capabilities Matrix
@@ -724,16 +724,16 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
               }`}
             >
               <Link href="/services" className="inline-block group">
-                <span className="text-browning-red font-semibold text-sm uppercase tracking-wider group-hover:text-red-700 transition-colors">
+                <span className="text-browning-red font-semibold text-sm uppercase tracking-wider group-hover:text-red-400 transition-colors">
                   Services
                 </span>
               </Link>
               <Link href="/services" className="block group">
-                <h2 className="text-3xl md:text-4xl font-bold text-browning-charcoal mt-4 group-hover:text-browning-red transition-colors">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mt-4 group-hover:text-browning-red transition-colors">
                   {currentService.title}
                 </h2>
               </Link>
-              <p className="text-browning-gray text-base md:text-lg mt-4 line-clamp-3">
+              <p className="text-gray-200 text-base md:text-lg mt-4 line-clamp-3">
                 {currentService.description}
               </p>
 
@@ -743,7 +743,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
                   {currentService.features.map((feature, index) => (
                     <span
                       key={index}
-                      className="text-xs font-medium text-browning-charcoal bg-white/80 border border-gray-200 px-3 py-1.5 rounded-full"
+                      className="text-xs font-medium text-white bg-white/20 border border-white/30 px-3 py-1.5 rounded-full"
                     >
                       {feature}
                     </span>
@@ -753,8 +753,8 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
             </div>
 
             {/* Capabilities List */}
-            <div className="pt-6 border-t border-gray-300/50">
-              <h3 className="text-xs font-semibold text-browning-gray uppercase tracking-wider mb-3">
+            <div className="pt-6 border-t border-white/20">
+              <h3 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">
                 Capabilities
               </h3>
               <ul className="space-y-1">
@@ -764,8 +764,8 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
                       onClick={() => handleServiceChange(index)}
                       className={`w-full text-left py-2 px-3 rounded transition-all duration-200 border-l-2 ${
                         index === activeService
-                          ? 'text-browning-red border-browning-red bg-white/50'
-                          : 'text-browning-charcoal border-transparent hover:text-browning-red hover:border-browning-red/50'
+                          ? 'text-browning-red border-browning-red bg-white/10'
+                          : 'text-white border-transparent hover:text-browning-red hover:border-browning-red/50'
                       }`}
                     >
                       <span className="text-sm md:text-base">{service.title}</span>
@@ -780,7 +780,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
               <div className="pt-2">
                 <button
                   onClick={() => setIsLinecardModalOpen(true)}
-                  className="inline-flex items-center gap-2 text-browning-red hover:text-white border border-browning-red hover:bg-browning-red px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm bg-white/50"
+                  className="inline-flex items-center gap-2 text-white hover:text-browning-charcoal border border-white hover:bg-white px-4 py-2.5 rounded-full font-semibold transition-all duration-200 text-sm bg-white/10"
                 >
                   <Download size={16} />
                   See Our Capabilities Matrix
@@ -796,7 +796,7 @@ export default function ServicesShowcase({ showLinecard = true }: ServicesShowca
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
           >
-            <div className="relative h-[400px] md:h-[500px] lg:h-[600px]">
+            <div className="relative h-[450px] md:h-[550px] lg:h-[650px]">
               <div
                 className={`absolute inset-0 transition-opacity duration-300 ${
                   isTransitioning ? 'opacity-0' : 'opacity-100'
