@@ -11,6 +11,9 @@ const clients = [
   { name: 'Skippy', logo: '/images/clients/skippy.png' },
 ];
 
+// Quadruple for seamless loop on large displays
+const extendedClients = [...clients, ...clients, ...clients, ...clients];
+
 export default function ClientsSection() {
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
@@ -50,11 +53,11 @@ export default function ClientsSection() {
           aria-label="View all industries"
         />
 
-        {/* Marquee wrapper - two identical tracks side by side */}
-        <div className="flex">
+        {/* Marquee wrapper - two extended tracks side by side */}
+        <div className="marquee marquee--fast">
           {/* First track */}
-          <div className="flex animate-marquee-clients shrink-0">
-            {clients.map((client, index) => (
+          <div className="marquee__content">
+            {extendedClients.map((client, index) => (
               <div
                 key={index}
                 className="flex-shrink-0 w-[180px] md:w-[220px] lg:w-[260px] px-6 md:px-10 flex items-center justify-center"
@@ -75,8 +78,8 @@ export default function ClientsSection() {
             ))}
           </div>
           {/* Second track (duplicate for seamless loop) */}
-          <div className="flex animate-marquee-clients shrink-0">
-            {clients.map((client, index) => (
+          <div className="marquee__content" aria-hidden="true">
+            {extendedClients.map((client, index) => (
               <div
                 key={`dup-${index}`}
                 className="flex-shrink-0 w-[180px] md:w-[220px] lg:w-[260px] px-6 md:px-10 flex items-center justify-center"

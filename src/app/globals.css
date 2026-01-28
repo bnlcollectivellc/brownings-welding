@@ -157,43 +157,53 @@ section {
 }
 
 /* Infinite marquee animations - pure CSS, no JS */
-/* Each track slides its full width, creating seamless loop with duplicate track */
-@keyframes marquee-clients {
-  0% {
+/* Best practice: use CSS variable for gap, include gap in translateX calculation */
+/* Reference: https://ryanmulligan.dev/blog/css-marquee/ */
+
+.marquee {
+  --gap: 0px;
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: var(--gap);
+}
+
+.marquee__content {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-around;
+  min-width: 100%;
+  gap: var(--gap);
+  animation: scroll var(--duration, 30s) linear infinite;
+}
+
+/* The critical fix: include gap in the calculation to prevent visible jump */
+@keyframes scroll {
+  from {
     transform: translateX(0);
   }
-  100% {
-    transform: translateX(-100%);
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
   }
 }
 
-@keyframes marquee-team {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
+/* Accessibility: respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .marquee__content {
+    animation-play-state: paused;
   }
 }
 
-@keyframes marquee-testimonials {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
+/* Speed variants */
+.marquee--slow .marquee__content {
+  --duration: 50s;
 }
 
-.animate-marquee-clients {
-  animation: marquee-clients 25s linear infinite;
+.marquee--medium .marquee__content {
+  --duration: 35s;
 }
 
-.animate-marquee-team {
-  animation: marquee-team 35s linear infinite;
-}
-
-.animate-marquee-testimonials {
-  animation: marquee-testimonials 50s linear infinite;
+.marquee--fast .marquee__content {
+  --duration: 25s;
 }
 

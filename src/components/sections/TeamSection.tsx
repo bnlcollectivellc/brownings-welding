@@ -17,6 +17,9 @@ const managementTeam = [
   { name: 'Scott Hance', role: 'Shop Floor Manager', image: '/images/team/scott-hance.jpg' },
 ];
 
+// Quadruple for seamless loop on large displays
+const extendedTeam = [...managementTeam, ...managementTeam, ...managementTeam, ...managementTeam];
+
 export default function TeamSection({ onJoinClick }: TeamSectionProps) {
   const [headerRef, headerVisible] = useInView(0.2);
   const [carouselRef, carouselVisible] = useInView(0.1);
@@ -63,11 +66,11 @@ export default function TeamSection({ onJoinClick }: TeamSectionProps) {
           aria-label="View the team"
         />
 
-        {/* Marquee wrapper - two identical tracks side by side */}
-        <div className="flex py-4">
+        {/* Marquee wrapper - two extended tracks side by side */}
+        <div className="marquee marquee--medium py-4">
           {/* First track */}
-          <div className="flex animate-marquee-team shrink-0">
-            {managementTeam.map((member, index) => (
+          <div className="marquee__content">
+            {extendedTeam.map((member, index) => (
               <div
                 key={index}
                 className="flex-shrink-0 w-[200px] md:w-[240px] lg:w-[280px] px-3 md:px-4"
@@ -97,8 +100,8 @@ export default function TeamSection({ onJoinClick }: TeamSectionProps) {
             ))}
           </div>
           {/* Second track (duplicate for seamless loop) */}
-          <div className="flex animate-marquee-team shrink-0">
-            {managementTeam.map((member, index) => (
+          <div className="marquee__content" aria-hidden="true">
+            {extendedTeam.map((member, index) => (
               <div
                 key={`dup-${index}`}
                 className="flex-shrink-0 w-[200px] md:w-[240px] lg:w-[280px] px-3 md:px-4"

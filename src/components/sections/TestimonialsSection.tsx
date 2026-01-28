@@ -69,6 +69,9 @@ const testimonials = [
   },
 ];
 
+// Triple for seamless loop on large displays (9 testimonials x 3 = 27 items per track)
+const extendedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+
 export default function TestimonialsSection() {
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
@@ -128,18 +131,18 @@ export default function TestimonialsSection() {
         <div className="absolute left-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-        {/* Marquee wrapper - two identical tracks side by side */}
-        <div className="flex">
+        {/* Marquee wrapper - two extended tracks side by side */}
+        <div className="marquee marquee--slow">
           {/* First track */}
-          <div className="flex animate-marquee-testimonials shrink-0">
-            {testimonials.map((testimonial) => (
-              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+          <div className="marquee__content">
+            {extendedTestimonials.map((testimonial, index) => (
+              <TestimonialCard key={`${testimonial.id}-${index}`} testimonial={testimonial} />
             ))}
           </div>
           {/* Second track (duplicate for seamless loop) */}
-          <div className="flex animate-marquee-testimonials shrink-0">
-            {testimonials.map((testimonial) => (
-              <TestimonialCard key={`dup-${testimonial.id}`} testimonial={testimonial} keyPrefix="dup-" />
+          <div className="marquee__content" aria-hidden="true">
+            {extendedTestimonials.map((testimonial, index) => (
+              <TestimonialCard key={`dup-${testimonial.id}-${index}`} testimonial={testimonial} keyPrefix="dup-" />
             ))}
           </div>
         </div>
