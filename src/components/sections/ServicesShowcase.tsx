@@ -372,7 +372,7 @@ function ServiceBackground({
         />
       )}
       {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-black/70" />
     </div>
   );
 }
