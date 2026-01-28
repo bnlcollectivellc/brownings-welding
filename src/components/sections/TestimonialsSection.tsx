@@ -69,12 +69,37 @@ const testimonials = [
   },
 ];
 
-// Double for seamless CSS animation loop
-const infiniteTestimonials = [...testimonials, ...testimonials];
-
 export default function TestimonialsSection() {
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
+
+  // Render a single testimonial card
+  const TestimonialCard = ({ testimonial, keyPrefix = '' }: { testimonial: typeof testimonials[0], keyPrefix?: string }) => (
+    <div
+      key={`${keyPrefix}${testimonial.id}`}
+      className="flex-shrink-0 w-[320px] md:w-[380px] lg:w-[420px] mx-3 lg:mx-4 bg-white rounded-xl border border-gray-200 p-6 lg:p-8"
+    >
+      {/* Review Text */}
+      <p className="text-gray-700 text-sm lg:text-base leading-relaxed mb-4 line-clamp-4">
+        &ldquo;{testimonial.text}&rdquo;
+      </p>
+
+      {/* Stars */}
+      <div className="flex items-center gap-0.5 mb-2">
+        {[...Array(testimonial.rating)].map((_, i) => (
+          <Star key={i} size={14} className="text-yellow-400 fill-yellow-400 lg:w-4 lg:h-4" />
+        ))}
+      </div>
+
+      {/* Author */}
+      <p className="font-bold text-browning-charcoal lg:text-lg">
+        {testimonial.name}
+      </p>
+      {testimonial.company && (
+        <p className="text-sm lg:text-base text-browning-gray">{testimonial.company}</p>
+      )}
+    </div>
+  );
 
   return (
     <section
@@ -103,34 +128,20 @@ export default function TestimonialsSection() {
         <div className="absolute left-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-        {/* Animated Track - CSS animation only */}
-        <div className="flex animate-scroll-testimonials">
-          {infiniteTestimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] xl:w-[28vw] 2xl:w-[22vw] mx-3 lg:mx-4 bg-white rounded-xl border border-gray-200 p-6 lg:p-8"
-            >
-              {/* Review Text */}
-              <p className="text-gray-700 text-sm lg:text-base leading-relaxed mb-4 line-clamp-4">
-                &ldquo;{testimonial.text}&rdquo;
-              </p>
-
-              {/* Stars */}
-              <div className="flex items-center gap-0.5 mb-2">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} size={14} className="text-yellow-400 fill-yellow-400 lg:w-4 lg:h-4" />
-                ))}
-              </div>
-
-              {/* Author */}
-              <p className="font-bold text-browning-charcoal lg:text-lg">
-                {testimonial.name}
-              </p>
-              {testimonial.company && (
-                <p className="text-sm lg:text-base text-browning-gray">{testimonial.company}</p>
-              )}
-            </div>
-          ))}
+        {/* Marquee wrapper - two identical tracks side by side */}
+        <div className="flex">
+          {/* First track */}
+          <div className="flex animate-marquee-testimonials shrink-0">
+            {testimonials.map((testimonial) => (
+              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+            ))}
+          </div>
+          {/* Second track (duplicate for seamless loop) */}
+          <div className="flex animate-marquee-testimonials shrink-0">
+            {testimonials.map((testimonial) => (
+              <TestimonialCard key={`dup-${testimonial.id}`} testimonial={testimonial} keyPrefix="dup-" />
+            ))}
+          </div>
         </div>
       </div>
     </section>

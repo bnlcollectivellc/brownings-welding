@@ -156,43 +156,44 @@ section {
   }
 }
 
-/* Infinite scroll carousel animations - pure CSS, no JS */
-@keyframes scroll-clients {
+/* Infinite marquee animations - pure CSS, no JS */
+/* Each track slides its full width, creating seamless loop with duplicate track */
+@keyframes marquee-clients {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
 }
 
-@keyframes scroll-team {
+@keyframes marquee-team {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
 }
 
-@keyframes scroll-testimonials {
+@keyframes marquee-testimonials {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
 }
 
-.animate-scroll-clients {
-  animation: scroll-clients 30s linear infinite;
+.animate-marquee-clients {
+  animation: marquee-clients 25s linear infinite;
 }
 
-.animate-scroll-team {
-  animation: scroll-team 40s linear infinite;
+.animate-marquee-team {
+  animation: marquee-team 35s linear infinite;
 }
 
-.animate-scroll-testimonials {
-  animation: scroll-testimonials 60s linear infinite;
+.animate-marquee-testimonials {
+  animation: marquee-testimonials 50s linear infinite;
 }
 

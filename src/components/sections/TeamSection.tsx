@@ -17,9 +17,6 @@ const managementTeam = [
   { name: 'Scott Hance', role: 'Shop Floor Manager', image: '/images/team/scott-hance.jpg' },
 ];
 
-// Double for seamless CSS animation loop
-const infiniteTeam = [...managementTeam, ...managementTeam];
-
 export default function TeamSection({ onJoinClick }: TeamSectionProps) {
   const [headerRef, headerVisible] = useInView(0.2);
   const [carouselRef, carouselVisible] = useInView(0.1);
@@ -66,36 +63,70 @@ export default function TeamSection({ onJoinClick }: TeamSectionProps) {
           aria-label="View the team"
         />
 
-        {/* Animated Track - CSS animation only */}
-        <div className="flex animate-scroll-team py-4">
-          {infiniteTeam.map((member, index) => (
-            <div
-              key={index}
-              className="flex-shrink-0 w-[45vw] md:w-[30vw] lg:w-[22vw] xl:w-[18vw] 2xl:w-[15vw] px-2 md:px-3 lg:px-4"
-            >
-              {/* Photo */}
-              <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4">
-                {member.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                    <User className="text-gray-300" size={60} />
-                  </div>
-                )}
-              </div>
+        {/* Marquee wrapper - two identical tracks side by side */}
+        <div className="flex py-4">
+          {/* First track */}
+          <div className="flex animate-marquee-team shrink-0">
+            {managementTeam.map((member, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-[200px] md:w-[240px] lg:w-[280px] px-3 md:px-4"
+              >
+                {/* Photo */}
+                <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4">
+                  {member.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                      <User className="text-gray-300" size={60} />
+                    </div>
+                  )}
+                </div>
 
-              {/* Info */}
-              <h3 className="text-browning-charcoal font-semibold text-base md:text-lg">
-                {member.name}
-              </h3>
-              <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
-            </div>
-          ))}
+                {/* Info */}
+                <h3 className="text-browning-charcoal font-semibold text-base md:text-lg">
+                  {member.name}
+                </h3>
+                <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
+              </div>
+            ))}
+          </div>
+          {/* Second track (duplicate for seamless loop) */}
+          <div className="flex animate-marquee-team shrink-0">
+            {managementTeam.map((member, index) => (
+              <div
+                key={`dup-${index}`}
+                className="flex-shrink-0 w-[200px] md:w-[240px] lg:w-[280px] px-3 md:px-4"
+              >
+                {/* Photo */}
+                <div className="aspect-[4/5] bg-gray-200 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-4">
+                  {member.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                      <User className="text-gray-300" size={60} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <h3 className="text-browning-charcoal font-semibold text-base md:text-lg">
+                  {member.name}
+                </h3>
+                <p className="text-browning-gray text-xs md:text-sm">{member.role}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -11,9 +11,6 @@ const clients = [
   { name: 'Skippy', logo: '/images/clients/skippy.png' },
 ];
 
-// Double for seamless CSS animation loop
-const infiniteClients = [...clients, ...clients];
-
 export default function ClientsSection() {
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
@@ -53,27 +50,52 @@ export default function ClientsSection() {
           aria-label="View all industries"
         />
 
-        {/* Animated Track - CSS animation only */}
-        <div className="flex animate-scroll-clients">
-          {infiniteClients.map((client, index) => (
-            <div
-              key={index}
-              className="flex-shrink-0 w-[40vw] md:w-[25vw] lg:w-[20vw] xl:w-[16vw] px-4 md:px-8 flex items-center justify-center"
-            >
-              {client.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={client.logo}
-                  alt={client.name}
-                  className={`w-auto max-w-full object-contain grayscale-[50%] ${client.large ? 'h-20 md:h-24 lg:h-28' : 'h-14 md:h-18 lg:h-22'}`}
-                />
-              ) : (
-                <span className="text-browning-gray font-medium text-sm text-center px-2">
-                  {client.name}
-                </span>
-              )}
-            </div>
-          ))}
+        {/* Marquee wrapper - two identical tracks side by side */}
+        <div className="flex">
+          {/* First track */}
+          <div className="flex animate-marquee-clients shrink-0">
+            {clients.map((client, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-[180px] md:w-[220px] lg:w-[260px] px-6 md:px-10 flex items-center justify-center"
+              >
+                {client.logo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={client.logo}
+                    alt={client.name}
+                    className={`w-auto max-w-full object-contain ${client.large ? 'h-20 md:h-24 lg:h-28' : 'h-14 md:h-18 lg:h-22'}`}
+                  />
+                ) : (
+                  <span className="text-browning-gray font-medium text-sm text-center px-2">
+                    {client.name}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          {/* Second track (duplicate for seamless loop) */}
+          <div className="flex animate-marquee-clients shrink-0">
+            {clients.map((client, index) => (
+              <div
+                key={`dup-${index}`}
+                className="flex-shrink-0 w-[180px] md:w-[220px] lg:w-[260px] px-6 md:px-10 flex items-center justify-center"
+              >
+                {client.logo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={client.logo}
+                    alt={client.name}
+                    className={`w-auto max-w-full object-contain ${client.large ? 'h-20 md:h-24 lg:h-28' : 'h-14 md:h-18 lg:h-22'}`}
+                  />
+                ) : (
+                  <span className="text-browning-gray font-medium text-sm text-center px-2">
+                    {client.name}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

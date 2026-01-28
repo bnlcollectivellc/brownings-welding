@@ -86,22 +86,21 @@ export default function AboutSection() {
               bracket or a complex industrial project.
             </p>
 
-            {/* Desktop: Quote + Cards in a row */}
-            <div className="hidden lg:flex gap-4 items-stretch">
-              {/* Tagline */}
-              <div className="bg-white border-l-4 border-browning-red p-6 rounded-r-xl shadow-sm flex-1 flex flex-col justify-center">
-                <p className="text-browning-charcoal text-xl font-semibold italic">
-                  &quot;Faith, Family, & Fabrication&quot;
-                </p>
-                <p className="text-browning-gray mt-2">- The Browning Family</p>
-              </div>
+            {/* Tagline Quote */}
+            <div className="bg-white border-l-4 border-browning-red p-6 rounded-r-xl shadow-sm">
+              <p className="text-browning-charcoal text-xl font-semibold italic">
+                &quot;Faith, Family, & Fabrication&quot;
+              </p>
+              <p className="text-browning-gray mt-2">- The Browning Family</p>
+            </div>
 
-              {/* Compact Cards */}
+            {/* Value Cards - below quote */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mt-6">
               {highlights.map((item) => (
                 <Link
                   href="/about"
                   key={item.label}
-                  className="bg-white border border-gray-200 rounded-2xl p-4 text-center hover:border-browning-red/30 hover:shadow-lg transition-all group flex-1 flex flex-col justify-center"
+                  className="bg-white border border-gray-200 rounded-2xl p-4 text-center hover:border-browning-red/30 hover:shadow-lg transition-all group"
                 >
                   <div className="bg-browning-red/10 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2">
                     <item.icon className="text-browning-red" size={20} />
@@ -110,16 +109,6 @@ export default function AboutSection() {
                   <p className="text-browning-gray text-xs">{item.description}</p>
                 </Link>
               ))}
-            </div>
-
-            {/* Mobile: Tagline only */}
-            <div className="lg:hidden">
-              <div className="bg-white border-l-4 border-browning-red p-6 rounded-r-xl shadow-sm">
-                <p className="text-browning-charcoal text-xl font-semibold italic">
-                  &quot;Faith, Family, & Fabrication&quot;
-                </p>
-                <p className="text-browning-gray mt-2">- The Browning Family</p>
-              </div>
             </div>
           </div>
 
