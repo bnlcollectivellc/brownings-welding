@@ -1,6 +1,5 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
 import { Star } from 'lucide-react';
 import { useInView, useParallax } from '@/hooks/useScrollAnimations';
 
@@ -70,84 +69,12 @@ const testimonials = [
   },
 ];
 
-// Triple for seamless infinite scroll
-const infiniteTestimonials = [...testimonials, ...testimonials, ...testimonials];
+// Double for seamless CSS animation loop
+const infiniteTestimonials = [...testimonials, ...testimonials];
 
 export default function TestimonialsSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number>(0);
   const [sectionRef, sectionVisible] = useInView(0.2);
   const [parallaxRef, parallaxOffset] = useParallax(0.15);
-
-  const startAnimation = useCallback(() => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    // Cancel any existing animation
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
-
-    // Initialize scroll position to middle set
-    const singleSetWidth = container.scrollWidth / 3;
-    if (container.scrollLeft < singleSetWidth * 0.5 || container.scrollLeft > singleSetWidth * 2.5) {
-      container.scrollLeft = singleSetWidth;
-    }
-
-    lastTimeRef.current = performance.now();
-
-    const animate = (currentTime: number) => {
-      const container = scrollRef.current;
-      if (!container) return;
-
-      const deltaTime = Math.min(currentTime - lastTimeRef.current, 50);
-      lastTimeRef.current = currentTime;
-
-      // Speed: pixels per millisecond (slower for testimonials)
-      const isMobile = window.innerWidth < 768;
-      const speed = isMobile ? 0.06 : 0.03;
-
-      container.scrollLeft += speed * deltaTime;
-
-      const setWidth = container.scrollWidth / 3;
-
-      // Seamless loop
-      if (container.scrollLeft >= setWidth * 2) {
-        container.scrollLeft -= setWidth;
-      }
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-  }, []);
-
-  // Start animation on mount and handle visibility changes
-  useEffect(() => {
-    // Small delay to ensure DOM is ready
-    const initTimeout = setTimeout(() => {
-      startAnimation();
-    }, 100);
-
-    // Handle tab visibility changes
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        lastTimeRef.current = performance.now();
-        startAnimation();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      clearTimeout(initTimeout);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [startAnimation]);
 
   return (
     <section
@@ -156,7 +83,7 @@ export default function TestimonialsSection() {
       ref={parallaxRef}
       style={{ transform: `translateY(${parallaxOffset}px)` }}
     >
-      {/* Section Header - inside container */}
+      {/* Section Header */}
       <div
         ref={sectionRef}
         className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
@@ -170,23 +97,18 @@ export default function TestimonialsSection() {
         </div>
       </div>
 
-      {/* Carousel Container - full width for edge-to-edge fades */}
-      <div className="relative">
-        {/* Fade Left - at screen edge */}
+      {/* Carousel Container */}
+      <div className="relative overflow-hidden">
+        {/* Fade edges */}
         <div className="absolute left-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-
-        {/* Fade Right - at screen edge */}
         <div className="absolute right-0 top-0 bottom-0 w-8 md:w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-        {/* Scrollable Carousel Track */}
-        <div
-          ref={scrollRef}
-          className="flex overflow-x-hidden"
-        >
+        {/* Animated Track - CSS animation only */}
+        <div className="flex animate-scroll-testimonials">
           {infiniteTestimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] xl:w-[28vw] 2xl:w-[22vw] mx-3 lg:mx-4 bg-white rounded-xl border border-gray-200 p-6 lg:p-8 hover:border-browning-red/30 transition-colors"
+              className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] xl:w-[28vw] 2xl:w-[22vw] mx-3 lg:mx-4 bg-white rounded-xl border border-gray-200 p-6 lg:p-8"
             >
               {/* Review Text */}
               <p className="text-gray-700 text-sm lg:text-base leading-relaxed mb-4 line-clamp-4">

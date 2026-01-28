@@ -156,3 +156,43 @@ section {
   }
 }
 
+/* Infinite scroll carousel animations - pure CSS, no JS */
+@keyframes scroll-clients {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-team {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-testimonials {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-clients {
+  animation: scroll-clients 30s linear infinite;
+}
+
+.animate-scroll-team {
+  animation: scroll-team 40s linear infinite;
+}
+
+.animate-scroll-testimonials {
+  animation: scroll-testimonials 60s linear infinite;
+}
+
