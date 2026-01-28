@@ -194,16 +194,37 @@ section {
   }
 }
 
-/* Speed variants */
+/* Speed variants - optimized for readability and smooth UX */
+/* Reference: web.dev/articles/carousel-best-practices recommends slower speeds */
+/* Duration scaled for extended content (3-4x items per track) */
+
+/* Testimonials: slowest for reading (27 items × ~420px = ~11,000px track) */
 .marquee--slow .marquee__content {
-  --duration: 50s;
+  --duration: 120s;
 }
 
+/* Team: medium speed (20 items × ~280px = ~5,600px track) */
 .marquee--medium .marquee__content {
-  --duration: 35s;
+  --duration: 80s;
 }
 
+/* Clients/Logos: comfortable viewing speed (20 items × ~260px = ~5,200px track) */
 .marquee--fast .marquee__content {
-  --duration: 25s;
+  --duration: 60s;
+}
+
+/* Mobile: slightly faster since screens are smaller and less content visible */
+@media (max-width: 768px) {
+  .marquee--slow .marquee__content {
+    --duration: 90s;
+  }
+
+  .marquee--medium .marquee__content {
+    --duration: 60s;
+  }
+
+  .marquee--fast .marquee__content {
+    --duration: 45s;
+  }
 }
 
